@@ -3,12 +3,12 @@ import RakiAvailability ,{IRakiAvailability} from "../models/rakiAvailability";
 import moment from 'moment-timezone';
 import {AuthenticatedRequest} from "../@types/express";
 
-export const getAvailability = async (req: Request, res: Response) => {
+export const getAvailability = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
     try {
-        const { doctorId, date, timeZone } = req.query;
+        const { rakiId, date, timeZone } = req.query;
 
         const availability = await RakiAvailability.findOne({
-            doctorId,
+            rakiId,
             date,
         }).exec();
 
@@ -25,7 +25,7 @@ export const getAvailability = async (req: Request, res: Response) => {
         });
 
         res.status(200).json({
-            doctorId,
+            rakiId,
             date,
             timeSlots: convertedSlots,
         });
@@ -34,7 +34,7 @@ export const getAvailability = async (req: Request, res: Response) => {
     }
 };
 
-export const setAvailability = async (req: AuthenticatedRequest, res: Response) => {
+export const setAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const rakiId = req.user?.id;
         if (!rakiId) {
