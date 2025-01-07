@@ -1,3 +1,5 @@
+import { headers } from 'next/headers';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -10,6 +12,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        header: "#36454F",
+      },
+      fontFamily: {
+        fullsans: ['"FullSans-LC50Book"', 'sans-serif'],
+        fullsansbold: ['"full-sans-lc-90-bold"', 'sans-serif'],
       },
     },
   },

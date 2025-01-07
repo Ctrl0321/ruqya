@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import Header from "@/components/shared/layout/Header";
 
 export const metadata = {
   title: "Ruqya",
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
