@@ -1,9 +1,13 @@
 'use client'
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const isActive = (path) => router.pathname === path ? 'text-RuqyaGreen' : 'text-gray-700';
 
   return (
     <header>
@@ -19,10 +23,10 @@ const Header = () => {
             <img src='/nav-line.svg' alt="Navigation Center" width="700"/>
           </div>
           <div className="hidden md:flex space-x-4 mt-1">
-            <Link href="/Home" className="text-gray-700 hover:text-gray-900">Home</Link>
-            <Link href="/Book Raqis" className="text-gray-700 hover:text-gray-900">Book Raqis</Link>
-            <Link href="/Self-Ruqyah" className="text-gray-700 hover:text-gray-900">Self-Ruqyah</Link>
-            <Link href="/My Profile" className="text-gray-700 hover:text-gray-900">My Profile</Link>
+            <Link href="/Home" className={`${isActive('/Home')} hover:text-gray-900`}>Home</Link>
+            <Link href="/Book Raqis" className={`${isActive('/Book Raqis')} hover:text-gray-900`}>Book Raqis</Link>
+            <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} hover:text-gray-900`}>Self-Ruqyah</Link>
+            <Link href="/My Profile" className={`${isActive('/My Profile')} hover:text-gray-900`}>My Profile</Link>
           </div>
           <div className="md:hidden sm:block">
             <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 focus:outline-none">
@@ -34,10 +38,10 @@ const Header = () => {
         </div>
         {isOpen && (
           <div className="md:hidden">
-            <Link href="/Home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</Link>
-            <Link href="/Book Raqis" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Book Raqis</Link>
-            <Link href="/Self-Ruqyah" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Self-Ruqyah</Link>
-            <Link href="/My Profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">My Profile</Link>
+            <Link href="/Home" className={`${isActive('/Home')} block px-4 py-2 hover:bg-gray-100`}>Home</Link>
+            <Link href="/Book Raqis" className={`${isActive('/Book Raqis')} block px-4 py-2 hover:bg-gray-100`}>Book Raqis</Link>
+            <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} block px-4 py-2 hover:bg-gray-100`}>Self-Ruqyah</Link>
+            <Link href="/My Profile" className={`${isActive('/My Profile')} block px-4 py-2 hover:bg-gray-100`}>My Profile</Link>
           </div>
         )}
       </nav>
