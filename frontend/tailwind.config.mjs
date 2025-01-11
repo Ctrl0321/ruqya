@@ -13,6 +13,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         header: "#36454F",
+        RuqyaBlue: "#E6E6FA",
+        RuqyaGray: "#36454F",
+        RuqyaGreen: "#008080"
       },
       fontFamily: {
         fullsans: ['"FullSans-LC50Book"', 'sans-serif'],
