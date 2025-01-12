@@ -11,19 +11,20 @@ const sampledata = [
   {
     id: 1,
     name: "Raqi1",
+    image: "https://s3-alpha-sig.figma.com/img/570b/fa64/c576670f6fc2491ee8b27ed25dfe6f6f?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=FVPLxOlAZg~BigspbGx~9KX76Gpbf9I1sN2cAFowr~xo8q2eFmEUv3UB7Y15vMPXxC2BsuWJG3NrIg-O45GBz2bqQ9ornHnZ9acIBJmAdePb6aPJ7fhb5Oj9gd8yomi536AApiengbo5Wq29xs~QWYXjrbFqtM5-Rq5hafuh7FAYB2jTVv9aN2BHYjS1fA3jOh5MtP76ZKUPv0fUNNwG29hGVMuXxaXBfCdkILSlCS~zD5svOsIFjBvEpcsmaSsI2PbwiGfk3RRrq0nkF8VJMhnwBC6P8u9PhxCvRF7IbtaB-nALchVaCrIe93qkLKI0hlfVqENKeDXAjFdHkO~L3w__",
     Country: "Country1",
     bookedDate: "2022-01-01",
     bookedTime: "12:00",
-    bookedDuration: "1 hour",
+    bookedDuration: 120,
     bookedPrice: "$14.00",
   },
   {
     id: 2,
     name: "Raqi2",
-    Country: "Country2",
+    image: "https://s3-alpha-sig.figma.com/img/5525/c092/e5de185ff00132edbf92293fcf654f47?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IzwyQg~Ec3mAeOznb0yL83OI0Bi5~bLxiyfKm8EUkgl4oijkqRVb0rLS9KG6yS4jgsoGrtaIQTFFPHHKVKbwnpk17Aw3fFjeBq3~ntboI800TEyyAxB2EgnckXplzzDfZ6XHrLbEEIVpvlR5o2Itl4~tc~zmkjz78eQzKw-5OUBtyE6e2fFIQdjNGOE748VBwJ1vWxd4aG7lOTMX1SuzjxC6o0R2c9aLu1hcblbrc-xjlqXqTiTEWEuYA61PhquGIHz4gZ7vWhkyF0xeDvXO~0PJ~rFAw-I2pIbsS6QS9MEuQ~kHGPoUkyJ0~unG4GXiijWWVZMsYLtrjjpat8v9dg__",
     bookedDate: "2022-01-02",
     bookedTime: "13:00",
-    bookedDuration: "1 hour",
+    bookedDuration: 60,
     bookedPrice: "$14.00",
   },
   {
@@ -32,7 +33,7 @@ const sampledata = [
     Country: "Country3",
     bookedDate: "2022-01-03",
     bookedTime: "14:00",
-    bookedDuration: "1 hour",
+    bookedDuration: 30,
     bookedPrice: "$14.00",
   },
   {
@@ -41,7 +42,7 @@ const sampledata = [
     Country: "Country4",
     bookedDate: "2022-01-04",
     bookedTime: "15:00",
-    bookedDuration: "1 hour",
+    bookedDuration: 360,
     bookedPrice: "$14.00",
   },
 ];
@@ -99,7 +100,7 @@ export default function Home() {
           <span className="text-4xl"> $14.00</span> /booking
         </h1>
       </div>
-      <div id="third" className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+      <div id="third" className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10 m-5">
         {sampledata.map((data) => (
           <MyBookingCard key={data.id} booking={data} />
         ))}
