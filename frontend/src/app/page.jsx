@@ -6,6 +6,7 @@ import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
 import flower from "@/assets/svg/flower.svg";
 
 import MyBookingCard from "@/components/cards/MyBookingCard";
+import RaqisCard from "@/components/cards/RaqisCard";
 
 const sampledata = [
   {
@@ -18,7 +19,6 @@ const sampledata = [
     bookedTime: "18:00",
     bookedDuration: 120,
     bookedPrice: "$14.00",
-    disabled: true,
   },
   {
     id: 2,
@@ -28,7 +28,6 @@ const sampledata = [
     bookedTime: "19:15",
     bookedDuration: 60,
     bookedPrice: "$14.00",
-    disabled: true,
   },
   {
     id: 3,
@@ -72,7 +71,7 @@ export default function Home() {
           <p className="text-sm m-3 md:text-base">Connect with expert Raqis for personalized spiritual healing and guidance.</p>
           <br />
           <div className="flex flex-row justify-center md:justify-start mb-10 space-x-4">
-            <Button text="Book a Session" color="RuqyaGreen" bg="true" />
+            <Button text="Book a Session" color="RuqyaGreen" bg={true} />
             <Button text="Learn Ruqah" />
           </div>
         </div>
@@ -123,7 +122,23 @@ export default function Home() {
           ))}
         </div>
       </div>
-      
+
+      <div id="third" className="grid grid-cols-1 mt-10 m-5 bg-[#E6E6FA] p-5 rounded-lg ">
+        <div className="flex justify-between items-center mx-5">
+          <h1 className="text-2xl font-bold text-RuqyaGray">My Bookings</h1>
+          {sampledata.length > 3 && (
+            <div className="text-center">
+              <Link href="/all-bookings" className="text-RuqyaGreen font-bold">
+                See all <FaLongArrowAltRight className="inline mb-1" />
+              </Link>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+          <RaqisCard data={sampledata[1].image} />
+          <RaqisCard data={sampledata[1].image} />
+        </div>
+      </div>
     </div>
   );
 }
