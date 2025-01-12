@@ -1,28 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import Button from "@/components/ui/Button";
-import { FaReact, FaStar } from "react-icons/fa";
+import Button from "@/components/ui/buttons/HomeButton";
+import { FaStar } from "react-icons/fa";
 
 export default function RaqisCard(props) {
   const image = props.data;
   return (
-    <div className="relative flex flex-col items-center space-y-4 p-4">
+    <div className="relative flex flex-col items-center space-y-4 p-4 group">
       <div className="relative">
         <svg
           id="flower"
-          width="220"
-          height="220"
-          viewBox="0 0 183 183"
+          width="100"
+          height="100"
+          viewBox="0 0 150 150"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute z-0"
+          className="absolute z-0 transition-transform duration-500 group-hover:rotate-180"
           style={{
-            top: "-80px",
-            right: "-80px",
+            top: "-65px",
+            right: "-35px",
             borderRadius: "11px 0px 0px 0px",
             opacity: "1",
-            transform: "rotate(-14.89deg)"
+            transform: "rotate(0deg)",
+            width: "150",
+            height: "150",
           }}
         >
           <path
@@ -34,7 +36,7 @@ export default function RaqisCard(props) {
             fill="#FFDF7E"
           />
         </svg>
-        <span className="absolute flex flex-col items-center text-black justify-center font-semibold z-10" style={{ top: "0px", right: "15px" }}>
+        <span className="absolute flex flex-col items-center text-black justify-center font-semibold z-10" style={{ top: "5px", right: "15px" }}>
           <FaStar className="mb-1" />
           <p>5.0</p>
         </span>
@@ -79,7 +81,6 @@ export default function RaqisCard(props) {
                   <span>06 Years</span>
                 </div>
               </div>
-              {/* <Button text="Book Now" bg={true} color="teal-600" /> */}
               <Link href='#' className="w-full bg-teal-600 py-2 text-white text-center rounded-lg hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>

@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="bg-white shadow-md p-1 font-fullsansbold color-header">
+      <nav className="bg-gradient-to-l from-[#E6E6FA33] to-[#E6E6FA] bg-[#FFFFFF] shadow-md p-1 font-fullsansbold color-header">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-xl font-bold">
             <Link href="/" className="text-gray-700 hover:text-gray-900">

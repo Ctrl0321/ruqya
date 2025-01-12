@@ -1,7 +1,7 @@
 import React from "react";
 import { FaGlobe, FaCalendarAlt, FaClock } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
-import Button from "@/components/ui/Button";
+import Button from "@/components/ui/buttons/HomeButton";
 
 const MyBookingCard = ({ booking }) => {
   const calculateEndTime = (startTime, duration) => {

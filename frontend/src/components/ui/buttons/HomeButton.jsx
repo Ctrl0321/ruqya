@@ -11,7 +11,6 @@ const Button = (props) => {
         ? "bg-" + color + " text-white" 
         : "bg-[#36454F]" 
       : "border border-[#36454F] text-[#36454F]";
-console.log(setting);
 
   return (
     <Link href={disabled ? "#" : link ? link : "#"}>
