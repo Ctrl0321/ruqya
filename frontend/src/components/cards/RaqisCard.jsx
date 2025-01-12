@@ -34,7 +34,10 @@ export default function RaqisCard(props) {
             fill="#FFDF7E"
           />
         </svg>
-        <span className="absolute flex items-center text-black justify-center font-semibold z-10" style={{ top: "0px", right: "15px" }}><div className="font-sans leading-none">{" "} <FaStar className="flex item-center justify-center" /> <br /><p className="-mt-3"> 5.0</p></div></span>
+        <span className="absolute flex flex-col items-center text-black justify-center font-semibold z-10" style={{ top: "0px", right: "15px" }}>
+          <FaStar className="mb-1" />
+          <p>5.0</p>
+        </span>
         <svg width="292" height="328" viewBox="0 0 292 328" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10">
           <defs>
             <clipPath id="clip-circle">
