@@ -23,7 +23,7 @@ const Header = () => {
             <img src='/nav-line.svg' alt="Navigation Center" width="700"/>
           </div>
           <div className="hidden md:flex space-x-4 mt-1">
-            <Link href="/Home" className={`${isActive('/')} hover:text-gray-900`}>Home</Link>
+            <Link href="/" className={`${isActive('/')} hover:text-gray-900`}>Home</Link>
             <Link href="/Book Raqis" className={`${isActive('/Book Raqis')} hover:text-gray-900`}>Book Raqis</Link>
             <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} hover:text-gray-900`}>Self-Ruqyah</Link>
             <Link href="/My Profile" className={`${isActive('/My Profile')} hover:text-gray-900`}>My Profile</Link>
@@ -38,7 +38,7 @@ const Header = () => {
         </div>
         {isOpen && (
           <div className="md:hidden">
-            <Link href="/Home" className={`${isActive('/')} block px-4 py-2 hover:bg-gray-100`}>Home</Link>
+            <Link href="/" className={`${isActive('/')} block px-4 py-2 hover:bg-gray-100`}>Home</Link>
             <Link href="/Book Raqis" className={`${isActive('/Book Raqis')} block px-4 py-2 hover:bg-gray-100`}>Book Raqis</Link>
             <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} block px-4 py-2 hover:bg-gray-100`}>Self-Ruqyah</Link>
             <Link href="/My Profile" className={`${isActive('/My Profile')} block px-4 py-2 hover:bg-gray-100`}>My Profile</Link>
