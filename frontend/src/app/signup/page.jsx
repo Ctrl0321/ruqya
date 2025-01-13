@@ -6,6 +6,7 @@ import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect } from "react";
 
 import bg from "@/assets/images/bg.jpeg";
+import logo from "@/assets/images/logo.png";
 
 function SignUp() {
   return (
@@ -31,13 +32,13 @@ function SignUp() {
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-              {/* <Image
-                src="/placeholder.svg?height=50&width=200"
+              <Image
+                src={logo}
                 alt="Prophetic Ruqyah"
                 width={200}
                 height={50}
                 className="h-12 w-auto"
-              /> */}
+              />
             </div>
 
             <h1 className="text-2xl text-gray-700 text-center mb-8">Registration</h1>
