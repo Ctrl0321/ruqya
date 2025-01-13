@@ -13,7 +13,7 @@ function Button (props) {
   return (
     <Link href={disabled ? "#" : link ? link : "#"}>
       <div 
-        className={`min-w-30 py-2 px-4 font-sans flex text-center items-center justify-center gap-0 rounded-lg cursor-pointer opacity-100 leading-none ${setting}`}
+        className={`min-w-30 py-2 px-4 font-sans flex text-center items-center justify-center gap-0 rounded-lg cursor-pointer opacity-100 leading-none min-h-10 ${setting}`}
       >
         {text ? text : "Click Here"}
       </div>
