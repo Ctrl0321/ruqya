@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import Header from "@/components/shared/layout/Header";
+import Footer from "@/components/shared/layout/Footer";
 
 export const metadata = {
   title: "Ruqya",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
       <body className="bg-background text-foreground text-RuqyaGray">
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

@@ -4,11 +4,14 @@ import React from "react";
 const Button = (props) => {
   const { text, link, disabled, bg } = props;
   const color = props.color;
+  const temp = "bg-" + color; ;
+  console.log(temp);
+  
   const setting = disabled 
     ? "border border-[#36454F] text-[#36454F] opacity-50 cursor-not-allowed" 
     : bg 
       ? color
-        ? "bg-" + color + " text-white" 
+        ? temp + " text-white"
         : "bg-[#36454F]" 
       : "border border-[#36454F] text-[#36454F]";
 

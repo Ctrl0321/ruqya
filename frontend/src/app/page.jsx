@@ -3,10 +3,11 @@ import Link from "next/link";
 import Button from "@/components/ui/buttons/HomeButton";
 import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
 
-import flower from "@/assets/svg/flower.svg";
-
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import RaqisCard from "@/components/cards/RaqisCard";
+
+import Flower from "@/assets/svg/flower-right";
+import FlowerLeft from "@/assets/svg/flower-left";
 
 import First from "@/components/ui/home/First";
 import Search from "@/components/ui/home/Search";
@@ -22,6 +23,8 @@ const sampledata = [
     Country: "Sri Lanka",
     CountryCode: "LK",
     bookedDate: "2025-02-12",
+    Languages: ["English", "Arabic"],
+    Experience: "5 years",
     bookedTime: "18:00",
     bookedDuration: 120,
     bookedPrice: "$14.00",
@@ -40,6 +43,8 @@ const sampledata = [
     name: "Raqi3",
     Country: "United Kingdom",
     CountryCode: "GB",
+    Languages: ["English", "Arabic"],
+    Experience: "5 years",
     bookedDate: "2022-01-03",
     bookedTime: "14:00",
     bookedDuration: 30,
@@ -49,6 +54,9 @@ const sampledata = [
     id: 4,
     name: "Raqi4",
     Country: "Country4",
+    CountryCode: "C4",
+    Languages: ["English", "Arabic"],
+    Experience: "5 years",
     bookedDate: "2022-01-04",
     bookedTime: "15:00",
     bookedDuration: 360,
@@ -57,15 +65,19 @@ const sampledata = [
 ];
 
 export default function Home() {
-  const latestBookings = sampledata.slice(0, 3);
-
   return (
     <div className="bg-white shadow-md font-fullsansbold color-header min-h-screen text-center md:text-left">
-      <div className="relative">
-        <First className="relative z-10" />
-        <Search className="relative z-20" />
-        <Second />
+      <First />
+      <div className="hidden lg:flex">
+        <div className="absolute right-0 translate-y-0 translate-x-0">
+          <Flower className="z-100 w-96 h-96 transition-transform duration-500 group-hover:rotate-180" />
+        </div>
+        <div className="absolute left-0 translate-y-0 translate-x-0">
+          <FlowerLeft className="z-100 w-96 h-96 transition-transform duration-500 rotate-90" />
+        </div>
       </div>
+      <Search />
+      <Second />
       <Third sampledata={sampledata} />
       <Forth sampledata={sampledata} />
     </div>

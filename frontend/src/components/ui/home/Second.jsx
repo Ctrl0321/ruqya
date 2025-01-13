@@ -1,5 +1,5 @@
 import Image from "next/image";
-import flower from "@/assets/svg/flower.svg";
+import flower from "@/assets/svg/green-flower.svg";
 
 function Second() {
   return (

@@ -18,7 +18,7 @@ function Third (props){
             </div>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5 mt-5">
           {latestBookings.map((data) => (
             <MyBookingCard key={data.id} booking={data} />
           ))}
