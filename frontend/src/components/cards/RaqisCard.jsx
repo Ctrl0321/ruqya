@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Button from "@/components/ui/buttons/HomeButton";
+import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaGlobe } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 

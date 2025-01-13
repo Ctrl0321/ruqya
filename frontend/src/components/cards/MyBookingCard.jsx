@@ -1,7 +1,7 @@
 import React from "react";
 import { FaGlobe, FaCalendarAlt, FaClock } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
-import Button from "@/components/ui/buttons/HomeButton";
+import Button from "@/components/ui/buttons/DefaultButton";
 
 const MyBookingCard = ({ booking }) => {
   const calculateEndTime = (startTime, duration) => {
@@ -84,7 +84,7 @@ const MyBookingCard = ({ booking }) => {
             </p>
           </div>
         </div>
-        <div className="col-span-5 flex flex-row text-RuqyaGray mb-0 mt-auto">
+        <div className="col-span-5 flex flex-row text-RuqyaGray mb-5 mt-auto">
           <p>{calculateTimeUntilSession(booking.bookedDate, booking.bookedTime)}</p>
         </div>
       </div>

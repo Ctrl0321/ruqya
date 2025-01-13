@@ -1,18 +1,13 @@
 import Link from "next/link";
 import React from "react";
 
-const Button = (props) => {
-  const { text, link, disabled, bg } = props;
-  const color = props.color;
-  const temp = "bg-" + color; ;
-  console.log(temp);
-  
+function Button (props) {
+  const { text, link, disabled, bg, color } = props;
+
   const setting = disabled 
     ? "border border-[#36454F] text-[#36454F] opacity-50 cursor-not-allowed" 
     : bg 
-      ? color
-        ? temp + " text-white"
-        : "bg-[#36454F]" 
+      ? `bg-RuqyaGreen text-white`   //Note: Dynamic button color changes is remove due to some reason not working
       : "border border-[#36454F] text-[#36454F]";
 
   return (

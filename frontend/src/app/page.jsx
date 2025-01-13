@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/components/ui/buttons/HomeButton";
+import Button from "@/components/ui/buttons/DefaultButton";
 import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
 
 import MyBookingCard from "@/components/cards/MyBookingCard";
