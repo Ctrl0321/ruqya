@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="bg-gradient-to-l from-[#E6E6FA33] to-[#E6E6FA] bg-[#FFFFFF] shadow-md p-1 font-fullsansbold color-header">
+      <nav className={`${isActive('/') ? "bg-gradient-to-l from-[#E6E6FA33] to-[#E6E6FA] bg-[#FFFFFF]" : "bg-white"}  shadow-md p-1 font-fullsansbold color-header`}>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-xl font-bold">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
@@ -25,7 +25,7 @@ const Header = () => {
           <div className="hidden md:flex space-x-4 mt-1">
             <Link href="/" className={`${isActive('/')} hover:text-gray-900`}>Home</Link>
             <Link href="/BookRaqis" className={`${isActive('/BookRaqis')} hover:text-gray-900`}>Book Raqis</Link>
-            <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} hover:text-gray-900`}>Self-Ruqyah</Link>
+            <Link href="/SelfRuqyah" className={`${isActive('/SelfRuqyah')} hover:text-gray-900`}>Self-Ruqyah</Link>
             <Link href="/MyProfile" className={`${isActive('/MyProfile')} hover:text-gray-900`}>My Profile</Link>
           </div>
           <div className="md:hidden sm:block">
@@ -40,7 +40,7 @@ const Header = () => {
           <div className="md:hidden">
             <Link href="/" className={`${isActive('/')} block px-4 py-2 hover:bg-gray-100`}>Home</Link>
             <Link href="/BookRaqis" className={`${isActive('/BookRaqis')} block px-4 py-2 hover:bg-gray-100`}>Book Raqis</Link>
-            <Link href="/Self-Ruqyah" className={`${isActive('/Self-Ruqyah')} block px-4 py-2 hover:bg-gray-100`}>Self-Ruqyah</Link>
+            <Link href="/SelfRuqyah" className={`${isActive('/SelfRuqyah')} block px-4 py-2 hover:bg-gray-100`}>Self-Ruqyah</Link>
             <Link href="/MyProfile" className={`${isActive('/MyProfile')} block px-4 py-2 hover:bg-gray-100`}>My Profile</Link>
           </div>
         )}

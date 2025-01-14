@@ -66,7 +66,7 @@ const sampledata = [
 
 export default function Home() {
   return (
-    <div className="bg-white font-fullsansbold color-header min-h-screen text-center md:text-left mb-20">
+    <div className="bg-white font-fullsansbold color-header min-h-screen text-center md:text-left mb-56">
       <First />
       <div className="hidden lg:flex">
         <div className="absolute right-0 translate-y-0 translate-x-0">
