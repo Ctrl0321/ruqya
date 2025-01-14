@@ -11,7 +11,7 @@ export default function RaqisCard({ raqi }) {
     return null;
   }
 
-  const { image, name, Country, CountryCode, Languages, Experience } = raqi;
+  const { image, name, Country, CountryCode, Languages, Experience, id } = raqi;
   const displayImage = image ? image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
   return (
@@ -85,7 +85,7 @@ export default function RaqisCard({ raqi }) {
                   <span>{Experience ? Experience : "Not Available"}</span>
                 </div>
               </div>
-              <Link href="#" className="w-full bg-teal-600 py-2 text-white text-center rounded-lg hover:bg-teal-700 transition-colors">
+              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-teal-600 py-2 text-white text-center rounded-lg hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>
             </div>
