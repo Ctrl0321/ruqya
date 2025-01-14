@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from "next/image"
 import Link from "next/link"
 import RaqisCard from "@/components/cards/RaqisCard"
-import sampledata from "../sampledata.json"
+import sampledata from "@/data/sampledata"
 
 
 // Main Page Component

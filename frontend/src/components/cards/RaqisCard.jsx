@@ -11,7 +11,7 @@ export default function RaqisCard({ raqi }) {
     return null;
   }
 
-  const { image, name, Country, CountryCode, Languages, Experience, id } = raqi;
+  const { image, name, Country, CountryCode, Languages, Experience, id, rating} = raqi;
   const displayImage = image ? image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
   return (
@@ -40,7 +40,7 @@ export default function RaqisCard({ raqi }) {
         </svg>
         <span className="absolute flex flex-col items-center text-black justify-center font-semibold z-10" style={{ top: "5px", right: "15px" }}>
           <FaStar className="mb-1" />
-          <p>5.0</p>
+          <p>{rating ? rating : "0.0"}</p>
         </span>
         <svg width="292" height="328" viewBox="0 0 292 328" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10">
           <defs>
@@ -82,7 +82,7 @@ export default function RaqisCard({ raqi }) {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Experience</span>
-                  <span>{Experience ? Experience : "Not Available"}</span>
+                  <span>{Experience ? Experience + " Year" + (Experience > 1 ? "s" : "") : "Not Available"}</span>
                 </div>
               </div>
               <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-teal-600 py-2 text-white text-center rounded-lg hover:bg-teal-700 transition-colors">

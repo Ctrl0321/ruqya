@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Button from "@/components/ui/buttons/DefaultButton"
 import { FileIcon, Music2Icon } from 'lucide-react'
-import content from './content.json'
+import content from '@/data/ruqyah'
 
 export default function RuqyahPage() {
   return (
