@@ -1,6 +1,15 @@
+@import '../styles/custom.css';
+@font-face {
+  font-family: 'Full Sans LC';
+  src: url('/fonts/World Of The Fonts - FullSans-LC50Book.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 :root {
   --background: #ffffff;
@@ -17,5 +26,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Full Sans LC', sans-serif;
 }
