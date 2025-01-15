@@ -1,12 +1,14 @@
 import {  Request,  Response } from 'express';
 import User, {IUser} from '../models/user';
 import {AuthenticatedRequest} from "../@types/express";
+import moment from "moment-timezone";
+import {getAllCountries, getTimezone} from "countries-and-timezones";
 
 
 
 export const updateUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-        const { name, email, country, languages, mobileNumber, age, yearOfExperience, description } = req.body;
+        const { name, email, country, timezone, languages, mobileNumber, age, yearOfExperience, description } = req.body;
 
         const userId = req.user?.id;
         if (!userId) {
@@ -21,6 +23,9 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
             return;
         }
 
+        const countries = getAllCountries();
+
+
         if (name) user.name = name;
         if (email) user.email = email;
         if (country) user.country = country;
@@ -33,6 +38,25 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
             if (description) user.description = description;
         }
 
+        // Handle timezone
+        if (timezone) {
+            // Validate timezone format
+            if (!moment.tz.zone(timezone)) {
+                res.status(400).json({ message: 'Invalid timezone format' });
+                return;
+            }
+            user.timezone = timezone;
+        } else if (country) {
+            // Derive timezone from country if not provided
+            const timeZoneInfo = getTimezone(country);
+            if (timeZoneInfo && timeZoneInfo.name) {
+                user.timezone = timeZoneInfo.name;
+            } else {
+                res.status(400).json({ message: 'Could not find timezone for the provided country' });
+                return;
+            }
+        }
+
         await user.save();
 
         res.status(200).json({
@@ -41,6 +65,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
             email: user.email,
             role: user.role,
             country: user.country,
+            timezone: user.timezone,
             languages: user.languages,
             mobileNumber: user.mobileNumber,
             age: user.age,
@@ -48,6 +73,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
             description: user.description,
         });
     } catch (error) {
+        console.error("Error updating user:", error);
         res.status(500).json({ message: 'Server error', error });
     }
 };

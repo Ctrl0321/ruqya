@@ -6,6 +6,7 @@ export interface IUser extends Document {
     name: string;
     email: string;
     country:string;
+    timezone:string;
     languages:[string],
     mobileNumber:string,
     yearOfExperience:number,
@@ -23,6 +24,7 @@ const userSchema: Schema<IUser> = new Schema({
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'raki', 'user'], default: 'user' },
     country: { type: String },
+    timezone: { type: String },
     languages: { type: [String] },
     mobileNumber: { type: String },
     age: { type: Number },

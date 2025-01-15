@@ -21,11 +21,10 @@ services:
 #      volumes:
 #        - /root/usr/share/nginx/html:/usr/share/nginx/html
 
-  mongo:
+  mongo-ruqya:
     image: mongo:4.4
     volumes:
-      - /ruqya/data:/data/db
-      - /ruqya/backup:/backup
+      - /d/backup/mongo/ruqya:/data/db
     networks:
       - app-network
     ports:
