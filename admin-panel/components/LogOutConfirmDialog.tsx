@@ -22,10 +22,8 @@ export function LogoutConfirmDialog({ isOpen, onClose }: LogoutConfirmDialogProp
     const router = useRouter()
 
     const handleLogout = async () => {
+        localStorage.removeItem("token")
         setIsLoggingOut(true)
-        // Implement your logout logic here
-        // For example:
-        // await signOut()
         setIsLoggingOut(false)
         onClose()
         router.push('/')

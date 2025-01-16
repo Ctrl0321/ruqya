@@ -28,14 +28,18 @@ import { Separator } from "@/components/ui/seperator"
 import { toast } from "@/components/ui/use-toast"
 
 const profileFormSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
-    email: z.string().email({
-        message: "Please enter a valid email address.",
-    }),
-    bio: z.string().max(160).optional(),
-})
+    name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+    email: z.string().email({ message: "Please enter a valid email address." }),
+    country: z.string(),
+    timezone: z.string(),
+    languages: z.array(z.string()),
+    mobileNumber: z.string(),
+    yearOfExperience: z.number().min(0, { message: "Must be a valid number." }),
+    description: z.string(),
+    firstTimeLogin: z.boolean(),
+    age: z.number().min(1, { message: "Age must be a valid number." }),
+});
+
 
 const passwordFormSchema = z.object({
     currentPassword: z.string().min(8, {
@@ -55,12 +59,19 @@ const passwordFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 type PasswordFormValues = z.infer<typeof passwordFormSchema>
 
-// This can come from your backend or auth provider in the future
 const defaultValues: Partial<ProfileFormValues> = {
-    username: "admin",
-    email: "admin@example.com",
-    bio: "I'm an admin user.",
-}
+    name: "Aathiq Ahamed",
+    email: "aathiqahamed333@gmail.com",
+    country: "Srilanka",
+    timezone: "+5.30",
+    languages: ["English", "Sinhala", "Tamil"],
+    mobileNumber: "+94 788080001",
+    yearOfExperience: 3,
+    description: "software engineer",
+    firstTimeLogin: true,
+    age: 24,
+};
+
 
 export default function SettingsPage() {
     const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
@@ -123,10 +134,10 @@ export default function SettingsPage() {
                             <CardContent className="space-y-4">
                                 <FormField
                                     control={profileForm.control}
-                                    name="username"
+                                    name="name"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Username</FormLabel>
+                                            <FormLabel>Name</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
                                             </FormControl>
@@ -136,10 +147,10 @@ export default function SettingsPage() {
                                 />
                                 <FormField
                                     control={profileForm.control}
-                                    name="email"
+                                    name="country"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Email</FormLabel>
+                                            <FormLabel>Country</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
                                             </FormControl>
@@ -149,16 +160,78 @@ export default function SettingsPage() {
                                 />
                                 <FormField
                                     control={profileForm.control}
-                                    name="bio"
+                                    name="timezone"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Bio</FormLabel>
+                                            <FormLabel>Timezone</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
                                             </FormControl>
-                                            <FormDescription>
-                                                You can <span>@mention</span> other users and organizations.
-                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
+                                    name="languages"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Languages</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
+                                    name="mobileNumber"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Mobile Number</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
+                                    name="yearOfExperience"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Years of Experience</FormLabel>
+                                            <FormControl>
+                                                <Input type="number" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Description</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
+                                    name="age"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Age</FormLabel>
+                                            <FormControl>
+                                                <Input type="number" {...field} />
+                                            </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}

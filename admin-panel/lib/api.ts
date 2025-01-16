@@ -4,8 +4,8 @@ const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-export const login = async (username: string, password: string) => {
-    const response = await api.post('/login', { username, password });
+export const login = async (email: string, password: string) => {
+    const response = await api.post('ruqya-api/auth/login', { email, password });
     const { token } = response.data;
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

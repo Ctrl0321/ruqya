@@ -1,26 +1,59 @@
 'use client'
 
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import {login} from "@/lib/api";
+import { toast } from "@/components/ui/use-toast"
+import {Loader2} from "lucide-react";
 
 export default function SignIn() {
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const [isLoading, setLoading] = useState(false)
     const router = useRouter()
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            router.replace("/admin");
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
+
         try {
-            await login(username, password)
-            router.push('/admin')
+            const response = await login(email, password)
+
+
+            if (response && response.role === "admin") {
+                setLoading(false)
+                toast({
+                    title: "Login Successful",
+                    description: "Welcome, Admin!",
+                });
+                router.push("/admin");
+
+            } else {
+                setLoading(false)
+                toast({
+                    title: "Unauthorized Access",
+                    description: "You do not have permission to access this page.",
+                });
+            }
         } catch (err) {
-            setError('Invalid username or password')
-            console.log(err)
+            console.error(err);
+            setLoading(false)
+            toast({
+                title: "Login Failed",
+                description: "Invalid username or password.",
+            });
         }
-    }
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -28,14 +61,14 @@ export default function SignIn() {
                 <h1 className="text-2xl font-bold mb-6 text-center text-secondary-50">Sign In</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                            Username
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            Email
                         </label>
                         <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
@@ -52,10 +85,14 @@ export default function SignIn() {
                         />
                     </div>
                     <button
+                        disabled={isLoading}
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Sign In
+                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isLoading ? " Sign In..." : "  Sign In"}
+
+
                     </button>
                 </form>
                 {/*<div className="mt-6">*/}
