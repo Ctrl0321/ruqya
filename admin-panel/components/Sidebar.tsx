@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {Home, Users, Settings, HelpCircle, LogOut, DollarSign, Calendar, BookOpen} from "lucide-react";
+import {Home, Users, Settings, DollarSign, Calendar, BookOpen} from "lucide-react";
 
 
 const menuItems = [
