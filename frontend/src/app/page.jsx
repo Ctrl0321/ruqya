@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
+import '@/styles/globals.css';
 
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import RaqisCard from "@/components/cards/RaqisCard";
@@ -20,7 +21,7 @@ import sampledata from "@/data/sampledata";
 export default function Home() {
   return (
     <div className="bg-white font-fullsansbold color-header min-h-screen text-center md:text-left mb-56">
-      <First />
+      <First className="" />
       <div className="hidden lg:flex">
         <div className="absolute right-0 translate-y-0 translate-x-0">
           <Flower className="z-100 w-96 h-96 transition-transform duration-500 group-hover:rotate-180" />

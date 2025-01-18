@@ -5,7 +5,9 @@ import Image from "next/image"
 import Link from "next/link"
 import RaqisCard from "@/components/cards/RaqisCard"
 import sampledata from "@/data/sampledata"
-
+import { FaFilter, FaTimes } from "react-icons/fa"
+import 'rc-slider/assets/index.css';
+import Slider from 'rc-slider';
 
 // Main Page Component
 export default function BookRaqis() {
@@ -19,7 +21,7 @@ export default function BookRaqis() {
   // State management
   const [filteredData, setFilteredData] = useState(sampledata);
   const [userSelections, setUserSelections] = useState({
-    experience: experienceRange.min,
+    experience: [experienceRange.min, experienceRange.max],
     languages: [],
     availability: {
       date: null,
@@ -29,12 +31,14 @@ export default function BookRaqis() {
     countries: []
   });
 
+  // State for mobile filter visibility
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
   // Updated experience change handler
-  const handleExperienceChange = (value) => {
-    const numValue = parseInt(value, 10);
+  const handleExperienceChange = (values) => {
     setUserSelections(prev => ({
       ...prev,
-      experience: Math.max(experienceRange.min, Math.min(experienceRange.max, numValue))
+      experience: values
     }));
   };
 
@@ -102,9 +106,9 @@ export default function BookRaqis() {
     }
 
     // Filter by experience
-    if (userSelections.experience > 0) {
+    if (userSelections.experience[0] > 0 || userSelections.experience[1] < experienceRange.max) {
       result = result.filter(raqi => 
-        raqi.Experience >= userSelections.experience
+        raqi.Experience >= userSelections.experience[0] && raqi.Experience <= userSelections.experience[1]
       );
     }
 
@@ -141,26 +145,37 @@ export default function BookRaqis() {
       </nav>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters Sidebar */}
-        <aside className="w-full md:w-72 space-y-6 bg-RuqyaLightPurple p-6 rounded-lg">
-         
+        <aside className={`w-full md:w-72 space-y-6 bg-RuqyaLightPurple p-6 rounded-lg border border-gray-300 ${isFilterVisible ? 'block' : 'hidden'} md:block fixed top-4 left-4 right-4 bottom-4  md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:botto
+        m-0 md:m-0 z-50 overflow-y-auto`}>
+          {/* Close button for mobile view */}
+          <button 
+            className="md:hidden text-right text-primary mb-4"
+            onClick={() => setIsFilterVisible(false)}
+          >
+            <FaTimes size={24} />
+          </button>
           {/* Updated Experience Level Section */}
           <div className="filter-section border-b border-gray-200 pb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Experience Level</h2>
               <span className="text-sm text-gray-600">
-                {userSelections.experience} Year{userSelections.experience !== 1 ? 's' : ''}
+                {userSelections.experience[0]} - {userSelections.experience[1]} Year{userSelections.experience[1] !== 1 ? 's' : ''}
               </span>
             </div>
             
             <div className="space-y-4">
-              <input 
-                type="range" 
+              <Slider
+                range
                 min={experienceRange.min}
                 max={experienceRange.max}
-                step="1"
-                value={userSelections.experience} 
-                onChange={(e) => handleExperienceChange(e.target.value)} 
-                className="w-full accent-primary"
+                value={userSelections.experience}
+                onChange={handleExperienceChange}
+                trackStyle={[{ backgroundColor: 'green', height: 2 }]}
+                handleStyle={[
+                  { borderColor: 'green', height: 20, width: 20, marginLeft: -10, marginTop: -9 },
+                  { borderColor: 'green', height: 20, width: 20, marginLeft: -10, marginTop: -9 }
+                ]}
+                railStyle={{ backgroundColor: 'gray', height: 2 }}
               />
               
               <div className="flex justify-between text-sm text-gray-600">
@@ -170,7 +185,7 @@ export default function BookRaqis() {
                     <div
                       key={level}
                       className={`h-1 w-1 rounded-full ${
-                        level <= userSelections.experience 
+                        level <= userSelections.experience[1] 
                           ? 'bg-primary' 
                           : 'bg-gray-300'
                       }`}
@@ -199,7 +214,8 @@ export default function BookRaqis() {
                     id={`language-${language}`}
                     checked={userSelections.languages.includes(language)}
                     onChange={(e) => handleLanguageChange(e, language)}
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                    className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer"
+                    style={{ borderColor: 'RuqyaLightPurple' }}
                   />
                   <label
                     htmlFor={`language-${language}`}
@@ -228,7 +244,8 @@ export default function BookRaqis() {
                     id={`country-${country}`}
                     checked={userSelections.countries.includes(country)}
                     onChange={(e) => handleCountryChange(e, country)}
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                    className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer"
+                    style={{ borderColor: 'RuqyaLightPurple' }}
                   />
                   <label htmlFor={`country-${country}`} className="text-sm flex-1 cursor-pointer">
                     {country}
@@ -280,6 +297,13 @@ export default function BookRaqis() {
 
         {/* Practitioners Grid */}
         <main className="flex-1">
+          {/* Filter button for mobile view */}
+          <button 
+            className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg z-10"
+            onClick={() => setIsFilterVisible(true)}
+          >
+            {isFilterVisible ? <FaTimes size={24} /> : <FaFilter size={24} />}
+          </button>
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Available Practitioners</h1>
             <p className="text-gray-600">Found {filteredData.length} practitioners matching your criteria</p>

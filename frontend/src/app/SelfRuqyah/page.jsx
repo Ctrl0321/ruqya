@@ -39,15 +39,14 @@ export default function RuqyahPage() {
           ))}
 
           <section id="resources" className="space-y-4">
-            <h2 className="text-2xl font-semibold">Downloadable Resources:</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="border rounded-lg p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FileIcon className="h-8 w-8 text-red-500" />
                   <span>PDF Name Goes Here.pdf</span>
                 </div>
-                <Button variant="default" className="bg-teal-600 hover:bg-teal-700">
-                  Download
+                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700">
+                  
                 </Button>
               </div>
               <div className="border rounded-lg p-4 flex items-center justify-between">
@@ -55,7 +54,7 @@ export default function RuqyahPage() {
                   <Music2Icon className="h-8 w-8 text-teal-500" />
                   <span>MP3 name goes here</span>
                 </div>
-                <Button variant="default" className="bg-teal-600 hover:bg-teal-700">
+                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700">
                   Download
                 </Button>
               </div>
