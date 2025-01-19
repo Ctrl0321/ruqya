@@ -9,13 +9,13 @@ function Second() {
         <br />
         involving sacred recitations.
       </h1>
-      <p className="mt-5 text-sm md:text-base text-center leading-relaxed">
-        <Image src={flower} alt="flower" className="w-4 mb-3 inline" />
+      <p className="mt-5 text-sm md:text-base text-center font-fullsans leading-relaxed">
+        <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
         Our platform offers access to expert Raqis and self-guided resources
-        <Image src={flower} alt="flower" className="w-4 mb-3 inline" />
+        <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
       </p>
       <h1 className="mt-5 text-2xl md:text-3xl font-bold text-RuqyaGray text-center leading-relaxed">
-        <span className="text-4xl"> $14.00</span> /booking
+        <span className="text-5xl"> $14.00/</span> booking
       </h1>
     </div>
   );
