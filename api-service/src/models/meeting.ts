@@ -21,4 +21,4 @@ const meetingSchema: Schema<IMeeting> = new Schema({
 
 
 
-export default mongoose.model<IMeeting>('User', meetingSchema);
+export default mongoose.model<IMeeting>('Meeting', meetingSchema);

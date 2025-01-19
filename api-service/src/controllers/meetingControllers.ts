@@ -14,7 +14,7 @@ const convertMeetingDates = (meetings: any[], timeZone: string): any[] => {
     }));
 };
 
-export const getAllMeetings = async (req: AuthenticatedRequest, res: Response) => {
+export const getAllMeetings = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
 
@@ -40,7 +40,7 @@ export const getAllMeetings = async (req: AuthenticatedRequest, res: Response) =
     }
 };
 
-export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response) => {
+export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
 
@@ -77,7 +77,7 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
             return res.status(401).json({ message: 'User ID not found in request' });
         }
 
-        const { meetingId, topic, date, userId, notificationSend, timeZone = 'UTC' } = req.body;
+        const { meetingId, topic, date, userId, notificationSend=false, timeZone = 'UTC' } = req.body;
 
         if (!meetingId || !topic || !date || !userId) {
             return res.status(400).json({ message: 'All required fields must be provided' });
