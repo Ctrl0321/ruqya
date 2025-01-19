@@ -10,9 +10,10 @@ import {usePathname} from "next/navigation";
 
 const menuItems = [
   { icon: Home, label: 'Dashboard', href: '/admin' },
+  { icon: BookOpen, label: 'Rakis', href: '/admin/rakis' },
   { icon: Users, label: 'Users', href: '/admin/users' },
-  { icon: BookOpen, label: 'Tutors', href: '/admin/tutors' },
-  { icon: Calendar, label: 'Classes', href: '/admin/classes' },
+  { icon: Calendar, label: 'Availability', href: '/admin/availability' },
+  { icon: Calendar, label: 'Sessions', href: '/admin/classes' },
   { icon: DollarSign, label: 'Revenue', href: '/admin/revenue' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },
 ];
@@ -34,17 +35,28 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
             animate={{width: collapsed ? 64 : 200}}
             transition={{duration: 0.3}}
         >
-          <div className="mt-4 w-150 h-12 flex items-center justify-center">
-            <div className="bg-primary-50 rounded-full  w-12 h-12 flex items-center justify-center ">
+          <div className="mt-4 p0  w-150 h-12 flex items-center justify-center">
+            <div className="bg-primary-200 w-12 h-12 flex items-center justify-center custom-box ">
               <motion.img
-                  src="/images/logo.png"
+                  src="/images/logo2.png"
                   alt="Logo"
-                  className=" custom-logo rounded-full"
+                  className="custom-logo "
                   animate={{rotate: collapsed ? 360 : 0}}
                   transition={{duration: 0.5}}/>
             </div>
 
           </div>
+          {/*<div className="mt-4 w-150 h-12 flex items-center justify-center">*/}
+          {/*  <div className="bg-primary-50 rounded-full w-12 h-12 flex items-center justify-center overflow-hidden">*/}
+          {/*    <motion.img*/}
+          {/*        src="/images/logo.png"*/}
+          {/*        alt="Logo"*/}
+          {/*        className="custom-logo w-full h-full"*/}
+          {/*        animate={{rotate: collapsed ? 360 : 0}}*/}
+          {/*        transition={{duration: 0.5}}*/}
+          {/*    />*/}
+          {/*  </div>*/}
+
           <nav className="mt-8">
             <ul>
               {menuItems.map((item, index) => (
@@ -62,7 +74,7 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
                         {!collapsed && <span>{item.label}</span>}
                         {collapsed && hoveredIndex === index && (
                             <motion.div
-                                className="absolute left-16 bg-primary-200 text-white px-2 py-1 rounded"
+                                className="absolute left-16 bg-primary-200 text-white px-2 py-1 rounded z-50"
                                 initial={{opacity: 0, x: -10}}
                                 animate={{opacity: 1, x: 0}}
                                 transition={{duration: 0.2}}
