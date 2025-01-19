@@ -135,7 +135,7 @@ export default function BookRaqis() {
     .sort((a, b) => a - b);
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen mb-56">
+    <div className="container mx-auto px-4 py-8 min-h-screen mb-56 font-poppins">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li><Link href="/" className="hover:text-primary">Home</Link></li>
