@@ -3,7 +3,7 @@ import flower from "@/assets/svg/green-flower.svg";
 
 function Second() {
   return (
-    <div id="second" className="mt-10 m-5">
+    <div id="second" className="min-h-[20vh] mb-28 mt-28 m-5">
       <h1 className="text-3xl md:text-5xl font-bold text-RuqyaGray text-center leading-tight">
         Ruqyah is a <span className="text-RuqyaGreen"> spiritual healing</span> practice
         <br />

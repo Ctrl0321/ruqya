@@ -60,9 +60,9 @@ export default function RaqisCard({ raqi }) {
             mask="url(#path-1-inside-1_283_3862)"
           />
           <foreignObject x="0" y="0" width="292" height="328">
-            <div className="flex flex-col items-center space-y-4 pt-[100px] font-sans m-5">
+            <div className="flex flex-col items-center space-y-3 pt-[100px] font-sans mt-8 m-5">
               <h2 className="text-xl font-semibold">{name}</h2>
-              <div className="w-full space-y-3">
+              <div className="w-full space-y-1">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Country</span>
                   <div className="flex items-center gap-2">
@@ -74,10 +74,10 @@ export default function RaqisCard({ raqi }) {
                   <span className="text-gray-600">Languages</span>
                   <div className="flex gap-2">
                     {Languages ? Languages.map((lang, index) => (
-                      <span key={index} className="px-2 py-1 bg-gray-100 rounded-full text-sm">
+                      <span key={index} className="px-4 py-1 bg-yellow-100 rounded-full text-sm">
                         {lang.slice(0, 2).toUpperCase()}
                       </span>
-                    )) : <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">EN</span>}
+                    )) : <span className="px-4 py-1 bg-yellow-100 rounded-full text-sm">EN</span>}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -85,7 +85,7 @@ export default function RaqisCard({ raqi }) {
                   <span>{Experience ? Experience + " Year" + (Experience > 1 ? "s" : "") : "Not Available"}</span>
                 </div>
               </div>
-              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-teal-600 py-2 text-white text-center rounded-lg hover:bg-teal-700 transition-colors">
+              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-RuqyaGreen py-2 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>
             </div>

@@ -15,7 +15,7 @@ export default function RuqyahPage() {
       </nav>
       <div className="flex flex-col gap-4 md:flex-row">
         {/* Sidebar Navigation */}
-        <nav className="w-full md:w-64 md:h-96 bg-RuqyaLightPurple font-sans rounded-lg p-4 overflow-y-auto">
+        <nav className="overflow-hidden w-full md:w-64 md:h-96 bg-RuqyaLightPurple font-sans rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4">Content</h2>
           <ul className="space-y-2">
             {content.sections.map(section => (

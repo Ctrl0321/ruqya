@@ -20,7 +20,13 @@ export default {
       fontFamily: {
         fullsans: ['"FullSans-LC50Book"', 'sans-serif'],
         fullsansbold: ['"full-sans-lc-90-bold"', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
       },
+      spacing:{
+        "70vh": "70vh",
+        "80vh": "80vh",
+        "90vh": "90vh"
+      }
     },
   },
   plugins: [],

@@ -11,7 +11,7 @@ function Button (props) {
       : "border border-[#36454F] text-[#36454F]";
 
   return (
-    <Link href={disabled ? "#" : link ? link : "#"} className={` py-2 px-4 font-sans flex text-center items-center justify-center gap-0 rounded-lg cursor-pointer opacity-100 leading-none min-h-10 ${setting} ${className} `}>
+    <Link href={disabled ? "#" : link ? link : "#"} className={` py-2 px-4 font-sans flex text-center items-center justify-center gap-0 rounded-lg cursor-pointer opacity-100 leading-none min-h-9 ${setting} ${className} `}>
         {text ? text : "Click Here"}
     </Link>
   );

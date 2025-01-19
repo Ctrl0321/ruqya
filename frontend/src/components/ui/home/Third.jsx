@@ -7,8 +7,8 @@ function Third(props) {
   const latestBookings = sampledata.slice(0, 3);
 
   return (
-    <div id="third" className=" bg-RuqyaLightPurple p-5 m-5 rounded-lg ">
-      <div className="grid grid-cols-1 mt-10 md:mx-16 m-5">
+    <div id="third" className=" bg-RuqyaLightPurple p-3 m-5 rounded-lg ">
+      <div className="grid grid-cols-1 md:mx-16 m-2">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl md:text-3xl text-RuqyaGray">My Bookings</h1>
           {sampledata.length > 3 && (

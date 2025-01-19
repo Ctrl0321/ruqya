@@ -39,42 +39,71 @@ function Raqis() {
         </ol>
       </nav>
       {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
-      <div className="flex flex-col lg:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center mx-5 mt-5">
-        <div id="one" className="flex flex-row justify-between items-center space-y-4 p-4 group -mt-16">
-          <div className="h-48 w-48 p-2 bg-white rounded-lg">
-            <img id="raqi-profile" src={data.image} alt={data.name} className="w-full h-full object-cover rounded-lg" />
-            <div className="flex justify-center mt-4">
-              <Link href={`/raqis/${data.id}/chat`} className="flex items-center bg-RuqyaGreen text-white rounded-lg p-2">
-                <MdOutlineMessage className="mr-2" />
-                Chat with Raqi
-              </Link>
+      <div className="flex flex-col justify-center m-auto lg:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center">
+        <div className="flex flex-col lg:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center w-full">
+          <div id="one" className="flex flex-row justify-between items-center space-y-4 p-4 group -mt-16">
+            <div className="h-48 w-48 p-2 bg-white rounded-lg">
+              <img id="raqi-profile" src={data.image} alt={data.name} className="w-full h-full object-cover rounded-lg" />
+              <div className="justify-center mt-4 hidden md:flex">
+                <Link href={`/raqis/${data.id}/chat`} className="flex items-center bg-RuqyaGreen text-white rounded-lg p-2">
+                  <MdOutlineMessage className="mr-2" />
+                  Chat with Raqi
+                </Link>
+              </div>
             </div>
           </div>
+          <div className="md:flex hidden flex-col items-start space-y-2 p-4 group mt-10">
+            {data.name && <h1 className="text-2xl font-semibold">{data.name}</h1>}
+            {data.Country && (
+              <div className="flex items-center space-x-1">
+                <p>{data.Country}</p>
+                <ReactCountryFlag countryCode={data.CountryCode} svg className="w-6 h-6" title={data.Country} />
+              </div>
+            )}
+            {data.Languages && (
+              <div className="flex items-center space-x-2">
+                {data.Languages.map((lang, index) => (
+                  <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
+                    {lang.toUpperCase()}
+                  </span>
+                ))}
+              </div>
+            )}
+            {data.Experience && <p>{data.Experience} Years of Experience</p>}
+          </div>
         </div>
-
-        <div id="two" className="flex flex-col items-start space-y-2 p-4 group mt-10">
-          {data.name && <h1 className="text-2xl font-semibold">{data.name}</h1>}
-          {data.Country && (
-            <div className="flex items-center space-x-1">
-              <p>{data.Country}</p>
-              <ReactCountryFlag countryCode={data.CountryCode} svg className="w-6 h-6" title={data.Country} />
-            </div>
-          )}
-          {data.Languages && (
-            <div className="flex items-center space-x-2">
-              {data.Languages.map((lang, index) => (
-                <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
-                  {lang.toUpperCase()}
-                </span>
-              ))}
-            </div>
-          )}
-          {data.Experience && <p>{data.Experience} Years of Experience</p>}
+        <div className="flex-col items-center justify-center hidden md:flex">
+          <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-blue-400 p-4">
+            <h3 className="mb-3">Want to have a Session ?</h3>
+            <Button href={"/raqis/book/" + data.id} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
+          </div>
         </div>
       </div>
-      <div id="three" className="fixed bottom-4 right-4 lg:static lg:m-auto lg:mt-10 flex flex-col justify-self-end h-46 items-left space-y-4 p-4 group bg-gray-200 rounded-lg">
-        Want to have a Session ?
-        <Button href={"/raqis/book/" + data.id} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
+      <div className="flex md:hidden flex-col items-start space-y-2 text-xl p-4 group mx-3">
+        {data.name && (
+          <h1 className="text-4xl font-semibold flex flex-row">
+            {data.name} <p className="ml-5 m-2 px-3 p-1 bg-green-400 rounded-2xl text-sm font-sans font-normal">{data.status ? data.status : ""}</p>
+          </h1>
+        )}
+        {data.Country && (
+          <div className="flex items-center space-x-1">
+            <p>{data.Country}</p>
+            <ReactCountryFlag countryCode={data.CountryCode} svg className="w-6 h-6" title={data.Country} />
+          </div>
+        )}
+        {data.Languages && (
+          <div className="flex items-center space-x-2">
+            {data.Languages.map((lang, index) => (
+              <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
+                {lang.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        )}
+        {data.Experience && <p>{data.Experience} Years of Experience</p>}
+      </div>
+      <div>
+        
       </div>
     </div>
   );

@@ -55,36 +55,34 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-2 mb-4">
-      <div className="grid grid-cols-5 gap-4">
-        <div className="col-span-2 rounded-lg">
-          <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-lg w-36 h-24 object-cover object-top" />
-        </div>
+    <div className="bg-white rounded-lg md:max-w-84 shadow-md p-2 mb-4">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row gap-4">
+          <div className="col-span-2 rounded-lg">
+            <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-lg w-28 h-28 object-cover object-top" />
+          </div>
 
-        <div className="col-span-3 flex flex-col">
-          <h1 className="text-left text-sm md:text-lg font-bold text-RuqyaGray leading-tight">
-            <span className="text-RuqyaGreen">{booking.name}</span>
-          </h1>
-          <div className="grid grid-rows-3 mt-1 font-sans">
-            {booking.Country && (
+          <div className="flex flex-col">
+            <h1 className="text-left text-sm md:text-lg font-bold text-RuqyaGray leading-tight">
+              <span className="text-RuqyaGreen text-xl">{booking.name}</span>
+            </h1>
+            <div className="grid grid-rows-3 mt-1 font-sans">
+              {booking.Country && (
+                <p className="text-gray-600 flex items-center">
+                  {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
+                  {booking.Country}
+                </p>
+              )}
               <p className="text-gray-600 flex items-center">
-                {booking.CountryCode ? (
-                  <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" />
-                ) : (
-                  <FaGlobe className="mr-2 text-RuqyaGreen" />
-                )}
-                {booking.Country}
+                <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {booking.bookedDate}
               </p>
-            )}
-            <p className="text-gray-600 flex items-center">
-              <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {booking.bookedDate}
-            </p>
-            <p className="text-gray-600 flex items-center">
-              <FaClock className="mr-2 text-RuqyaGreen" /> {booking.bookedTime} - {calculateEndTime(booking.bookedTime, booking.bookedDuration)}
-            </p>
+              <p className="text-gray-600 flex items-center">
+                <FaClock className="mr-2 text-RuqyaGreen" /> {booking.bookedTime} - {calculateEndTime(booking.bookedTime, booking.bookedDuration)}
+              </p>
+            </div>
           </div>
         </div>
-        <div className="col-span-5 flex flex-row text-RuqyaGray mb-5 mt-auto">
+        <div className="text-RuqyaGray text-left mb-2 mr-5 mt-auto">
           <p>{calculateTimeUntilSession(booking.bookedDate, booking.bookedTime)}</p>
         </div>
       </div>

@@ -18,8 +18,8 @@ const Header = () => {
 
   return (
     <header>
-      <nav className={`${isCurrent("/")}  shadow-md p-1 font-fullsansbold color-header`}>
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <nav className={`${isCurrent("/")} px-4 py-4 shadow-md font-fullsansbold color-header `}>
+        <div className="flex justify-between items-center mx-5 md:mx-16">
           <div className="text-xl ">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
               <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />
@@ -29,17 +29,17 @@ const Header = () => {
             <img src="/nav-flower.svg" alt="Navigation Center" width="33" className="-mr-4" />
             <img src="/nav-line.svg" alt="Navigation Center" width="700" />
           </div>
-          <div className="hidden md:flex space-x-4 mt-1">
+          <div className="hidden md:flex space-x-8 gap-5 mt-1">
             <Link href="/" className={`${isActive("/")} hover:text-gray-900`}>
               Home
             </Link>
-            <Link href="/BookRaqis" className={`${isActive("/BookRaqis")} hover:text-gray-900`}>
+            <Link href="/BookRaqis" className={`${isActive("/BookRaqis")} w-24 hover:text-gray-900`}>
               Book Raqis
             </Link>
-            <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} hover:text-gray-900`}>
+            <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} w-24 hover:text-gray-900`}>
               Self-Ruqyah
             </Link>
-            <Link href="/MyProfile" className={`${isActive("/MyProfile")} hover:text-gray-900`}>
+            <Link href="/MyProfile" className={`${isActive("/MyProfile")} w-20 hover:text-gray-900`}>
               My Profile
             </Link>
           </div>
