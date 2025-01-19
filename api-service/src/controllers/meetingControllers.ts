@@ -1,6 +1,6 @@
 import {AuthenticatedRequest} from "../@types/express";
 import {Response} from "express";
-import Meeting from "../models/meeting";
+import Meeting, {MeetingStatus} from "../models/meeting";
 import {validateAndConvertTimezone} from "../utils/timezone";
 import moment from "moment-timezone";
 
@@ -216,5 +216,157 @@ export const getMeetingsByRakiId = async (req: AuthenticatedRequest, res: Respon
         res.status(200).json(convertedMeetings);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch meetings', error });
+    }
+};
+
+export const rescheduleMeeting = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const {meetingId, newDate, timeZone = 'UTC' } = req.body;
+
+        if (!newDate) {
+            return res.status(400).json({
+                message: 'New date is required for rescheduling'
+            });
+        }
+
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone);
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone'
+            });
+        }
+
+        const utcNewDate = moment.tz(newDate, validatedTimeZone).utc();
+
+        const meeting = await Meeting.findOne({
+            meetingId
+        });
+
+        if (!meeting) {
+            return res.status(404).json({
+                message: 'Meeting not found or you do not have permission to reschedule it'
+            });
+        }
+
+        if (meeting.status === MeetingStatus.CANCELLED) {
+            return res.status(400).json({
+                message: 'Cannot reschedule a cancelled meeting'
+            });
+        }
+
+        const dayStart = moment(utcNewDate).startOf('day');
+        const dayEnd = moment(utcNewDate).endOf('day');
+
+        const existingMeetings = await Meeting.find({
+            _id: { $ne: meeting._id },
+            date: {
+                $gte: dayStart.toDate(),
+                $lte: dayEnd.toDate()
+            },
+            status: { $ne: MeetingStatus.CANCELLED }
+        });
+
+        if (existingMeetings.length > 0) {
+            return res.status(409).json({
+                message: 'Scheduling conflict on the new date',
+                conflictingMeetings: existingMeetings.map(m => ({
+                    ...m.toObject(),
+                    date: moment(m.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
+                }))
+            });
+        }
+
+        const updatedMeeting = await Meeting.findOneAndUpdate(
+            { meetingId },
+            {
+                date: utcNewDate.toDate(),
+                status: MeetingStatus.RESCHEDULED,
+                note:'Meeting rescheduled',
+                notificationSend: false
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: 'Meeting rescheduled successfully',
+            meeting: {
+                ...updatedMeeting?.toObject(),
+                date: moment(updatedMeeting?.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
+            }
+        });
+
+    } catch (error) {
+        console.error('Error rescheduling meeting:', error);
+        res.status(500).json({
+            message: 'Failed to reschedule meeting',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+};
+
+export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const { meetingId } = req.params;
+        const { note } = req.body;
+
+        if (!note) {
+            return res.status(400).json({
+                message: 'Cancellation note is required'
+            });
+        }
+
+        const meeting = await Meeting.findOne({
+            meetingId,
+            $or: [
+                { userId: userId },
+                { rakiId: userId }
+            ]
+        });
+
+        if (!meeting) {
+            return res.status(404).json({
+                message: 'Meeting not found or you do not have permission to cancel it'
+            });
+        }
+
+        if (meeting.status === MeetingStatus.CANCELLED) {
+            return res.status(400).json({
+                message: 'Meeting is already cancelled'
+            });
+        }
+
+        const updatedMeeting = await Meeting.findOneAndUpdate(
+            { meetingId },
+            {
+                status: MeetingStatus.CANCELLED,
+                note,
+                notificationSend: false // Reset notification flag
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: 'Meeting cancelled successfully',
+            meeting: updatedMeeting
+        });
+
+    } catch (error) {
+        console.error('Error cancelling meeting:', error);
+        res.status(500).json({
+            message: 'Failed to cancel meeting',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
 };

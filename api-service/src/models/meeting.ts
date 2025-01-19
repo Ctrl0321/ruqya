@@ -1,5 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+
+
+export enum MeetingStatus {
+    SCHEDULED = 'scheduled',
+    RESCHEDULED = 'rescheduled',
+    CANCELLED = 'cancelled'
+}
+
 export interface IMeeting extends Document {
     id: string;
     meetingId: string;
@@ -8,6 +16,8 @@ export interface IMeeting extends Document {
     rakiId:string;
     userId:string,
     notificationSend:boolean,
+    status:string,
+    note:string
 }
 
 const meetingSchema: Schema<IMeeting> = new Schema({
@@ -17,6 +27,8 @@ const meetingSchema: Schema<IMeeting> = new Schema({
     rakiId: { type: String, required: true },
     userId: { type: String },
     notificationSend:{type:Boolean},
+    status:{type:String},
+    note:{type:String}
 });
 
 
