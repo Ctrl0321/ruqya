@@ -74,10 +74,10 @@ export default function RaqisCard({ raqi }) {
                   <span className="text-gray-600">Languages</span>
                   <div className="flex gap-2">
                     {Languages ? Languages.map((lang, index) => (
-                      <span key={index} className="px-4 py-1 bg-yellow-100 rounded-full text-sm">
+                      <span key={index} className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm">
                         {lang.slice(0, 2).toUpperCase()}
                       </span>
-                    )) : <span className="px-4 py-1 bg-yellow-100 rounded-full text-sm">EN</span>}
+                    )) : <span className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm">EN</span>}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">

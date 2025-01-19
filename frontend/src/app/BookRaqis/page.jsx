@@ -138,7 +138,7 @@ export default function BookRaqis() {
     <div className="container mx-auto px-4 py-8 min-h-screen mb-56 font-poppins">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
-          <li><Link href="/" className="hover:text-primary">Home</Link></li>
+          <li><Link href="/" className="hover:text-primary underline">Home</Link></li>
           <li>/</li>
           <li>Book Raqis</li>
         </ol>
@@ -157,7 +157,7 @@ export default function BookRaqis() {
           {/* Updated Experience Level Section */}
           <div className="filter-section border-b border-gray-200 pb-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-poppins">Experience Level</h2>
+              <h2 className="text-lg font-semibold">Experience Level</h2>
               <span className="text-sm text-gray-600">
                 {userSelections.experience[0]} - {userSelections.experience[1]} Year{userSelections.experience[1] !== 1 ? 's' : ''}
               </span>
@@ -200,8 +200,8 @@ export default function BookRaqis() {
 
           {/* Languages Filter Section */}
           <div className="filter-section border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-poppins mb-4 flex items-center">
-              <span className="flex-1">Languages</span>
+            <h2 className="text-lg  mb-4 flex items-center">
+              <span className="flex-1 font-semibold">Languages</span>
               <div className="text-xs text-gray-500">
                 {userSelections.languages.length} selected
               </div>
@@ -219,7 +219,7 @@ export default function BookRaqis() {
                   />
                   <label
                     htmlFor={`language-${language}`}
-                    className="text-sm flex-1 pl-2 font-poppins cursor-pointer"
+                    className="text-sm flex-1 pl-2  cursor-pointer"
                   >
                     {language}
                   </label>
@@ -230,8 +230,8 @@ export default function BookRaqis() {
 
           {/* Countries Filter */}
           <div className="filter-section border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-poppins mb-4 flex items-center">
-              <span className="flex-1">Countries</span>
+            <h2 className="text-lg  mb-4 flex items-center">
+              <span className="flex-1 font-semibold">Countries</span>
               <div className="text-xs text-gray-500">
                 {userSelections.countries.length} selected
               </div>
@@ -257,7 +257,7 @@ export default function BookRaqis() {
 
           {/* Availability Filter */}
           <div className="filter-section pb-6">
-            <h2 className="text-lg font-poppins mb-4">Availability</h2>
+            <h2 className="text-lg font-semibold mb-4">Availability</h2>
             <div className="space-y-4 bg-white/50 p-4 rounded-lg">
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Date</label>
@@ -287,7 +287,7 @@ export default function BookRaqis() {
           {/* Debug section */}
           {/* <div className="filter-section bg-white rounded-md">
             <details>
-              <summary className="font-poppins cursor-pointer">Selected Filters</summary>
+              <summary className="cursor-pointer">Selected Filters</summary>
               <pre className="whitespace-pre-wrap text-xs mt-2 p-2 bg-gray-50">
                 {JSON.stringify(userSelections, null, 2)}
               </pre>
