@@ -4,6 +4,7 @@ import moment from 'moment-timezone';
 import {AuthenticatedRequest} from "../@types/express";
 import User from "../models/user";
 import {getTimezone } from 'countries-and-timezones';
+import {convertToTimeZone} from "../utils/timezone";
 
 
 export const getAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
@@ -21,21 +22,9 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // const userCountry = user.country || 'Asia/Colombo';
-        // console.log("User Country:", userCountry);
-        //
-        // // Get timezone for the country
-        // const timeZoneInfo = getTimezone(userCountry);
-        // console.log("Timezone Info:", timeZoneInfo);
-        //
-        // if (!timeZoneInfo || !timeZoneInfo.name) {
-        //     return res.status(404).json({ message: 'Could not find timezone for this country' });
-        // }
+        const userTimeZone = timeZone || 'UTC';
 
-        // const userTimeZone = timeZoneInfo.name;
-        const userTimeZone = timeZone;
 
-        // Retrieve availability for the given rakiId and date
         const availability = await RakiAvailability.findOne({
             rakiId,
             date,
@@ -52,15 +41,15 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
 
         const convertedSlots = availability.timeSlots.map((slot) => {
             if (!slot.startTime || !slot.endTime) {
-                return null; // Skip invalid slots
+                return null;
             }
 
             return {
-                startTime: moment.utc(slot.startTime).tz(<string>timeZone).format('YYYY-MM-DD hh:mm A'),
-                endTime: moment.utc(slot.endTime).tz(<string>timeZone).format('YYYY-MM-DD hh:mm A'),
+                startTime: convertToTimeZone(new Date(slot.startTime), userTimeZone.toString()),
+                endTime: convertToTimeZone(new Date(slot.endTime), userTimeZone.toString()),
                 isAvailable: slot.isAvailable,
             };
-        }).filter(Boolean); // Remove null or undefined slots
+        }).filter(Boolean);
 
         res.status(200).json({
             rakiId,
@@ -97,5 +86,20 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
         res.status(200).json({ message: 'Availability set successfully', availability });
     } catch (error) {
         res.status(500).json({ message: 'Error setting availability', error });
+    }
+};
+
+export const getAllAdmins = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const admins = await User.find({ role: 'admin' });
+
+        if (!admins || admins.length === 0) {
+            res.status(404).json({ message: 'No admins found' });
+            return;
+        }
+
+        res.status(200).json(admins);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
     }
 };

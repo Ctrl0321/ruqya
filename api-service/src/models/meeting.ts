@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import bcrypt from 'bcryptjs';
 
 export interface IMeeting extends Document {
     id: string;
     meetingId: string;
     topic: string;
+    date:Date;
     rakiId:string;
     userId:string,
     notificationSend:boolean,
@@ -13,6 +13,7 @@ export interface IMeeting extends Document {
 const meetingSchema: Schema<IMeeting> = new Schema({
     meetingId: { type: String, required: true },
     topic: { type: String, required: true, unique: true },
+    date:{type:Date,required:true},
     rakiId: { type: String, required: true },
     userId: { type: String },
     notificationSend:{type:Boolean},
