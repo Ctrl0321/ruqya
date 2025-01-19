@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'FullSans-LC50Book';
+  src: url('/fonts/FullSans-LC50Book.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'full-sans-lc-90-bold';
+  src: url('/fonts/full-sans-lc-90-bold.otf') format('opentype');
+}
+
 /* 
 :root {
   --background: #ffffff;
