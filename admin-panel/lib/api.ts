@@ -5,6 +5,15 @@ const api = axios.create({
     withCredentials: true,
 });
 
+interface Session {
+    meetingId: string;
+    topic: string;
+    date: Date;
+    rakiId: string;
+    userId: string;
+    notificationSend: boolean;
+}
+
 export const login = async (email: string, password: string) => {
     const response = await api.post('ruqya-api/auth/login', { email, password });
     const { token } = response.data;
@@ -75,6 +84,33 @@ export const updateUserStatus=async (userId:String, newRole:String)=>{
         },});
     return response.data;
 
+}
+
+export const getTodaySessions = async (dateFilter: { type: string }): Promise<Session[]> => {
+    return [
+        {
+            meetingId: "123",
+            topic: "Math",
+            date: new Date(),
+            rakiId: "456",
+            userId: "user1",
+            notificationSend: true,
+        },
+        {
+            meetingId: "456",
+            topic: "Science",
+            date: new Date(),
+            rakiId: "456",
+            userId: "Aathiq",
+            notificationSend: true,
+        },
+    ];
+};
+export const cancelSession=async (meetingId:string,reason:string)=>{
+    return[]
+}
+export const rescheduleSession=async (meetingId:string,newTime:string)=>{
+    return[]
 }
 
 export  const getReviews= async (tutorId:string)=>{
@@ -196,12 +232,12 @@ export const updateRaki = async (tutorId: number, tutorData: any) => {
     return response.data;
 };
 
-export const getRevenueData = async () => {
+export const getRevenueData = async (selectedMonth: { type: string }) => {
     const response = await api.get('/revenue');
     return response.data;
 };
 
-export const getClassData = async () => {
+export const getClassData = async (selectedMonth: { type: string }) => {
     const response = await api.get('/classes');
     return response.data;
 };
