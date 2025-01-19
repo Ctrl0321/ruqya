@@ -4,26 +4,32 @@ import moment from 'moment-timezone';
 import {AuthenticatedRequest} from "../@types/express";
 import User from "../models/user";
 import {getTimezone } from 'countries-and-timezones';
-import {convertToTimeZone} from "../utils/timezone";
+import {validateAndConvertTimezone} from "../utils/timezone";
 
 
 export const getAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
-        const { rakiId, date,timeZone } = req.query;
+        const { rakiId, date, timeZone = 'UTC' } = req.query;
         const userId = req.user?.id;
 
         if (!userId) {
             return res.status(401).json({ message: 'User not authenticated' });
         }
 
-        // Retrieve user to get their country info
+        // Validate timezone
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone'
+            });
+        }
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        const userTimeZone = timeZone || 'UTC';
-
 
         const availability = await RakiAvailability.findOne({
             rakiId,
@@ -34,19 +40,19 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(404).json({ message: 'Availability not found' });
         }
 
-        // Validate and convert time slots
-        if (!Array.isArray(availability.timeSlots)) {
-            return res.status(400).json({ message: 'Invalid time slots format' });
-        }
-
+        // Convert stored UTC times to requested timezone
         const convertedSlots = availability.timeSlots.map((slot) => {
             if (!slot.startTime || !slot.endTime) {
                 return null;
             }
 
             return {
-                startTime: convertToTimeZone(new Date(slot.startTime), userTimeZone.toString()),
-                endTime: convertToTimeZone(new Date(slot.endTime), userTimeZone.toString()),
+                startTime: moment(slot.startTime)
+                    .tz(validatedTimeZone)
+                    .format('YYYY-MM-DD HH:mm:ss'),
+                endTime: moment(slot.endTime)
+                    .tz(validatedTimeZone)
+                    .format('YYYY-MM-DD HH:mm:ss'),
                 isAvailable: slot.isAvailable,
             };
         }).filter(Boolean);
@@ -54,6 +60,7 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
         res.status(200).json({
             rakiId,
             date,
+            timeZone: validatedTimeZone,
             timeSlots: convertedSlots,
         });
     } catch (error) {
@@ -71,23 +78,66 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
 
         const { date, timeSlots, timeZone } = req.body;
 
-        const utcTimeSlots = timeSlots.map((slot: { startTime: string; endTime: string }) => ({
-            startTime: moment.tz(slot.startTime, timeZone).utc().toISOString(),
-            endTime: moment.tz(slot.endTime, timeZone).utc().toISOString(),
+        // Validate input
+        if (!Array.isArray(timeSlots) || !timeZone || !date) {
+            return res.status(400).json({
+                message: 'Invalid input. Required: date, timeSlots array, and timeZone'
+            });
+        }
+
+        // Validate timezone
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone);
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone'
+            });
+        }
+
+        const utcTimeSlots = timeSlots.map((slot) => ({
+            startTime: moment.tz(slot.startTime, validatedTimeZone).utc().toISOString(),
+            endTime: moment.tz(slot.endTime, validatedTimeZone).utc().toISOString(),
             isAvailable: true,
         }));
 
+        // Validate converted times
+        const isValidTimes = utcTimeSlots.every(slot =>
+            moment(slot.startTime).isValid() &&
+            moment(slot.endTime).isValid() &&
+            moment(slot.startTime).isBefore(moment(slot.endTime))
+        );
+
+        if (!isValidTimes) {
+            return res.status(400).json({
+                message: 'Invalid time format or start time is after end time'
+            });
+        }
+
         const availability = await RakiAvailability.findOneAndUpdate(
             { rakiId, date },
-            { rakiId, date, timeSlots: utcTimeSlots },
+            {
+                rakiId,
+                date,
+                timeSlots: utcTimeSlots,
+                sourceTimeZone: validatedTimeZone // Store original timezone for reference
+            },
             { new: true, upsert: true }
         );
 
-        res.status(200).json({ message: 'Availability set successfully', availability });
+        res.status(200).json({
+            message: 'Availability set successfully',
+            availability
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error setting availability', error });
+        console.error("Error setting availability:", error);
+        res.status(500).json({
+            message: 'Error setting availability',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
 };
+
 
 export const getAllAdmins = async (req: Request, res: Response): Promise<void> => {
     try {

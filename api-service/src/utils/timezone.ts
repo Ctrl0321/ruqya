@@ -1,5 +1,10 @@
 import { format } from 'date-fns-tz';
+import moment from "moment-timezone";
 
-export const convertToTimeZone = (date: Date, timeZone: string): string => {
-    return format(date, 'yyyy-MM-dd HH:mm:ssXXX', { timeZone });
+export const validateAndConvertTimezone = (timeZone: string): string => {
+    const validTimezones = moment.tz.names();
+    if (!validTimezones.includes(timeZone)) {
+        throw new Error(`Invalid timezone: ${timeZone}`);
+    }
+    return timeZone;
 };
