@@ -20,7 +20,9 @@ function First() {
             <br />
             <div className="flex flex-row justify-center md:justify-start mb-10 space-x-4">
               <Button text="Book a Session" color="RuqyaGreen" bg={true} className="px-8 py-3" />
-              <Button text="Learn Ruqyah" className="px-8 py-3 font-medium text-[#36454FCC]"/>
+              <Button text="Learn Ruqyah" className="px-8 py-3 font-bold border-[#36454F] text-[#596571]"/>
+
+
             </div>
           </div>
         </div>
