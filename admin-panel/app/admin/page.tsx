@@ -227,7 +227,7 @@ export default function AdminDashboard() {
                                     <TableHead className="w-[20%]">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            {todaySessions.length!==0 && (
+                            {todaySessions[0] && (
                             <TableBody>
                                 {todaySessions.map((session) => (
                                     <TableRow key={session.meetingId}>

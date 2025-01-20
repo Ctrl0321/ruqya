@@ -13,16 +13,16 @@ export default function Header({
   const [user, setUser] = useState<{ name: string; profileImage: string } | null>(null)
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const userData = await getUserProfile()
-        setUser(userData)
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error)
-      }
-    }
-
-    fetchUserProfile()
+    // const fetchUserProfile = async () => {
+    //   try {
+    //     const userData = await getUserProfile()
+    //     setUser(userData)
+    //   } catch (error) {
+    //     console.error('Failed to fetch user profile:', error)
+    //   }
+    // }
+    //
+    // fetchUserProfile()
   }, [])
 
   return (
