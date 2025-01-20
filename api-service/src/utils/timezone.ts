@@ -8,3 +8,4 @@ export const validateAndConvertTimezone = (timeZone: string): string => {
     }
     return timeZone;
 };
+

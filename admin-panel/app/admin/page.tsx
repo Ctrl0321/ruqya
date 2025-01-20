@@ -12,6 +12,7 @@ import { format } from 'date-fns'
 import { CancelSessionDialog } from '@/components/CancelSessionDialog'
 import { RescheduleSessionDialog } from '@/components/ResheduledSessionDialog'
 import { DateRangeFilter } from '@/components/DateRangeFilter'
+import {formatDateTimeWithOffset} from "@/lib/utils";
 
 interface Session {
     meetingId: string;
@@ -26,32 +27,39 @@ const FIXED_SESSION_FEE = 50;
 
 export default function AdminDashboard() {
     const { user } = useAuth()
-    const [revenueData, setRevenueData] = useState([])
-    const [classData, setClassData] = useState([])
-    const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'))
-    const [totalSessions, setTotalSessions] = useState(0)
-    const [totalRevenue, setTotalRevenue] = useState(0)
+    const [revenueData, setRevenueData] = useState({
+        totalMeetings: 0,
+        completedMeetings: 0,
+        cancelledMeetings: 0,
+        revenue: 0,
+        averageMeetingsPerDay: 0,
+    })
+    const [dateFilter, setDateFilter] = useState<{ type: string; start?: Date; end?: Date }>({ type: 'all' })
+
     const [todayClasses, setTodayClasses] = useState(0)
     const [todaySessions, setTodaySessions] = useState<Session[]>([])
     const [cancelSessionId, setCancelSessionId] = useState<string | null>(null)
     const [rescheduleSessionId, setRescheduleSessionId] = useState<string | null>(null)
-    const [dateFilter, setDateFilter] = useState({ type: 'all' })
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (user?.role === 'admin') {
-                    const revenue = await getRevenueData(dateFilter)
-                    const classes = await getClassData(dateFilter)
+                if (user?.role === 'super-admin') {
+                    const revenue = await getRevenueData({
+                        filterType: dateFilter.type,
+                        startDate: formatDateTimeWithOffset(dateFilter.start) ,
+                        endDate: formatDateTimeWithOffset(dateFilter.end),
+                    })
                     setRevenueData(revenue)
-                    setClassData(classes)
+                    setTodaySessions(revenue.totalMeetings)
                 }
 
-                const sessions = await getTodaySessions(dateFilter)
-                setTodaySessions(sessions)
-
-                setTotalSessions(sessions.length)
-                setTotalRevenue(sessions.length * FIXED_SESSION_FEE)
+                const sessions = await getTodaySessions()
+                if (Array.isArray(sessions)) {
+                    setTodaySessions(sessions)
+                } else {
+                    setTodaySessions([])
+                }
                 setTodayClasses(sessions.filter(session => new Date(session.date).toDateString() === new Date().toDateString()).length)
             } catch (error) {
                 console.error('Failed to fetch dashboard data:', error)
@@ -69,9 +77,12 @@ export default function AdminDashboard() {
     const handleCancelSession = async (meetingId: string, reason: string) => {
         try {
             await cancelSession(meetingId, reason)
-            // Refresh today's sessions
-            const sessions = await getTodaySessions(dateFilter)
-            setTodaySessions(sessions)
+            const sessions = await getTodaySessions()
+            if (Array.isArray(sessions)) {
+                setTodaySessions(sessions)
+            } else {
+                setTodaySessions([])
+            }
             setCancelSessionId(null)
         } catch (error) {
             console.error('Failed to cancel session:', error)
@@ -82,8 +93,12 @@ export default function AdminDashboard() {
         try {
             await rescheduleSession(meetingId, newDate.toISOString())
             // Refresh today's sessions
-            const sessions = await getTodaySessions(dateFilter)
-            setTodaySessions(sessions)
+            const sessions = await getTodaySessions()
+            if (Array.isArray(sessions)) {
+                setTodaySessions(sessions)
+            } else {
+                setTodaySessions([])
+            }
             setRescheduleSessionId(null)
         } catch (error) {
             console.error('Failed to reschedule session:', error)
@@ -96,89 +111,105 @@ export default function AdminDashboard() {
                 <h1 className="text-3xl font-bold text-primary-700">Admin Dashboard</h1>
                 <DateRangeFilter onFilterChange={handleDateFilterChange} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <Card>
                     <CardHeader>
                         <CardTitle>Total Sessions</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{totalSessions}</p>
+                        <p className="text-3xl font-bold">{revenueData.totalMeetings}</p>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card style={{background:"#C1E1C1"}}>
+                    <CardHeader>
+                        <CardTitle>Completed Sessions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-3xl font-bold">{revenueData.completedMeetings}</p>
+                    </CardContent>
+                </Card>
+                <Card style={{background:"#FF6961"}}>
+                    <CardHeader>
+                        <CardTitle>Cancelled Sessions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-3xl font-bold">{revenueData.cancelledMeetings}</p>
+                    </CardContent>
+                </Card>
+                <Card style={{background:"#A1D6B2"}}>
                     <CardHeader>
                         <CardTitle>Total Revenue</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">${totalRevenue.toFixed(2)}</p>
+                        <p className="text-3xl font-bold">${revenueData.revenue.toFixed(2)}</p>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Today's Classes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{todayClasses}</p>
-                    </CardContent>
-                </Card>
+                {/*<Card>*/}
+                {/*    <CardHeader>*/}
+                {/*        <CardTitle>Average Meetings Per Day</CardTitle>*/}
+                {/*    </CardHeader>*/}
+                {/*    <CardContent>*/}
+                {/*        <p className="text-3xl font-bold">{revenueData.averageMeetingsPerDay}</p>*/}
+                {/*    </CardContent>*/}
+                {/*</Card>*/}
             </div>
 
-            {user?.role === 'admin' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Revenue</CardTitle>
-                            <CardDescription>Revenue for the selected period</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ChartContainer
-                                config={{
-                                    revenue: {
-                                        label: "Revenue",
-                                        color: "hsl(var(--primary-500))",
-                                    },
-                                }}
-                                className="h-[300px]"
-                            >
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={revenueData}>
-                                        <XAxis dataKey="date" />
-                                        <YAxis />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <Bar dataKey="revenue" fill="var(--color-revenue)" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </ChartContainer>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Classes</CardTitle>
-                            <CardDescription>Number of classes for the selected period</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ChartContainer
-                                config={{
-                                    classes: {
-                                        label: "Classes",
-                                        color: "hsl(var(--secondary-500))",
-                                    },
-                                }}
-                                className="h-[300px]"
-                            >
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={classData}>
-                                        <XAxis dataKey="date" />
-                                        <YAxis />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <Bar dataKey="classes" fill="var(--color-classes)" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </ChartContainer>
-                        </CardContent>
-                    </Card>
-                </div>
-            )}
+            {/*{user?.role === 'super-admin' && (*/}
+            {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">*/}
+            {/*        <Card>*/}
+            {/*            <CardHeader>*/}
+            {/*                <CardTitle>Revenue</CardTitle>*/}
+            {/*                <CardDescription>Revenue for the selected period</CardDescription>*/}
+            {/*            </CardHeader>*/}
+            {/*            <CardContent>*/}
+            {/*                <ChartContainer*/}
+            {/*                    config={{*/}
+            {/*                        revenue: {*/}
+            {/*                            label: "Revenue",*/}
+            {/*                            color: "hsl(var(--primary-500))",*/}
+            {/*                        },*/}
+            {/*                    }}*/}
+            {/*                    className="h-[300px]"*/}
+            {/*                >*/}
+            {/*                    <ResponsiveContainer width="100%" height={300}>*/}
+            {/*                        <BarChart data={revenueData}>*/}
+            {/*                            <XAxis dataKey="date" />*/}
+            {/*                            <YAxis />*/}
+            {/*                            <ChartTooltip content={<ChartTooltipContent />} />*/}
+            {/*                            <Bar dataKey="revenue" fill="var(--color-revenue)" />*/}
+            {/*                        </BarChart>*/}
+            {/*                    </ResponsiveContainer>*/}
+            {/*                </ChartContainer>*/}
+            {/*            </CardContent>*/}
+            {/*        </Card>*/}
+            {/*        <Card>*/}
+            {/*            <CardHeader>*/}
+            {/*                <CardTitle>Classes</CardTitle>*/}
+            {/*                <CardDescription>Number of classes for the selected period</CardDescription>*/}
+            {/*            </CardHeader>*/}
+            {/*            <CardContent>*/}
+            {/*                <ChartContainer*/}
+            {/*                    config={{*/}
+            {/*                        classes: {*/}
+            {/*                            label: "Classes",*/}
+            {/*                            color: "hsl(var(--secondary-500))",*/}
+            {/*                        },*/}
+            {/*                    }}*/}
+            {/*                    className="h-[300px]"*/}
+            {/*                >*/}
+            {/*                    <ResponsiveContainer width="100%" height={300}>*/}
+            {/*                        <BarChart data={classData}>*/}
+            {/*                            <XAxis dataKey="date" />*/}
+            {/*                            <YAxis />*/}
+            {/*                            <ChartTooltip content={<ChartTooltipContent />} />*/}
+            {/*                            <Bar dataKey="classes" fill="var(--color-classes)" />*/}
+            {/*                        </BarChart>*/}
+            {/*                    </ResponsiveContainer>*/}
+            {/*                </ChartContainer>*/}
+            {/*            </CardContent>*/}
+            {/*        </Card>*/}
+            {/*    </div>*/}
+            {/*)}*/}
 
             <Card>
                 <CardHeader>
@@ -196,13 +227,14 @@ export default function AdminDashboard() {
                                     <TableHead className="w-[20%]">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
+                            {todaySessions.length!==0 && (
                             <TableBody>
                                 {todaySessions.map((session) => (
                                     <TableRow key={session.meetingId}>
                                         <TableCell className="font-medium">{session.topic}</TableCell>
                                         <TableCell>{session.rakiId}</TableCell>
                                         <TableCell>{session.userId}</TableCell>
-                                        <TableCell>{format(new Date(session.date), 'yyyy-MM-dd HH:mm')}</TableCell>
+                                        <TableCell>{format(new Date(session.date), 'hh:mm a')}</TableCell>
                                         <TableCell>
                                             <Button variant="destructive" size="sm" className="mr-2" onClick={() => setCancelSessionId(session.meetingId)}>
                                                 Cancel
@@ -214,6 +246,7 @@ export default function AdminDashboard() {
                                     </TableRow>
                                 ))}
                             </TableBody>
+                            )}
                         </Table>
                     </div>
                 </CardContent>

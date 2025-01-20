@@ -2,7 +2,7 @@ import express from "express";
 import {
     addMeeting, cancelMeeting,
     getAllMeetings, getMeetingsByRakiId,
-    getMeetingsByUserId,
+    getMeetingsByUserId, getMeetingStatistics,
     getTodayAndFutureMeetings, rescheduleMeeting
 } from "../controllers/meetingControllers";
 import {authorizeRoles, protect} from "../middleware/authMiddleware";
@@ -16,5 +16,6 @@ router.get('/get-meetings/user/', protect, authorizeRoles('user'), getMeetingsBy
 router.get('/get-meetings/raki/', protect, authorizeRoles('admin', 'super-admin'), getMeetingsByRakiId);
 router.post('/reschedule/', protect, authorizeRoles('admin','super-admin'), rescheduleMeeting);
 router.post('/cancel/', protect, authorizeRoles('admin', 'super-admin'), cancelMeeting);
+router.get('/get-meeting-statistics/', protect, authorizeRoles( 'super-admin'), getMeetingStatistics);
 
 export default router
