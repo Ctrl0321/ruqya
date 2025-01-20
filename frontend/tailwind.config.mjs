@@ -21,6 +21,7 @@ export default {
         fullsans: ['"FullSans-LC50Book"', 'sans-serif'],
         fullsansbold: ['"full-sans-lc-90-bold"', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
+        TheFullSans: ['TheFullSans', 'sans-serif'],
       },
       spacing:{
         "70vh": "70vh",

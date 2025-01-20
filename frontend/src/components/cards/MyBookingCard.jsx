@@ -55,28 +55,28 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg md:max-w-[450px] shadow-md p-2 mb-4">
+    <div className="bg-white rounded-xl md:max-w-[450px] shadow-md p-4 mb-4 ">
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div className="col-span-2 rounded-lg">
-            <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-lg w-28 h-28 object-cover object-top" />
+            <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
           </div>
 
           <div className="flex flex-col">
-            <h1 className="text-left text-sm md:text-lg font-bold text-RuqyaGray leading-tight">
-              <span className="text-RuqyaGreen text-xl">{booking.name}</span>
+            <h1 className="text-left text-sm md:text-lg font-extrabold text-RuqyaGray leading-tight">
+              <span className="font-extrabold text-xl">{booking.name}</span>
             </h1>
             <div className="grid grid-rows-3 mt-1 font-sans">
               {booking.Country && (
-                <p className="text-gray-600 flex items-center">
+                <p className="text-gray-600 flex items-center my-1">
                   {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
                   {booking.Country}
                 </p>
               )}
-              <p className="text-gray-600 flex items-center">
+              <p className="text-gray-600 flex items-center my-1">
                 <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {booking.bookedDate}
               </p>
-              <p className="text-gray-600 flex items-center">
+              <p className="text-gray-600 flex items-center my-1">
                 <FaClock className="mr-2 text-RuqyaGreen" /> {booking.bookedTime} - {calculateEndTime(booking.bookedTime, booking.bookedDuration)}
               </p>
             </div>
@@ -86,7 +86,7 @@ const MyBookingCard = ({ booking }) => {
           <p>{calculateTimeUntilSession(booking.bookedDate, booking.bookedTime)}</p>
         </div>
       </div>
-      <Button text="Join Now" color="RuqyaGreen" bg={true} disabled={!isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && !isSessionActive(booking.bookedDate, booking.bookedTime)} />
+      <Button text="Join Now" color="RuqyaGreen" bg={true} className="rounded-xl" disabled={!isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && !isSessionActive(booking.bookedDate, booking.bookedTime)} />
     </div>
   );
 };
