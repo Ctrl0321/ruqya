@@ -106,11 +106,31 @@ export const getTodaySessions = async (dateFilter: { type: string }): Promise<Se
         },
     ];
 };
-export const cancelSession=async (meetingId:string,reason:string)=>{
-    return[]
+export const cancelSession=async (meetingId:string,note:string)=>{
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+    const response = await api.post('ruqya-api/meeting//cancel/', { meetingId, note },{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+
+    return response.data
 }
-export const rescheduleSession=async (meetingId:string,newTime:string)=>{
-    return[]
+export const rescheduleSession=async (meetingId:string,newDate:string)=>{
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+    const response = await api.post('ruqya-api/meeting/reschedule', { meetingId, newDate },{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+
+    return response.data
 }
 
 export  const getReviews= async (tutorId:string)=>{

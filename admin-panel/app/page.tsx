@@ -30,7 +30,7 @@ export default function SignIn() {
             const response = await login(email, password)
 
 
-            if (response && response.role === "admin") {
+            if (response && response.role === "super-admin") {
                 setLoading(false)
                 toast({
                     title: "Login Successful",
