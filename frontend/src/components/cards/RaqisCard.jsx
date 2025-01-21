@@ -60,9 +60,9 @@ export default function RaqisCard({ raqi }) {
             mask="url(#path-1-inside-1_283_3862)"
           />
           <foreignObject x="0" y="0" width="292" height="328">
-            <div className="flex flex-col items-center space-y-3 pt-[100px]  mt-8 m-5">
+            <div className="flex flex-col items-center space-y-3 pt-[100px] mt-8 m-5">
               <h2 className="text-xl font-semibold">{name}</h2>
-              <div className="w-full space-y-1">
+              <div className="w-full space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Country</span>
                   <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export default function RaqisCard({ raqi }) {
                   <span>{Experience ? Experience + " Year" + (Experience > 1 ? "s" : "") : "Not Available"}</span>
                 </div>
               </div>
-              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-RuqyaGreen py-2 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
+              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-RuqyaGreen py-3 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>
             </div>

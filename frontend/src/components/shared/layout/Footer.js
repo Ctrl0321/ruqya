@@ -9,7 +9,7 @@ function Footer() {
   return (
     <footer className="relative z-100 w-full pt-16 -mt-56">
       <Triangle />
-      <div className="bg-RuqyaLightPurple text-white text-sm font-sans">
+      <div className="bg-RuqyaLightPurple text-white text-sm">
         <div className="container px-4 mx-auto text-center md:text-left ">
           <div className="flex justify-center mb-12"></div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -60,7 +60,7 @@ function Footer() {
 
             {/* Newsletter Subscription */}
             <div className="space-y-4">
-              <h3 className="text-[#424867] text-2xl font-medium mb-2">Be Our Subscribers</h3>
+              <h3 className="text-[#424867] text-2xl font-bold mb-2">Be Our Subscribers</h3>
               <p className="text-[#424867] mb-6">to get the latest news about health from our experts</p>
               <div className="flex justify-center items-center gap-2 p-2 bg-white rounded-lg">
                 <Input type="email" placeholder="example@gmail.com" className="border-none bg-transparent" />
@@ -69,7 +69,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="bg-RuqyaGray border border-[#424867] text-white text-sm font-sans mt-5 min-h-10 flex flex-col md:flex-row justify-between items-center px-4 py-2">
+        <div className="bg-RuqyaGray border border-[#424867] text-white text-sm mt-5 min-h-10 flex flex-col md:flex-row justify-between items-center px-4 py-2">
           <div className="flex items-center gap-4 mb-2 md:mb-0">
             <span className="">Follow Us:</span>
             <Link href="https://facebook.com" target="_blank" className="hover:text-teal-600">

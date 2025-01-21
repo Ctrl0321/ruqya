@@ -66,7 +66,7 @@ const MyBookingCard = ({ booking }) => {
             <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{fontWeight:"900",color:"000000"}}>
               <span className="font-extrabold text-xl">{booking.name}</span>
             </h1>
-            <div className="grid grid-rows-3 mt-1 " style={{fontWeight:"600",color:"#36454F"}}>
+            <div className="grid grid-rows-3 mt-1">
               {booking.Country && (
                 <p className="text-gray-600 flex items-center my-1">
                   {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}

@@ -41,7 +41,7 @@ function SignUp() {
               />
             </div>
 
-            <h1 className="text-2xl text-gray-700 text-center mb-8">Registration</h1>
+            <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold">Registration</h1>
 
             <form className="space-y-6">
               <div className="relative mb-4">
@@ -72,7 +72,7 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-10">
-                <Button type="submit" bg={true} text="Sign Up" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-6 mt-12" />
+                <Button type="submit" bg={true} text="Sign Up" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-4 mt-12" />
               </div>
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">

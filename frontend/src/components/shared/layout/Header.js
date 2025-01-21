@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className={`${isCurrent("/")} px-4 py-4 shadow-md font-fullsansbold color-header `}>
+      <nav className={`${isCurrent("/")} px-4 py-4 shadow-md font-bold color-header `}>
         <div className="flex justify-between items-center mx-5 md:mx-16">
           <div className="text-xl ">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
@@ -52,7 +52,7 @@ const Header = () => {
           </div>
         </div>
         {isOpen && (
-          <div className="md:hidden fixed inset-0 bg-RuqyaLightPurple z-40 flex flex-col items-center font-fullsansbold text-left">
+          <div className="md:hidden fixed inset-0 bg-RuqyaLightPurple z-40 flex flex-col items-center text-left">
             <div className="absolute top-4 left-4">
               <Link href="/" onClick={handleLinkClick}>
                 <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />
