@@ -176,6 +176,52 @@ export const getRevenueData = async (filter: { filterType?: string; startDate?: 
     return response.data;
 };
 
+export const setRakiAvailability = async (date:Date, timeSlots:[{startTime:Date,endTime:Date}]) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+
+    console.log("Messi",date,timeSlots)
+
+    // const response = await api.post('ruqya-api/raki/set-availability',
+    //     {
+    //       date,
+    //       timeSlots,
+    //       timeZone:userTimeZone
+    //     },
+    //     {
+    //     headers: {
+    //         Authorization: `Bearer ${token}`,
+    //     },
+    //
+    // });
+
+    // return response.data;
+};
+
+export const removeRakiAvailability = async (date:Date,startTime:Date) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+
+    const response = await api.post('ruqya-api/raki/remove-availability',
+        {
+            date,
+            startTime,
+            timeZone:userTimeZone
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+
+        });
+
+    return response.data;
+};
+
 export const getClassData = async (selectedMonth: { type: string }) => {
     const response = await api.get('/classes');
     return response.data;

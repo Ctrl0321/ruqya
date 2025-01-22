@@ -23,7 +23,6 @@ interface Session {
     notificationSend: boolean;
 }
 
-const FIXED_SESSION_FEE = 50;
 
 export default function AdminDashboard() {
     const { user } = useAuth()

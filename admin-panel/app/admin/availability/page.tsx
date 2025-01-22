@@ -1,58 +1,91 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { format, startOfWeek, addDays, isBefore, startOfDay } from 'date-fns'
+import { useState } from "react"
+import { format, parse, startOfDay, isBefore } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
+import { setRakiAvailability, removeRakiAvailability } from "@/lib/api"
+import { formatDateTimeWithOffset } from "@/lib/utils"
 
 interface TimeSlot {
-    start: string;
-    end: string;
+    startTime: Date
+    endTime: Date
 }
 
 interface DayAvailability {
-    [date: string]: TimeSlot[];
+    [date: string]: TimeSlot[]
 }
 
 export default function AvailabilityPage() {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
     const [availability, setAvailability] = useState<DayAvailability>({})
-    const [newSlot, setNewSlot] = useState<TimeSlot>({ start: '', end: '' })
+    const [newSlot, setNewSlot] = useState<TimeSlot>({ startTime: new Date(), endTime: new Date() })
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleDateSelect = (date: Date | undefined) => {
-        console.log(date)
         setSelectedDate(date)
     }
 
-    const handleAddTimeSlot = () => {
-        if (!selectedDate || !newSlot.start || !newSlot.end) return
+    const handleAddTimeSlot = async () => {
+        if (!selectedDate || !newSlot.startTime || !newSlot.endTime) return
 
-        const dateKey = format(selectedDate, 'yyyy-MM-dd')
-        const updatedAvailability = {
-            ...availability,
-            [dateKey]: [...(availability[dateKey] || []), newSlot]
+        setIsLoading(true)
+        const dateKey = format(selectedDate, "yyyy-MM-dd")
+
+        try {
+            await setRakiAvailability(selectedDate, [newSlot])
+
+            setAvailability((prev) => ({
+                ...prev,
+                [dateKey]: [...(prev[dateKey] || []), newSlot],
+            }))
+            setNewSlot({ startTime: new Date(), endTime: new Date() })
+
+            toast({
+                title: "Time slot added",
+                description: `Added ${formatDateTimeWithOffset(newSlot.startTime)} - ${formatDateTimeWithOffset(newSlot.endTime)} to ${format(selectedDate, "MMMM d, yyyy")}`,
+            })
+        } catch (error) {
+            console.error("Failed to add time slot:", error)
+            toast({
+                title: "Error",
+                description: "Failed to add time slot. Please try again.",
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
         }
-        setAvailability(updatedAvailability)
-        setNewSlot({ start: '', end: '' })
-
-        toast({
-            title: "Time slot added",
-            description: `Added ${newSlot.start} - ${newSlot.end} to ${format(selectedDate, 'MMMM d, yyyy')}`,
-        })
     }
 
-    const handleRemoveTimeSlot = (date: string, index: number) => {
-        const updatedAvailability = { ...availability }
-        updatedAvailability[date] = updatedAvailability[date].filter((_, i) => i !== index)
-        setAvailability(updatedAvailability)
+    const handleRemoveTimeSlot = async (date: string, index: number) => {
+        setIsLoading(true)
+        const slotToRemove = availability[date][index]
 
-        toast({
-            title: "Time slot removed",
-            description: `Removed time slot from ${format(new Date(date), 'MMMM d, yyyy')}`,
-        })
+        try {
+            await removeRakiAvailability(new Date(date), slotToRemove.startTime)
+
+            setAvailability((prev) => ({
+                ...prev,
+                [date]: prev[date].filter((_, i) => i !== index),
+            }))
+
+            toast({
+                title: "Time slot removed",
+                description: `Removed time slot from ${format(new Date(date), "MMMM d, yyyy")}`,
+            })
+        } catch (error) {
+            console.error("Failed to remove time slot:", error)
+            toast({
+                title: "Error",
+                description: "Failed to remove time slot. Please try again.",
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const isDateInPast = (date: Date) => {
@@ -60,32 +93,35 @@ export default function AvailabilityPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 ">
+        <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-6 text-primary-700">Availability</h1>
             <div className="flex flex-col md:flex-row gap-8">
-                <div className="md:w-1/4">
+                <div className="md:w-1/2">
                     <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleDateSelect}
                         className="rounded-md border"
-                        disabled={(date:any) => isDateInPast(date)}
+                        disabled={(date) => isDateInPast(date)}
                     />
                 </div>
                 <div className="md:w-1/2">
                     {selectedDate && !isDateInPast(selectedDate) && (
                         <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">
-                                {format(selectedDate, 'MMMM d, yyyy')}
-                            </h2>
+                            <h2 className="text-xl font-semibold">{format(selectedDate, "MMMM d, yyyy")}</h2>
                             <div className="flex gap-4">
                                 <div className="flex-1">
                                     <Label htmlFor="start-time">Start Time</Label>
                                     <Input
                                         id="start-time"
                                         type="time"
-                                        value={newSlot.start}
-                                        onChange={(e) => setNewSlot({ ...newSlot, start: e.target.value })}
+                                        value={format(newSlot.startTime, "HH:mm")}
+                                        onChange={(e) =>
+                                            setNewSlot({
+                                                ...newSlot,
+                                                startTime: parse(e.target.value, "HH:mm", selectedDate),
+                                            })
+                                        }
                                     />
                                 </div>
                                 <div className="flex-1">
@@ -93,26 +129,37 @@ export default function AvailabilityPage() {
                                     <Input
                                         id="end-time"
                                         type="time"
-                                        value={newSlot.end}
-                                        onChange={(e) => setNewSlot({ ...newSlot, end: e.target.value })}
+                                        value={format(newSlot.endTime, "HH:mm")}
+                                        onChange={(e) =>
+                                            setNewSlot({
+                                                ...newSlot,
+                                                endTime: parse(e.target.value, "HH:mm", selectedDate),
+                                            })
+                                        }
                                     />
                                 </div>
                             </div>
-                            <Button onClick={handleAddTimeSlot}>Add Time Slot</Button>
+                            <Button onClick={handleAddTimeSlot} disabled={isLoading}>
+                                {isLoading ? "Adding..." : "Add Time Slot"}
+                            </Button>
                             <div className="mt-4">
                                 <h3 className="text-lg font-semibold mb-2">Available Time Slots:</h3>
-                                {availability[format(selectedDate, 'yyyy-MM-dd')]?.map((slot, index) => (
-                                    <div key={index} className="flex justify-between items-center mb-2">
-                                        <span>{slot.start} - {slot.end}</span>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => handleRemoveTimeSlot(format(selectedDate, 'yyyy-MM-dd'), index)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </div>
-                                ))}
+                                {selectedDate &&
+                                    availability[format(selectedDate, "yyyy-MM-dd")]?.map((slot, index) => (
+                                        <div key={index} className="flex justify-between items-center mb-2">
+                      <span>
+                        {formatDateTimeWithOffset(slot.startTime)} - {formatDateTimeWithOffset(slot.endTime)}
+                      </span>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleRemoveTimeSlot(format(selectedDate, "yyyy-MM-dd"), index)}
+                                                disabled={isLoading}
+                                            >
+                                                {isLoading ? "Removing..." : "Remove"}
+                                            </Button>
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                     )}

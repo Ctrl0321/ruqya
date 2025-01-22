@@ -76,7 +76,9 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(401).json({ message: 'User ID not found in request' });
         }
 
-        const { date, timeSlots, timeZone } = req.body;
+        const { date, timeSlots, timeZone } = req.body
+
+        console.log(timeSlots,date,timeZone)
 
         // Validate input
         if (!Array.isArray(timeSlots) || !timeZone || !date) {
@@ -151,5 +153,43 @@ export const getAllAdmins = async (req: Request, res: Response): Promise<void> =
         res.status(200).json(admins);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+export const removeAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const rakiId = req.user?.id;
+        const { date, startTime } = req.body;
+
+        if (!rakiId || !date || !startTime) {
+            return res.status(400).json({ message: 'Invalid input. Required: date and startTime' });
+        }
+
+        const availability = await RakiAvailability.findOne({ rakiId, date }).exec();
+
+        if (!availability) {
+            return res.status(404).json({ message: 'Availability not found' });
+        }
+
+        // Remove the time slot with the matching startTime
+        const updatedTimeSlots = availability.timeSlots.filter(
+            (slot) => moment(slot.startTime).toISOString() !== moment(startTime).toISOString()
+        );
+
+        if (updatedTimeSlots.length === availability.timeSlots.length) {
+            return res.status(404).json({ message: 'Time slot not found' });
+        }
+
+        // Update the availability with the remaining time slots
+        availability.timeSlots = updatedTimeSlots;
+        await availability.save();
+
+        res.status(200).json({
+            message: 'Time slot removed successfully',
+            availability,
+        });
+    } catch (error) {
+        console.error("Error removing availability:", error);
+        res.status(500).json({ message: 'Error removing availability', error });
     }
 };

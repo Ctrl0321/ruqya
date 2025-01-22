@@ -14,13 +14,13 @@ export default function SignIn() {
     const router = useRouter()
 
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-            router.replace("/admin");
-        }
-    }, []);
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+    //
+    //     if (token) {
+    //         router.replace("/admin");
+    //     }
+    // }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
