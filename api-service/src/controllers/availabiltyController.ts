@@ -10,19 +10,19 @@ import {validateAndConvertTimezone} from "../utils/timezone";
 export const getAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { rakiId, date, timeZone = 'UTC' } = req.query;
+
         const userId = req.user?.id;
 
         if (!userId) {
             return res.status(401).json({ message: 'User not authenticated' });
         }
 
-        // Validate timezone
         let validatedTimeZone: string;
         try {
             validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
         } catch (error) {
             return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
+                message: error instanceof Error ? error.message : 'Invalid timezone',
             });
         }
 
@@ -31,31 +31,31 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const availability = await RakiAvailability.findOne({
-            rakiId,
-            date,
-        }).exec();
+        const availability = await RakiAvailability.findOne({ rakiId, date }).exec();
 
         if (!availability) {
             return res.status(404).json({ message: 'Availability not found' });
         }
 
-        // Convert stored UTC times to requested timezone
         const convertedSlots = availability.timeSlots.map((slot) => {
-            if (!slot.startTime || !slot.endTime) {
-                return null;
-            }
+            const startDateTimeUTC = moment.tz(`${date}T${slot.startTime}`, 'YYYY-MM-DDTHH:mm', 'UTC');
+            const endDateTimeUTC = moment.tz(`${date}T${slot.endTime}`, 'YYYY-MM-DDTHH:mm', 'UTC');
+
+            // Convert to the requested timezone
+            const startTimeInTimeZone = startDateTimeUTC.tz(validatedTimeZone).format('HH:mm');
+            const endTimeInTimeZone = endDateTimeUTC.tz(validatedTimeZone).format('HH:mm');
+
+            console.log('startTime (UTC):', startDateTimeUTC.format());
+            console.log('startTime (TimeZone):', startTimeInTimeZone, ' TimeZone:', validatedTimeZone);
+            console.log('endTime (UTC):', endDateTimeUTC.format());
+            console.log('endTime (TimeZone):', endTimeInTimeZone);
 
             return {
-                startTime: moment(slot.startTime)
-                    .tz(validatedTimeZone)
-                    .format('YYYY-MM-DD HH:mm:ss'),
-                endTime: moment(slot.endTime)
-                    .tz(validatedTimeZone)
-                    .format('YYYY-MM-DD HH:mm:ss'),
+                startTime: startTimeInTimeZone,
+                endTime: endTimeInTimeZone,
                 isAvailable: slot.isAvailable,
             };
-        }).filter(Boolean);
+        });
 
         res.status(200).json({
             rakiId,
@@ -64,10 +64,12 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             timeSlots: convertedSlots,
         });
     } catch (error) {
-        console.error("Error fetching availability:", error);
+        console.error('Error fetching availability:', error);
         res.status(500).json({ message: 'Error fetching availability', error });
     }
 };
+
+
 
 export const setAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
@@ -76,15 +78,116 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(401).json({ message: 'User ID not found in request' });
         }
 
-        const { date, timeSlots, timeZone } = req.body
+        const { date, timeSlots, timeZone } = req.body;
 
-        console.log(timeSlots,date,timeZone)
+        console.log("Body", req.body);
 
-        // Validate input
         if (!Array.isArray(timeSlots) || !timeZone || !date) {
             return res.status(400).json({
-                message: 'Invalid input. Required: date, timeSlots array, and timeZone'
+                message: 'Invalid input. Required: date, timeSlots array, and timeZone',
             });
+        }
+
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone);
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone',
+            });
+        }
+
+        const utcTimeSlots: { startTime: string; endTime: string;  }[] = [];
+        const nextDayTimeSlots: { startTime: string; endTime: string;  }[] = [];
+        const currentDate = moment(date, 'YYYY-MM-DD');
+        const nextDate = currentDate.clone().add(1, 'day').format('YYYY-MM-DD');
+
+        timeSlots.forEach((slot) => {
+            const startDateTime = moment.tz(`${date}T${slot.startTime}`, 'YYYY-MM-DDTHH:mm', validatedTimeZone).utc();
+            const endDateTime = moment.tz(`${date}T${slot.endTime}`, 'YYYY-MM-DDTHH:mm', validatedTimeZone).utc();
+
+            if (endDateTime.isBefore(startDateTime)) {
+                // Slot spans into the next day
+                utcTimeSlots.push({
+                    startTime: startDateTime.format('HH:mm'),
+                    endTime: '23:59',
+                });
+
+                nextDayTimeSlots.push({
+                    startTime: '00:00',
+                    endTime: endDateTime.format('HH:mm')
+                });
+            } else {
+                // Slot belongs to the same day
+                utcTimeSlots.push({
+                    startTime: startDateTime.format('HH:mm'),
+                    endTime: endDateTime.format('HH:mm'),
+                });
+            }
+        });
+
+        const isValidTimes = utcTimeSlots.concat(nextDayTimeSlots).every(
+            (slot) =>
+                moment(slot.startTime, 'HH:mm').isValid() &&
+                moment(slot.endTime, 'HH:mm').isValid() &&
+                moment(slot.startTime, 'HH:mm').isBefore(moment(slot.endTime, 'HH:mm'))
+        );
+
+        if (!isValidTimes) {
+            return res.status(400).json({
+                message: 'Invalid time format or start time is after end time',
+            });
+        }
+
+        const currentDayAvailability = await RakiAvailability.findOneAndUpdate(
+            { rakiId, date },
+            {
+                rakiId,
+                date,
+                timeSlots: utcTimeSlots,
+                sourceTimeZone: validatedTimeZone,
+            },
+            { new: true, upsert: true }
+        );
+
+        let nextDayAvailability = null;
+        if (nextDayTimeSlots.length > 0) {
+            nextDayAvailability = await RakiAvailability.findOneAndUpdate(
+                { rakiId, date: nextDate },
+                {
+                    rakiId,
+                    date: nextDate,
+                    timeSlots: nextDayTimeSlots,
+                    sourceTimeZone: validatedTimeZone,
+                },
+                { new: true, upsert: true }
+            );
+        }
+
+        res.status(200).json({
+            message: 'Availability set successfully',
+            currentDayAvailability,
+            nextDayAvailability,
+        });
+    } catch (error) {
+        console.error("Error setting availability:", error);
+        res.status(500).json({
+            message: 'Error setting availability',
+            error: error instanceof Error ? error.message : 'Unknown error',
+        });
+    }
+};
+
+
+
+
+export const removeAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const rakiId = req.user?.id;
+        const { date, startTime, timeZone = 'UTC' } = req.body;
+
+        if (!rakiId || !date || !startTime) {
+            return res.status(400).json({ message: 'Invalid input. Required: date, startTime, and timeZone' });
         }
 
         // Validate timezone
@@ -93,50 +196,42 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             validatedTimeZone = validateAndConvertTimezone(timeZone);
         } catch (error) {
             return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
+                message: error instanceof Error ? error.message : 'Invalid timezone',
             });
         }
 
-        const utcTimeSlots = timeSlots.map((slot) => ({
-            startTime: moment.tz(slot.startTime, validatedTimeZone).utc().toISOString(),
-            endTime: moment.tz(slot.endTime, validatedTimeZone).utc().toISOString(),
-            isAvailable: true,
-        }));
+        const availability = await RakiAvailability.findOne({ rakiId, date }).exec();
 
-        // Validate converted times
-        const isValidTimes = utcTimeSlots.every(slot =>
-            moment(slot.startTime).isValid() &&
-            moment(slot.endTime).isValid() &&
-            moment(slot.startTime).isBefore(moment(slot.endTime))
-        );
-
-        if (!isValidTimes) {
-            return res.status(400).json({
-                message: 'Invalid time format or start time is after end time'
-            });
+        if (!availability) {
+            return res.status(404).json({ message: 'Availability not found' });
         }
 
-        const availability = await RakiAvailability.findOneAndUpdate(
-            { rakiId, date },
-            {
-                rakiId,
-                date,
-                timeSlots: utcTimeSlots,
-                sourceTimeZone: validatedTimeZone // Store original timezone for reference
-            },
-            { new: true, upsert: true }
+        // Convert provided startTime to UTC for comparison
+        const startDateTimeUTC = moment
+            .tz(`${date}T${startTime}`, 'YYYY-MM-DDTHH:mm', validatedTimeZone)
+            .utc()
+            .format('HH:mm');
+
+        // Remove the time slot with the matching startTime
+        const updatedTimeSlots = availability.timeSlots.filter(
+            (slot) => slot.startTime !== startDateTimeUTC
         );
+
+        if (updatedTimeSlots.length === availability.timeSlots.length) {
+            return res.status(404).json({ message: 'Time slot not found' });
+        }
+
+        // Update the availability with the remaining time slots
+        availability.timeSlots = updatedTimeSlots;
+        await availability.save();
 
         res.status(200).json({
-            message: 'Availability set successfully',
-            availability
+            message: 'Time slot removed successfully',
+            availability,
         });
     } catch (error) {
-        console.error("Error setting availability:", error);
-        res.status(500).json({
-            message: 'Error setting availability',
-            error: error instanceof Error ? error.message : 'Unknown error'
-        });
+        console.error('Error removing availability:', error);
+        res.status(500).json({ message: 'Error removing availability', error });
     }
 };
 
@@ -153,43 +248,5 @@ export const getAllAdmins = async (req: Request, res: Response): Promise<void> =
         res.status(200).json(admins);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
-    }
-};
-
-export const removeAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
-    try {
-        const rakiId = req.user?.id;
-        const { date, startTime } = req.body;
-
-        if (!rakiId || !date || !startTime) {
-            return res.status(400).json({ message: 'Invalid input. Required: date and startTime' });
-        }
-
-        const availability = await RakiAvailability.findOne({ rakiId, date }).exec();
-
-        if (!availability) {
-            return res.status(404).json({ message: 'Availability not found' });
-        }
-
-        // Remove the time slot with the matching startTime
-        const updatedTimeSlots = availability.timeSlots.filter(
-            (slot) => moment(slot.startTime).toISOString() !== moment(startTime).toISOString()
-        );
-
-        if (updatedTimeSlots.length === availability.timeSlots.length) {
-            return res.status(404).json({ message: 'Time slot not found' });
-        }
-
-        // Update the availability with the remaining time slots
-        availability.timeSlots = updatedTimeSlots;
-        await availability.save();
-
-        res.status(200).json({
-            message: 'Time slot removed successfully',
-            availability,
-        });
-    } catch (error) {
-        console.error("Error removing availability:", error);
-        res.status(500).json({ message: 'Error removing availability', error });
     }
 };

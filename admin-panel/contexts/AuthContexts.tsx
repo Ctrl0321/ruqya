@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {getOwnProfile, getUserProfile} from "@/lib/api";
 
 interface User {
-    id: string
+    _id: string
     name: string
     email: string
     role: 'super-admin' | 'admin' | 'user'

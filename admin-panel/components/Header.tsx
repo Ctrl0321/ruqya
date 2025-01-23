@@ -1,8 +1,7 @@
 'use client'
 
 import { Menu,User } from "lucide-react";
-import {useEffect, useState} from "react";
-import {getUserProfile} from "@/lib/api";
+import {useEffect} from "react";
 
 
 export default function Header({
@@ -10,7 +9,7 @@ export default function Header({
 }: {
   onToggleSidebar: () => void;
 }) {
-  const [user, setUser] = useState<{ name: string; profileImage: string } | null>(null)
+  // const [user, setUser] = useState<{ name: string; profileImage: string } | null>(null)
 
   useEffect(() => {
     // const fetchUserProfile = async () => {

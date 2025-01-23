@@ -14,7 +14,7 @@ export const ChartContainer: React.FC<{
     )
 }
 
-export const ChartTooltip: typeof Tooltip = (props) => {
+export const ChartTooltip: (props: any) => React.JSX.Element = (props:any) => {
     return <Tooltip {...props} />
 }
 

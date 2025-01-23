@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {getUserTimeZone} from "@/lib/utils";
+import {DayAvailability, TimeSlot} from "@/app/admin/availability/page";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -47,17 +48,17 @@ export const getOwnProfile = async () => {
 
 
 
-export const updateUserProfile = async (profileData: any) => {
-    const response = await api.post('ruqya-api/user/update', profileData);
-    return response.data;
-};
+// export const updateUserProfile = async (profileData: any) => {
+//     const response = await api.post('ruqya-api/user/update', profileData);
+//     return response.data;
+// };
 
 export const getUsers = async () => {
     const response = await api.get('ruqya-api/user/users');
     return response.data;
 };
 
-export const updateUserRole=async (userId:String, newRole:String)=>{
+export const updateUserRole=async (userId:string, newRole:string)=>{
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -75,7 +76,7 @@ export const getRakis = async () => {
     return response.data;
 };
 
-export const updateUserStatus=async (userId:String, newRole:String)=>{
+export const updateUserStatus=async (userId:string, newRole:string)=>{
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -122,13 +123,15 @@ export const rescheduleSession=async (meetingId:string,newDate:string)=>{
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
-    const response = await api.post('ruqya-api/meeting/reschedule', { meetingId, newDate },{
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    });
 
-    return response.data
+    console.log("Messi ankara",newDate)
+    // const response = await api.post('ruqya-api/meeting/reschedule', { meetingId, newDate },{
+    //     headers: {
+    //         Authorization: `Bearer ${token}`,
+    //     }
+    // });
+    //
+    // return response.data
 }
 
 export  const getReviews= async (rakiId:string)=>{
@@ -147,10 +150,10 @@ export  const getReviews= async (rakiId:string)=>{
 
 
 
-export const updateRaki = async (tutorId: number, tutorData: any) => {
-    const response = await api.put(`/tutors/${tutorId}`, tutorData);
-    return response.data;
-};
+// export const updateRaki = async (tutorId: number, tutorData: any) => {
+//     const response = await api.put(`/tutors/${tutorId}`, tutorData);
+//     return response.data;
+// };
 
 
 export const getRevenueData = async (filter: { filterType?: string; startDate?: string; endDate?: string;  }) => {
@@ -176,56 +179,67 @@ export const getRevenueData = async (filter: { filterType?: string; startDate?: 
     return response.data;
 };
 
-export const setRakiAvailability = async (date:Date, timeSlots:[{startTime:Date,endTime:Date}]) => {
-    const token = localStorage.getItem('token');
+
+
+
+export const getRakiAvailability = async (rakiId: string | undefined, date: string) => {
+    const token = localStorage.getItem("token")
     if (!token) {
-        throw new Error("No token found. Please log in.");
+        throw new Error("No token found. Please log in.")
     }
 
-    console.log("Messi",date,timeSlots)
-
-    // const response = await api.post('ruqya-api/raki/set-availability',
-    //     {
-    //       date,
-    //       timeSlots,
-    //       timeZone:userTimeZone
-    //     },
-    //     {
-    //     headers: {
-    //         Authorization: `Bearer ${token}`,
-    //     },
-    //
-    // });
-
-    // return response.data;
-};
-
-export const removeRakiAvailability = async (date:Date,startTime:Date) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        throw new Error("No token found. Please log in.");
-    }
-
-    const response = await api.post('ruqya-api/raki/remove-availability',
-        {
+    const response = await api.get("ruqya-api/raki/get-availability/", {
+        params:{
+            rakiId,
             date,
-            startTime,
             timeZone:userTimeZone
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 
-        });
-
-    return response.data;
-};
-
-export const getClassData = async (selectedMonth: { type: string }) => {
-    const response = await api.get('/classes');
-    return response.data;
+    return response.data
 }
+
+export const setRakiAvailability = async (date:string,timeSlots:TimeSlot[]) => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+        throw new Error("No token found. Please log in.")
+    }
+    const timeZone=userTimeZone
+
+    const response = await api.post("ruqya-api/raki/set-availability", {date,timeSlots,timeZone}, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return response.data
+}
+
+export const removeRakiAvailability = async (date: string, startTime:string) => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+        throw new Error("No token found. Please log in.")
+
+    }
+    const timeZone=userTimeZone
+    const response = await api.post("ruqya-api/raki/remove-availability", {date,startTime,timeZone}, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return response.data
+}
+
+
+// export const getClassData = async (selectedMonth: { type: string }) => {
+//     const month=selectedMonth
+//     const response = await api.get('/classes');
+//     return response.data;
+// }
 
 
 

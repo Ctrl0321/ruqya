@@ -1,7 +1,6 @@
 'use client'
 
-import {useEffect, useState} from 'react'
-import { signIn } from 'next-auth/react'
+import { useState} from 'react'
 import { useRouter } from 'next/navigation'
 import {login} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast"

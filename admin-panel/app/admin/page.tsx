@@ -1,17 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getRevenueData, getClassData, getTodaySessions, cancelSession, rescheduleSession } from '@/lib/api'
-import { useAuth } from '@/contexts/AuthContexts'
-import { format } from 'date-fns'
-import { CancelSessionDialog } from '@/components/CancelSessionDialog'
-import { RescheduleSessionDialog } from '@/components/ResheduledSessionDialog'
-import { DateRangeFilter } from '@/components/DateRangeFilter'
+import {useEffect, useState} from 'react'
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
+import {Button} from "@/components/ui/button"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
+import {cancelSession, getRevenueData, getTodaySessions, rescheduleSession} from '@/lib/api'
+import {useAuth} from '@/contexts/AuthContexts'
+import {format} from 'date-fns'
+import {CancelSessionDialog} from '@/components/CancelSessionDialog'
+import {RescheduleSessionDialog} from '@/components/ResheduledSessionDialog'
+import {DateRangeFilter} from '@/components/DateRangeFilter'
 import {formatDateTimeWithOffset} from "@/lib/utils";
 
 interface Session {
@@ -35,7 +33,7 @@ export default function AdminDashboard() {
     })
     const [dateFilter, setDateFilter] = useState<{ type: string; start?: Date; end?: Date }>({ type: 'all' })
 
-    const [todayClasses, setTodayClasses] = useState(0)
+    const [, setTodayClasses] = useState(0)
     const [todaySessions, setTodaySessions] = useState<Session[]>([])
     const [cancelSessionId, setCancelSessionId] = useState<string | null>(null)
     const [rescheduleSessionId, setRescheduleSessionId] = useState<string | null>(null)
