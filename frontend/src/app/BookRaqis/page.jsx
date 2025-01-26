@@ -132,7 +132,7 @@ export default function BookRaqis() {
       <div className="flex flex-col md:flex-row gap-1">
         {/* Filters Sidebar */}
         <aside
-          className={`w-full md:w-[275px] lg:w-64 xl:w-80 space-y-6 bg-RuqyaLightPurple p-4 rounded-lg border border-gray-300 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-0 left-0 right-0 bottom-0 md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:bottom-0 z-50 overflow-y-auto`}
+          className={`w-full md:w-72 xl:w-80 space-y-6 bg-RuqyaLightPurple p-4 rounded-lg border border-gray-300 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-0 left-0 right-0 bottom-0 md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:bottom-0 z-50 overflow-y-auto`}
         >
           {/* Close button for mobile view */}
           <button className="md:hidden text-right text-primary mb-4" onClick={() => setIsFilterVisible(false)}>
