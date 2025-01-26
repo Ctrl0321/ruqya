@@ -1,6 +1,7 @@
 import Link from "next/link";
 import RaqisCard from "@/components/cards/RaqisCard";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import Grid from "@/components/ui/layout/Grid"; 
 
 function Forth(props) {
     const { sampledata } = props;
@@ -17,11 +18,11 @@ function Forth(props) {
           </div>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 mx-1">
-      {sampledata && sampledata.map((data) => (
-        <RaqisCard key={data.id} raqi={data} />
-      ))}
-      </div>
+      <Grid>
+        {sampledata && sampledata.map((data) => (
+          <RaqisCard key={data.id} raqi={data} />
+        ))}
+      </Grid>
     </div>
   );
 }

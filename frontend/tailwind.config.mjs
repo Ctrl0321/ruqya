@@ -9,6 +9,15 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'ipad': '768px', 
+        'ipad-landscape': '1180px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        '3xl': '2048px',
+        '4xl': '2560px',
+        '5xl': '3072px',
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
