@@ -20,16 +20,16 @@ const Header = () => {
     <header>
       <nav className={`${isCurrent("/")} px-4 py-4 shadow-md font-bold color-header `}>
         <div className="flex justify-between items-center mx-5 md:mx-16">
-          <div className="text-xl ">
+          <div className="text-xl min-w-32">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
               <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />
             </Link>
           </div>
-          <div className="hidden md:flex flex-grow justify-center items-center px-3">
+          <div className="hidden md:flex flex-grow justify-center items-center mx-5">
             <img src="/nav-flower.svg" alt="Navigation Center" width="33" className="-mr-4" />
-            <img src="/nav-line.svg" alt="Navigation Center" width="700" />
+            <img src="/nav-line.svg" alt="Navigation Center" width="1600" />
           </div>
-          <div className="hidden md:flex space-x-8 gap-5 mt-1">
+          <div className="hidden md:flex space-x-8 gap-5">
             <Link href="/" className={`${isActive("/")} hover:text-gray-900`}>
               Home
             </Link>
@@ -53,9 +53,9 @@ const Header = () => {
         </div>
         {isOpen && (
           <div className="md:hidden fixed inset-0 bg-RuqyaLightPurple z-40 flex flex-col items-center text-left">
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-4 min-w-24">
               <Link href="/" onClick={handleLinkClick}>
-                <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />
+                <img src="/logo.png" alt="Ruqya logo" width="10" height="10" />
               </Link>
             </div>
             <Link href="/" className={`${isActive("/")} mt-28 block w-full max-w-xs py-2 pl-3 my-2 rounded-lg hover:bg-gray-100 bg-white`} onClick={handleLinkClick}>
