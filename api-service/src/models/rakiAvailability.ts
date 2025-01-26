@@ -2,10 +2,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IRakiAvailability extends Document {
     rakiId: string;
-    date: string; // Date in YYYY-MM-DD format
+    date: string;
     timeSlots: {
-        startTime: string; // UTC time in ISO string format
-        endTime: string; // UTC time in ISO string format
+        startTime: string;
+        endTime: string;
         isAvailable: boolean;
     }[];
 }

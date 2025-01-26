@@ -45,10 +45,6 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             const startTimeInTimeZone = startDateTimeUTC.tz(validatedTimeZone).format('HH:mm');
             const endTimeInTimeZone = endDateTimeUTC.tz(validatedTimeZone).format('HH:mm');
 
-            console.log('startTime (UTC):', startDateTimeUTC.format());
-            console.log('startTime (TimeZone):', startTimeInTimeZone, ' TimeZone:', validatedTimeZone);
-            console.log('endTime (UTC):', endDateTimeUTC.format());
-            console.log('endTime (TimeZone):', endTimeInTimeZone);
 
             return {
                 startTime: startTimeInTimeZone,
@@ -97,28 +93,38 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             });
         }
 
-        const utcTimeSlots: { startTime: string; endTime: string;  }[] = [];
-        const nextDayTimeSlots: { startTime: string; endTime: string;  }[] = [];
+        const utcTimeSlots: { startTime: string; endTime: string; }[] = [];
+        const nextDayTimeSlots: { startTime: string; endTime: string; }[] = [];
         const currentDate = moment(date, 'YYYY-MM-DD');
         const nextDate = currentDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
         timeSlots.forEach((slot) => {
+            console.log("Processing slot:", slot);
+
             const startDateTime = moment.tz(`${date}T${slot.startTime}`, 'YYYY-MM-DDTHH:mm', validatedTimeZone).utc();
             const endDateTime = moment.tz(`${date}T${slot.endTime}`, 'YYYY-MM-DDTHH:mm', validatedTimeZone).utc();
 
+            console.log("startDateTime:", startDateTime.format(), "endDateTime:", endDateTime.format());
+
             if (endDateTime.isBefore(startDateTime)) {
-                // Slot spans into the next day
+                // Slot spans into the next day (e.g., 23:00-00:30)
+                console.log("++++++++++++++++++++++++++++++++++++++++++","startDateTime:", startDateTime.format(), "endDateTime:", endDateTime.format())
+
                 utcTimeSlots.push({
                     startTime: startDateTime.format('HH:mm'),
                     endTime: '23:59',
                 });
 
                 nextDayTimeSlots.push({
-                    startTime: '00:00',
-                    endTime: endDateTime.format('HH:mm')
+                    startTime: '00:00', // Start from midnight on the next day
+                    endTime: endDateTime.format('HH:mm') // Convert end time to the next day
                 });
-            } else {
-                // Slot belongs to the same day
+            }
+            // if (endDateTime.isAfter(startDateTime)){
+            //     console.log("=====================================","startDateTime:", startDateTime.format(), "endDateTime:", endDateTime.format())
+            // }
+            else {
+                // Slot is within the same day
                 utcTimeSlots.push({
                     startTime: startDateTime.format('HH:mm'),
                     endTime: endDateTime.format('HH:mm'),
@@ -126,11 +132,21 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             }
         });
 
+        // Debugging log to check the times before validation
+        console.log("UTC TimeSlots:", utcTimeSlots);
+        console.log("Next Day TimeSlots:", nextDayTimeSlots);
+
+        // Validate times again with updated logic
         const isValidTimes = utcTimeSlots.concat(nextDayTimeSlots).every(
-            (slot) =>
-                moment(slot.startTime, 'HH:mm').isValid() &&
-                moment(slot.endTime, 'HH:mm').isValid() &&
-                moment(slot.startTime, 'HH:mm').isBefore(moment(slot.endTime, 'HH:mm'))
+            (slot) => {
+                // Convert times back to a moment object before validating
+                const startTimeMoment = moment(slot.startTime, 'HH:mm');
+                const endTimeMoment = moment(slot.endTime, 'HH:mm');
+
+                return startTimeMoment.isValid() &&
+                    endTimeMoment.isValid() &&
+                    startTimeMoment.isBefore(endTimeMoment);
+            }
         );
 
         if (!isValidTimes) {
@@ -139,6 +155,7 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
             });
         }
 
+        // Save current day availability
         const currentDayAvailability = await RakiAvailability.findOneAndUpdate(
             { rakiId, date },
             {
@@ -152,6 +169,7 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
 
         let nextDayAvailability = null;
         if (nextDayTimeSlots.length > 0) {
+            // Save next day availability
             nextDayAvailability = await RakiAvailability.findOneAndUpdate(
                 { rakiId, date: nextDate },
                 {
@@ -177,9 +195,6 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
         });
     }
 };
-
-
-
 
 export const removeAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
