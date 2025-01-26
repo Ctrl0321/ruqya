@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 function Button (props) {
-  const { text, link, disabled, bg, color, className} = props;
+  const { text, link, disabled, bg, color, className, children } = props;
 
   const setting = disabled 
     ? "border border-[#36454F] text-[#36454F] opacity-50 cursor-not-allowed" 
@@ -12,7 +12,7 @@ function Button (props) {
 
   return (
     <Link href={disabled ? "#" : link ? link : "#"} className={`px-4 flex text-center items-center justify-center gap-0 rounded-lg cursor-pointer opacity-100 min-h-10 ${setting} ${className} `}>
-        {text ? text : "Click Here"}
+        {text ? text : children ? children : "Click Here"}
     </Link>
   );
 };

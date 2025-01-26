@@ -5,6 +5,7 @@ import Grid from "@/components/ui/layout/Grid";
 
 function Forth(props) {
     const { sampledata } = props;
+    const slice = sampledata.slice(0,4)
 
   return (
     <div id="Forth" className="grid grid-cols-1 md:mx-24 mt-20 m-5 rounded-lg ">
@@ -18,8 +19,9 @@ function Forth(props) {
           </div>
         )}
       </div>
+
       <Grid>
-        {sampledata && sampledata.map((data) => (
+        {sampledata && slice.map((data) => (
           <RaqisCard key={data.id} raqi={data} />
         ))}
       </Grid>

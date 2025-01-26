@@ -13,7 +13,7 @@ const Grid = ({
     <div className={cn(
       'grid',
       'grid-cols-1',
-      `md:grid-cols-1}`,
+      `md:grid-cols-1`,
       // `ipad-landscape:grid-cols-${Math.min(cols, 2)}`,
       `lg:grid-cols-2`,
       `xl:grid-cols-3`,

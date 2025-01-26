@@ -1,105 +1,113 @@
 [
-    {
-        "id": "Raqi1",
-        "name": "Raqi1",
-        "image": "https://img.freepik.com/free-photo/smiling-muslim-man-applauding_482257-103227.jpg",
-        "Country": "Sri Lanka",
-        "CountryCode": "LK",
-        "bookedDate": "2025-02-12",
-        "Languages": ["English", "Arabic"],
-        "Experience": 5,
-        "bookedTime": "18:00",
-        "bookedDuration": 120
+  {
+    "id": "Raqi1",
+    "name": "Raqi1",
+    "status": "Available",
+    "image": "https://img.freepik.com/free-photo/smiling-muslim-man-applauding_482257-103227.jpg",
+    "Country": "Sri Lanka",
+    "about": "For over two decades, Alruqya Healing™ has been dedicated to empowering people through educating society and reviving the medicine of the Prophet Mohammed (Peace be upon him).For over two decades, Alruqya Healing™ has been dedicated to empowering people through educating society and reviving the medicine of the Prophet Mohammed (Peace be upon him).",
+    "rating": {
+      "averageRating": 4.0,
+      "totalReviews": 10000,
+      "reviewsGrowth": 21,
+      "reviewBreakdown": [50, 30, 5, 0, 0]
     },
-    {
-        "id": "Raqi2",
-        "name": "Abdul rahman",
-        "image": "https://static.vecteezy.com/system/resources/previews/036/420/230/non_2x/ai-generated-muslim-man-isolated-on-a-transparent-background-free-png.png",
-        "bannerImage": "https://t3.ftcdn.net/jpg/03/16/91/28/360_F_316912806_RCeHVmUx5LuBMi7MKYTY5arkE4I0DcpU.jpg",
-        "Country": "India",
-        "status": "Available",
-        "CountryCode": "IN",
-        "Languages": ["English", "Hindi"],
-        "Experience": 3,
-        "rating": 4.5,
-        "bookedDate": "2025-01-13",
-        "bookedTime": "12:00",
-        "bookedDuration": 60
-    },
-    {
-        "id": "Raqi3",
-        "name": "Raqi3",
-        "Country": "United Kingdom",
-        "CountryCode": "GB",
-        "Experience": 1,
-        "bookedDate": "2025-01-15",
-        "bookedTime": "14:00",
-        "bookedDuration": 30
-    },
-    {
-        "id": "Raqi4",
-        "name": "Raqi4",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    },
-    {
-        "id": "Raqi5",
-        "name": "Raqi5",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    },
-    {
-        "id": "Raqi6",
-        "name": "Raqi6",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    },
-    {
-        "id": "Raqi7",
-        "name": "Raqi7",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    },
-    {
-        "id": "Raqi8",
-        "name": "Raqi8",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    },
-    {
-        "id": "Raqi9",
-        "name": "Raqi9",
-        "Country": "United States",
-        "CountryCode": "US",
-        "Languages": ["English", "Spanish"],
-        "Experience": 4,
-        "bookedDate": "2025-01-20",
-        "bookedTime": "16:00",
-        "bookedDuration": 90
-    }
+    "CountryCode": "LK",
+    "bookedDate": "2025-02-12",
+    "Languages": ["English", "Arabic"],
+    "Experience": 5,
+    "bookedTime": "18:00",
+    "bookedDuration": 120
+  },
+  {
+    "id": "Raqi2",
+    "name": "Abdul rahman",
+    "image": "https://static.vecteezy.com/system/resources/previews/036/420/230/non_2x/ai-generated-muslim-man-isolated-on-a-transparent-background-free-png.png",
+    "bannerImage": "https://t3.ftcdn.net/jpg/03/16/91/28/360_F_316912806_RCeHVmUx5LuBMi7MKYTY5arkE4I0DcpU.jpg",
+    "Country": "India",
+    "status": "Available",
+    "CountryCode": "IN",
+    "Languages": ["English", "Hindi"],
+    "Experience": 3,
+    "rating": 4.5,
+    "bookedDate": "2025-01-13",
+    "bookedTime": "12:00",
+    "bookedDuration": 60
+  },
+  {
+    "id": "Raqi3",
+    "name": "Raqi3",
+    "Country": "United Kingdom",
+    "CountryCode": "GB",
+    "Experience": 1,
+    "bookedDate": "2025-01-15",
+    "bookedTime": "14:00",
+    "bookedDuration": 30
+  },
+  {
+    "id": "Raqi4",
+    "name": "Raqi4",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  },
+  {
+    "id": "Raqi5",
+    "name": "Raqi5",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  },
+  {
+    "id": "Raqi6",
+    "name": "Raqi6",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  },
+  {
+    "id": "Raqi7",
+    "name": "Raqi7",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  },
+  {
+    "id": "Raqi8",
+    "name": "Raqi8",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  },
+  {
+    "id": "Raqi9",
+    "name": "Raqi9",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Languages": ["English", "Spanish"],
+    "Experience": 4,
+    "bookedDate": "2025-01-20",
+    "bookedTime": "16:00",
+    "bookedDuration": 90
+  }
 ]

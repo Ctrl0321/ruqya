@@ -12,14 +12,13 @@ const Grid = ({
   return (
     <div className={cn(
       'grid',
-      'grid-cols-1',
+      `grid-cols-${Math.min(cols, 1)}`,
       `md:grid-cols-${Math.min(cols, 2)}`,
-      `lg:grid-cols-${Math.min(cols, 3)}`,
-      `xl:grid-cols-${Math.min(cols, 4)}`,
-      `2xl:grid-cols-${Math.min(cols, 5)}`,
-      `3xl:grid-cols-${Math.min(cols, 6)}`,
+      `lg:grid-cols-${Math.min(cols, 2)}`,
+      `xl:grid-cols-${cols}`, // Ensure one row for desktop view
+      `2xl:grid-cols-${cols}`, // Ensure one row for desktop view
+      `3xl:grid-cols-${cols}`, // Ensure one row for desktop view
       `gap-${gap}`,
-      // 'mx-auto', // Center alignment
       'my-4', // Margin
       className
     )}>
