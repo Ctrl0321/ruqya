@@ -154,22 +154,25 @@ function Raqis() {
           </p>
         </div>
       )}
-      <div className="mx-10 mt-10">
-        <h3 className="font-bold mt-5 text-2xl mb-0 text-left">Reviews</h3>
-        {data.rating && (
-          <div className="grid grid-cols-3 gap-4 p-4 ">
-            <div className="flex justify-center items-center flex-col p-4 border-r border-gray-300">
+
+      {data.rating && (
+        <div className="mx-5 md:mx-10 mt-10">
+          <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4">
+
+            <div className="flex justify-center items-center mr-2 flex-col border-r border-gray-300 w-full">
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-3">Average Rating</h2>
-                <div className="flex flex-row justify-start items-center gap-5">
+                <div className="flex flex-row justify-start items-center gap-3">
                   <div className="text-4xl font-bold">{data.rating ? data.rating.averageRating : 0}</div>
-                  <div className="flex text-yellow-500 text-2xl space-x-3">{renderStars(data.rating.averageRating)}</div>
+                  <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(data.rating.averageRating)}</div>
                 </div>
                 <div className="text-gray-600">Average rating on this year</div>
               </div>
             </div>
 
-            <div className="flex justify-center items-center flex-col p-4 border-r border-gray-300">
+            <div className="flex justify-center items-center flex-col ml-4  md:border-r border-gray-300">
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
 
@@ -185,7 +188,7 @@ function Raqis() {
             </div>
 
             {/* <h2 className="text-lg font-medium">Review Breakdown</h2> */}
-            <div className="flex flex-row font-bold items-center">
+            <div className="hidden md:flex flex-row font-bold items-center">
               <div className="flex flex-col gap-0">
                 <span className="flex flex-row items-center">
                   <FaStar className="text-gray-400 mr-2" />5
@@ -216,8 +219,8 @@ function Raqis() {
               </BarChart>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
