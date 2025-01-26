@@ -19,7 +19,7 @@ const Header = () => {
   return (
     <header>
       <nav className={`${isCurrent("/")} px-4 py-4 shadow-md font-bold color-header `}>
-        <div className="flex justify-between items-center mx-5 md:mx-16">
+        <div className="flex justify-between items-center mx-5 md:mx-8">
           <div className="text-xl min-w-32">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
               <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />

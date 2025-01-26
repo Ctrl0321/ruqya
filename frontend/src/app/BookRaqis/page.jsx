@@ -117,7 +117,7 @@ export default function BookRaqis() {
     .sort((a, b) => a - b);
 
   return (
-    <div className="mx-6 md:mx-6 lg:mx-16 px-4 py-8 min-h-screen mb-56">
+    <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li>
@@ -129,11 +129,10 @@ export default function BookRaqis() {
           <li>Book Raqis</li>
         </ol>
       </nav>
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-1">
         {/* Filters Sidebar */}
         <aside
-          className={`w-full md:w-72 space-y-6 bg-RuqyaLightPurple p-6 rounded-lg border border-gray-300 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-4 left-4 right-4 bottom-4  md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:botto
-        m-0 md:m-0 z-50 overflow-y-auto`}
+          className={`w-full md:w-[275px] lg:w-64 xl:w-80 space-y-6 bg-RuqyaLightPurple p-4 rounded-lg border border-gray-300 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-0 left-0 right-0 bottom-0 md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:bottom-0 z-50 overflow-y-auto`}
         >
           {/* Close button for mobile view */}
           <button className="md:hidden text-right text-primary mb-4" onClick={() => setIsFilterVisible(false)}>
@@ -143,7 +142,7 @@ export default function BookRaqis() {
           <div className="filter-section border-b border-gray-200 pb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Experience Level</h2>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 ">
                 {userSelections.experience[0]} - {userSelections.experience[1]} Year{userSelections.experience[1] !== 1 ? "s" : ""}
               </span>
             </div>
@@ -251,7 +250,7 @@ export default function BookRaqis() {
         {/* Practitioners Grid */}
         <main className="flex-1">
           {/* Filter button for mobile view */}
-          <button className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg z-10" onClick={() => setIsFilterVisible(true)}>
+          <button className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg z-20" onClick={() => setIsFilterVisible(true)}>
             {isFilterVisible ? <FaTimes size={24} /> : <FaFilter size={24} />}
           </button>
           {/* <div className="mb-6">
@@ -261,8 +260,8 @@ export default function BookRaqis() {
           {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> */}
           {/* <div className="grid grid-cols-1 ipad:grid-cols-2 ipad-landscape:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6  gap-6"> */}
           <Grid>
-            {filteredData.map((practitioner) => (
-              <RaqisCard key={practitioner.id} raqi={practitioner} />
+            {filteredData.map((practitioner, index) => (
+              <RaqisCard key={`${practitioner.id}-${index}`} raqi={practitioner}  className={'z-5'}/>
             ))}
           </Grid>
           {/* </div> */}

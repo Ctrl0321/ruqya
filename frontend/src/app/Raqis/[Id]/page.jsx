@@ -45,8 +45,8 @@ function Raqis() {
             <div className="h-48 w-48 p-2 bg-white rounded-lg">
               <img id="raqi-profile" src={data.image} alt={data.name} className="w-full h-full object-cover rounded-lg" />
               <div className="justify-center mt-4 hidden md:flex">
-                <Link href={`/raqis/${data.id}/chat`} className="flex items-center bg-RuqyaGreen text-white rounded-lg p-2">
-                  <MdOutlineMessage className="mr-2" />
+                <Link href={`/raqis/${data.id}/chat`} className="flex items-center bg-RuqyaGreen text-white w-full rounded-lg p-2">
+                  <MdOutlineMessage className="mr-4" />
                   Chat with Raqi
                 </Link>
               </div>

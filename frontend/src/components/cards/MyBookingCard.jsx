@@ -77,7 +77,7 @@ const MyBookingCard = ({ booking }) => {
                 <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {booking.bookedDate}
               </p>
               <p className="text-gray-600 flex items-center my-1">
-                <FaClock className="mr-2 text-RuqyaGreen" /> {booking.bookedTime} - {calculateEndTime(booking.bookedTime, booking.bookedDuration)}
+                <FaClock className="mr-2 text-RuqyaGreen" /> {booking.bookedTime}-{calculateEndTime(booking.bookedTime, booking.bookedDuration)}
               </p>
             </div>
           </div>

@@ -24,7 +24,7 @@ const ResponsiveGrid = ({ children, data, breakpoints }) => {
     return () => window.removeEventListener("resize", updateVisibleItems);
   }, [data, breakpoints]);
 
-  return <Grid className={'mx-5 mt-5'}>{visibleItems.map(children)}</Grid>;
+  return <Grid className={' mt-5'}>{visibleItems.map((item, index) => React.cloneElement(children(item), { key: `${item.id}-${index}` }))}</Grid>;
 };
 
 export default ResponsiveGrid;

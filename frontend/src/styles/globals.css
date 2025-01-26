@@ -21,12 +21,12 @@
   src: url('/fonts/full-sans-lc-90-bold.otf') format('opentype');
 } */
 
-@font-face {
+/* @font-face {
   font-family: 'Full Sans LC';
   src: url('/fonts/TheFullSans-LC50Book.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 
 * {
