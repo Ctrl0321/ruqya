@@ -10,19 +10,19 @@ import Button from "@/components/ui/buttons/DefaultButton";
 function Raqis() {
   const [data, setData] = useState(null);
   const params = useParams();
-  const Id = parseInt(params.Id, 10);
+  const Id = params.Id;
 
   useEffect(() => {
-    const foundData = sampledata.find((item) => item.id === Id);
+    const foundData = sampledata.find((item) => item.id.toString() === Id);
     setData(foundData);
   }, [Id]);
 
   if (!Id) {
-    return <p>No ID found.</p>;
+    return <p className="min-h-screen mb-56 text-black">No ID found.</p>;
   }
 
   if (data === null) {
-    return <p>Loading...</p>;
+    return <p className="min-h-screen mb-56 text-black">Loading...</p>;
   }
 
   return (
@@ -40,7 +40,7 @@ function Raqis() {
       </nav>
       {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
       <div className="flex flex-col justify-center m-auto lg:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center">
-        <div className="flex flex-col lg:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center w-full">
+        <div className="flex flex-col md:flex-row lg:space-x-4 lg:space-y-0 space-y-4 lg:items-start items-center w-full">
           <div id="one" className="flex flex-row justify-between items-center space-y-4 p-4 group -mt-16">
             <div className="h-48 w-48 p-2 bg-white rounded-lg">
               <img id="raqi-profile" src={data.image} alt={data.name} className="w-full h-full object-cover rounded-lg" />
@@ -78,7 +78,7 @@ function Raqis() {
             <Button href={"/raqis/book/" + data.id} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
           </div>
         </div>
-      </div>
+      </div>  
       <div className="flex md:hidden flex-col items-start space-y-2 text-xl p-4 group mx-3">
         {data.name && (
           <h1 className="text-4xl font-semibold flex flex-row">
