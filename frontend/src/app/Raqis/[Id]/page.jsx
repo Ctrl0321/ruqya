@@ -8,24 +8,12 @@ import { MdOutlineMessage, MdTrendingDown, MdOutlineTrendingUp } from "react-ico
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
+import review from "@/data/review.json";
+import ReviewCard from "@/components/cards/ReviewCard";
+import Forth from "@/components/ui/home/Forth";
 
 function Raqis() {
-  const [data, setData] = useState({
-    id: null,
-    name: null,
-    image: null,
-    bannerImage: null,
-    Country: null,
-    CountryCode: null,
-    Languages: null,
-    Experience: null,
-    about: null,
-    rating: null,
-    status: null,
-    bookedDate: null,
-    bookedTime: null,
-    bookedDuration: null,
-  });
+  const [data, setData] = useState(null);
   const params = useParams();
   const Id = params.Id;
   const [showFullAbout, setShowFullAbout] = useState(false);
@@ -44,13 +32,13 @@ function Raqis() {
     return <p className="min-h-screen mb-56 text-black">Loading...</p>;
   }
 
-  const chartData = data.rating ? [
-    { name: "5 ★", value: data.rating.reviewBreakdown[0], fill: "#4caf50" },
-    { name: "4 ★", value: data.rating.reviewBreakdown[1], fill: "#9c27b0" },
-    { name: "3 ★", value: data.rating.reviewBreakdown[2], fill: "#ffeb3b" },
-    { name: "2 ★", value: data.rating.reviewBreakdown[3], fill: "#03a9f4" },
-    { name: "1 ★", value: data.rating.reviewBreakdown[4], fill: "#ffeb3b" },
-  ] : [];
+  const chartData = [
+    { name: "5 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, fill: "#4caf50" },
+    { name: "4 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, fill: "#9c27b0" },
+    { name: "3 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, fill: "#ffeb3b" },
+    { name: "2 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, fill: "#03a9f4" },
+    { name: "1 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, fill: "#ffeb3b" },
+  ];
 
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => {
@@ -71,12 +59,8 @@ function Raqis() {
     return count.toString();
   }
 
-  function formatRating(rating) {
-    return rating.toFixed(1);
-  }
-
   return (
-    <div className="min-h-screen  md:mx-24 mb-56 text-black">
+    <div className="min-h-screen mb-56 text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
         <ol className="flex items-center space-x-2 mx-5 mt-5 text-sm text-muted-foreground">
           <li>
@@ -88,7 +72,7 @@ function Raqis() {
           <li>{data.name}</li>
         </ol>
       </nav>
-      {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48  bg-gray-600"></div>}
+      {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
 
       <div className="flex flex-col md:flex-row items-center mx-8">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
@@ -132,12 +116,10 @@ function Raqis() {
       {/* Mobile view */}
       <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-1 text-xl group mt-2">
         {data.name && (
-          <div className="text-4xl font-semibold flex flex-row items-center justify-center">
-          <h1 >
+          <h1 className="text-4xl font-semibold flex flex-row">
             {data.name}
+            <p className={`ml-5 m-2 px-3 p-1 rounded-2xl text-sm font-sans font-normal ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `do ${data.status}` : ""}</p>
           </h1>
-          <p className={`m-auto mb-1 ml-2 px-3 p-1 rounded-2xl text-sm font-sans font-normal ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `${data.status}` : ""}</p>
-          </div>
         )}
         {data.Country && (
           <div className="flex items-center space-x-1">
@@ -186,7 +168,7 @@ function Raqis() {
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-3">Average Rating</h2>
                 <div className="flex flex-row justify-start items-center gap-3">
-                  <div className="text-4xl font-bold">{formatRating(data.rating.averageRating)}</div>
+                  <div className="text-4xl font-bold">{data.rating ? data.rating.averageRating : 0}</div>
                   <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(data.rating.averageRating)}</div>
                 </div>
                 <div className="text-gray-600">Average rating on this year</div>
@@ -198,9 +180,9 @@ function Raqis() {
                 <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
 
                 <div className="flex flex-row text-3xl font-bold">
-                  {formatReviewsCount(data.rating.totalReviews)}
-                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-1 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
-                    {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+                  {formatReviewsCount(data.rating ? data.rating.totalReviews : 0)}
+                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating && data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
+                    {data.rating ? data.rating.reviewsGrowth : 0}%{data.rating && data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
                   </span>
                 </div>
 
@@ -242,8 +224,13 @@ function Raqis() {
           </div>
         </div>
       )}
-
-      
+      <div className="mx-8 mt-5">
+        <div className="border-b w-full mb-5"></div>
+        {review.map((review, index) => (
+          <ReviewCard key={index} review={review} colorIndex={index} />
+        ))}
+      </div>
+      <Forth data={sampledata} title="Similar Raqis" />
     </div>
   );
 }

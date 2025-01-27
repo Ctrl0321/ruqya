@@ -33,7 +33,7 @@ export default function Home() {
       <Search />
       <Second />
       <Third sampledata={sampledata} />
-      <Forth sampledata={sampledata} />
+      <Forth data={sampledata} title="Meet Our Expert Raqis" />
     </div>
   );
 }
