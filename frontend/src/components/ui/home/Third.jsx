@@ -9,13 +9,13 @@ function Third(props) {
   const { sampledata } = props;
 
   return (
-    <div id="third" className="bg-RuqyaLightPurple p-3 m-5 rounded-lg">
+    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">
       <div className="grid grid-cols-1 m-2">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">My Bookings</h1>
           {sampledata.length > 3 && (
             <div className="text-center">
-              <Link href="/all-bookings" className="text-RuqyaGreen font-bold">
+              <Link href="/MyBookings" className="text-RuqyaGreen font-bold">
                 See all <FaLongArrowAltRight className="inline mb-1" />
               </Link>
             </div>

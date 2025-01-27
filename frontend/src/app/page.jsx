@@ -20,7 +20,7 @@ import sampledata from "@/data/sampledata";
 
 export default function Home() {
   return (
-    <div className="bg-white color-header min-h-screen text-center md:text-left mb-56">
+    <div className="bg-white color-header min-h-screen text-center md:text-left">
       <First className="" />
       <div className="hidden lg:flex">
         <div className="absolute right-0 translate-y-0 translate-x-0">

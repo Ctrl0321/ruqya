@@ -9,7 +9,7 @@ function Second() {
         <br />
         involving sacred recitations.
       </h1>
-      <p className="mt-5 text-sm md:text-base text-center font-fullsans leading-relaxed">
+      <p className="mt-5 text-sm md:text-base text-center leading-relaxed">
         <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
         Our platform offers access to expert Raqis and self-guided resources
         <Image src={flower} alt="flower" className="w-6 mb-3 inline" />

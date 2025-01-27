@@ -10,7 +10,7 @@ import logo from "@/assets/images/logo.png";
 
 function Login() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 mb-56 relative">
+    <main className="min-h-screen flex items-center justify-center p-4 relative text-sm md:text-lg">
       <Image src={bg} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
       <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
       <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div>
@@ -59,7 +59,7 @@ function Login() {
               </div>
 
               <div className="mt-10">
-                <Button type="submit" bg={true} text="Log In" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-6 mt-12" />
+                <Button type="submit" bg={true} text="Log In" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
               </div>
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
@@ -70,7 +70,7 @@ function Login() {
                 </div>
               </div>
               <div className="mt-5">
-                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-full py-6 border-2" />
+                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-full py-3 border-2" />
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}

@@ -10,7 +10,7 @@
       "averageRating": 4.0,
       "totalReviews": 10000,
       "reviewsGrowth": 21,
-      "reviewBreakdown": [50, 30, 5, 0, 0]
+      "reviewBreakdown": [50, 30, 35, 45, 20]
     },
     "CountryCode": "LK",
     "bookedDate": "2025-02-12",
@@ -33,7 +33,7 @@
       "averageRating": 4.5,
       "totalReviews": 5000,
       "reviewsGrowth": 15,
-      "reviewBreakdown": [40, 35, 15, 5, 5]
+      "reviewBreakdown": [100, 50, 75, 25, 15]
     },
     "bookedDate": "2025-01-13",
     "bookedTime": "12:00",

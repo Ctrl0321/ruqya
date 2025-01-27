@@ -32,12 +32,14 @@ function Raqis() {
     return <p className="min-h-screen mb-56 text-black">Loading...</p>;
   }
 
+  const overallAverage = data.rating.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
+
   const chartData = [
-    { name: "5 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, fill: "#4caf50" },
-    { name: "4 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, fill: "#9c27b0" },
-    { name: "3 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, fill: "#ffeb3b" },
-    { name: "2 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, fill: "#03a9f4" },
-    { name: "1 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, fill: "#ffeb3b" },
+    { name: "5", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
+    { name: "4", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
+    { name: "3", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "2", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
+    { name: "1", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
   ];
 
   const renderStars = (rating) => {
@@ -74,7 +76,7 @@ function Raqis() {
       </nav>
       {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
 
-      <div className="flex flex-col md:flex-row items-center mx-8">
+      <div className="flex flex-col md:flex-row items-center mx-4">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto">
@@ -114,12 +116,12 @@ function Raqis() {
       </div>
 
       {/* Mobile view */}
-      <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-1 text-xl group mt-2">
+      <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-3 text-xl group mt-2">
         {data.name && (
-          <h1 className="text-4xl font-semibold flex flex-row">
-            {data.name}
-            <p className={`ml-5 m-2 px-3 p-1 rounded-2xl text-sm font-sans font-normal ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `do ${data.status}` : ""}</p>
-          </h1>
+          <div className="text-4xl flex flex-row gap-3">
+            <h1 >{data.name}</h1>
+            <p className={`ml-auto w-auto m-auto px-3 p-1 rounded-2xl text-sm ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `${data.status}` : ""}</p>
+          </div>
         )}
         {data.Country && (
           <div className="flex items-center space-x-1">
@@ -159,12 +161,11 @@ function Raqis() {
       )}
 
       {data.rating && (
-        <div className="mx-5 md:mx-10 mt-10">
+        <div className="mx-3 md:mx-10 mt-10">
           <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4">
-
-            <div className="flex justify-center items-center mr-2 flex-col border-r border-gray-300 w-full">
+          <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
+            <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-3">Average Rating</h2>
                 <div className="flex flex-row justify-start items-center gap-3">
@@ -175,7 +176,7 @@ function Raqis() {
               </div>
             </div>
 
-            <div className="flex justify-center items-center flex-col ml-4  md:border-r border-gray-300">
+            <div className="flex justify-center items-center flex-col ml-4 border-l pl-5  md:border-r border-gray-300">
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
 
@@ -214,7 +215,7 @@ function Raqis() {
                 <YAxis type="category" dataKey="name" hide />
                 <CartesianGrid horizontal={false} vertical={false} />
                 <Bar dataKey="value" radius={[30, 30, 30, 30]} barSize={10}>
-                  <LabelList dataKey="value" position="right" />
+                  <LabelList dataKey="real" position="right" />
                   {chartData.map((entry, index) => (
                     <Bar key={`bar-${index}`} dataKey="value" fill={entry.fill} />
                   ))}
