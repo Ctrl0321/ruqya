@@ -130,113 +130,112 @@ export default function BookRaqis() {
       </nav>
       <div className="flex flex-col md:flex-row gap-1">
         {/* Filters Sidebar */}
-        <aside
-          className={`w-full md:w-72 xl:w-80 space-y-6 bg-RuqyaLightPurple p-4 rounded-lg border border-gray-300 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-0 left-0 right-0 bottom-0 md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:bottom-0 z-50 overflow-y-auto`}
-        >
-          {/* Close button for mobile view */}
-          <button className="md:hidden text-right text-primary mb-4" onClick={() => setIsFilterVisible(false)}>
-            <FaTimes size={24} />
-          </button>
-          {/* Updated Experience Level Section */}
-          <div className="filter-section border-b border-gray-200 pb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Experience Level</h2>
-              <span className="text-sm text-gray-600 ">
-                {userSelections.experience[0]} - {userSelections.experience[1]} Year{userSelections.experience[1] !== 1 ? "s" : ""}
-              </span>
-            </div>
-
-            <div className="space-y-4 ml-5">
-              <Slider
-                range
-                min={experienceRange.min}
-                max={experienceRange.max}
-                value={userSelections.experience}
-                onChange={handleExperienceChange}
-                trackStyle={[{ backgroundColor: "green", height: 2 }]}
-                handleStyle={[
-                  { borderColor: "green", height: 20, width: 20, marginLeft: -9, marginTop: -9 },
-                  { borderColor: "green", height: 20, width: 20, marginLeft: -9, marginTop: -9 },
-                ]}
-                railStyle={{ backgroundColor: "gray", height: 2 }}
-              />
-
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>
-                  {experienceRange.min} Year{experienceRange.min !== 1 ? "s" : ""}
-                </span>
-                <div className="flex ">
-                  {experienceLevels.map((level) => (
-                    <div key={level} className={`h-1 w-1 rounded-full ${level <= userSelections.experience[1] ? "bg-primary" : "bg-gray-300"}`} title={`${level} year${level !== 1 ? "s" : ""}`} />
-                  ))}
-                </div>
-                <span>
-                  {experienceRange.max} Year{experienceRange.max !== 1 ? "s" : ""}
+        <aside className={`w-full md:w-72 xl:w-80 space-y-6 ${isFilterVisible ? "block" : "hidden"} md:block fixed top-0 left-0 right-0 bottom-0 md:relative md:h-auto md:top-0 md:left-0 md:right-0 md:bottom-0 z-50 overflow-y-auto`}>
+          <div className=" bg-RuqyaLightPurple p-4 rounded-lg border border-gray-300 ">
+            {/* Close button for mobile view */}
+            <button className="md:hidden text-right text-primary mb-4" onClick={() => setIsFilterVisible(false)}>
+              <FaTimes size={24} />
+            </button>
+            {/* Updated Experience Level Section */}
+            <div className="filter-section border-b border-gray-200 pb-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Experience Level</h2>
+                <span className="text-sm text-gray-600 ">
+                  {userSelections.experience[0]} - {userSelections.experience[1]} Year{userSelections.experience[1] !== 1 ? "s" : ""}
                 </span>
               </div>
-            </div>
-          </div>
 
-          {/* Languages Filter Section */}
-          <div className="filter-section border-b border-gray-200 pb-6">
-            <h2 className="text-lg  mb-4 flex items-center">
-              <span className="flex-1 font-semibold">Languages</span>
-              <div className="text-xs text-gray-500">{userSelections.languages.length} selected</div>
-            </h2>
-            <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
-              {availableLanguages.map((language) => (
-                <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
-                  <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(language)} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
-                  <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2  cursor-pointer">
-                    {language}
-                  </label>
+              <div className="space-y-4 ml-5">
+                <Slider
+                  range
+                  min={experienceRange.min}
+                  max={experienceRange.max}
+                  value={userSelections.experience}
+                  onChange={handleExperienceChange}
+                  trackStyle={[{ backgroundColor: "green", height: 2 }]}
+                  handleStyle={[
+                    { borderColor: "green", height: 20, width: 20, marginLeft: -9, marginTop: -9 },
+                    { borderColor: "green", height: 20, width: 20, marginLeft: -9, marginTop: -9 },
+                  ]}
+                  railStyle={{ backgroundColor: "gray", height: 2 }}
+                />
+
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>
+                    {experienceRange.min} Year{experienceRange.min !== 1 ? "s" : ""}
+                  </span>
+                  <div className="flex ">
+                    {experienceLevels.map((level) => (
+                      <div key={level} className={`h-1 w-1 rounded-full ${level <= userSelections.experience[1] ? "bg-primary" : "bg-gray-300"}`} title={`${level} year${level !== 1 ? "s" : ""}`} />
+                    ))}
+                  </div>
+                  <span>
+                    {experienceRange.max} Year{experienceRange.max !== 1 ? "s" : ""}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Countries Filter */}
-          <div className="filter-section border-b border-gray-200 pb-6">
-            <h2 className="text-lg  mb-4 flex items-center">
-              <span className="flex-1 font-semibold">Countries</span>
-              <div className="text-xs text-gray-500">{userSelections.countries.length} selected</div>
-            </h2>
-            <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
-              {availableCountries.map((country) => (
-                <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
-                  <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(country)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
-                  <label htmlFor={`country-${country}`} className="text-sm pl-2 flex-1 cursor-pointer">
-                    {country}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Availability Filter */}
-          <div className="filter-section pb-6">
-            <h2 className="text-lg font-semibold mb-4">Availability</h2>
-            <div className="space-y-4 bg-white/50 p-4 rounded-lg">
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">Date</label>
-                <input type="date" value={userSelections.availability.date || ""} onChange={(e) => handleDateChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">Duration (minutes)</label>
-                <select value={userSelections.availability.duration || ""} onChange={(e) => handleDurationChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm">
-                  <option value="">Any duration</option>
-                  {availableDurations.map((duration) => (
-                    <option key={duration} value={duration}>
-                      {duration} min
-                    </option>
-                  ))}
-                </select>
               </div>
             </div>
-          </div>
 
-          {/* Debug section */}
-          {/* <div className="filter-section bg-white rounded-md">
+            {/* Languages Filter Section */}
+            <div className="filter-section border-b border-gray-200 pb-6">
+              <h2 className="text-lg  mb-4 flex items-center">
+                <span className="flex-1 font-semibold">Languages</span>
+                <div className="text-xs text-gray-500">{userSelections.languages.length} selected</div>
+              </h2>
+              <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                {availableLanguages.map((language) => (
+                  <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
+                    <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(language)} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
+                    <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2  cursor-pointer">
+                      {language}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Countries Filter */}
+            <div className="filter-section border-b border-gray-200 pb-6">
+              <h2 className="text-lg  mb-4 flex items-center">
+                <span className="flex-1 font-semibold">Countries</span>
+                <div className="text-xs text-gray-500">{userSelections.countries.length} selected</div>
+              </h2>
+              <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                {availableCountries.map((country) => (
+                  <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
+                    <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(country)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
+                    <label htmlFor={`country-${country}`} className="text-sm pl-2 flex-1 cursor-pointer">
+                      {country}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Availability Filter */}
+            <div className="filter-section pb-6">
+              <h2 className="text-lg font-semibold mb-4">Availability</h2>
+              <div className="space-y-4 bg-white/50 p-4 rounded-lg">
+                <div>
+                  <label className="text-sm text-gray-600 block mb-1">Date</label>
+                  <input type="date" value={userSelections.availability.date || ""} onChange={(e) => handleDateChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 block mb-1">Duration (minutes)</label>
+                  <select value={userSelections.availability.duration || ""} onChange={(e) => handleDurationChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm">
+                    <option value="">Any duration</option>
+                    {availableDurations.map((duration) => (
+                      <option key={duration} value={duration}>
+                        {duration} min
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Debug section */}
+            {/* <div className="filter-section bg-white rounded-md">
             <details>
               <summary className="cursor-pointer">Selected Filters</summary>
               <pre className="whitespace-pre-wrap text-xs mt-2 p-2 bg-gray-50">
@@ -244,6 +243,7 @@ export default function BookRaqis() {
               </pre>
             </details>
           </div> */}
+          </div>
         </aside>
 
         {/* Practitioners Grid */}
@@ -260,7 +260,7 @@ export default function BookRaqis() {
           {/* <div className="grid grid-cols-1 ipad:grid-cols-2 ipad-landscape:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6  gap-6"> */}
           <Grid>
             {filteredData.map((practitioner, index) => (
-              <RaqisCard key={`${practitioner.id}-${index}`} raqi={practitioner}  className={'z-5'}/>
+              <RaqisCard key={`${practitioner.id}-${index}`} raqi={practitioner} className={"z-5"} />
             ))}
           </Grid>
           {/* </div> */}
