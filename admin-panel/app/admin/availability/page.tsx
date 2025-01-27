@@ -1,233 +1,280 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { format, startOfDay, isBefore, parse, addHours } from "date-fns"
-import { CalendarIcon, Plus, Trash2 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { toast } from "@/components/ui/use-toast"
-import { getRakiAvailability, setRakiAvailability, removeRakiAvailability } from "@/lib/api"
-import { useAuth } from "@/contexts/AuthContexts"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from "react";
+import { format, startOfDay, isBefore, parse, addHours } from "date-fns";
+import { CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { toast } from "@/components/ui/use-toast";
+import {
+  getRakiAvailability,
+  setRakiAvailability,
+  removeRakiAvailability,
+} from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContexts";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface TimeSlot {
-    startTime: string
+  startTime: string;
 }
 
 export interface DayAvailability {
-    date: string
-    timeSlots: TimeSlot[]
+  date: string;
+  timeSlots: TimeSlot[];
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 export default function AvailabilityPage() {
-    const { user: currentUser } = useAuth()
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-    const [availability, setAvailability] = useState<DayAvailability | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+  const { user: currentUser } = useAuth();
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [availability, setAvailability] = useState<DayAvailability | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if (selectedDate && currentUser) {
-            fetchAvailability(selectedDate)
-        }
-    }, [selectedDate, currentUser])
-
-    const fetchAvailability = async (date: Date) => {
-        setIsLoading(true)
-        try {
-            const dateKey = format(date, "yyyy-MM-dd")
-            const data = await getRakiAvailability(currentUser?._id, dateKey)
-            console.log("Aathiq",data)
-            setAvailability(data)
-        } catch (error) {
-            setAvailability(null)
-            console.error("Failed to fetch availability:", error)
-            toast({
-                title: "Error",
-                description: "Failed to fetch availability. Please try again.",
-                variant: "destructive",
-            })
-        } finally {
-            setIsLoading(false)
-        }
+  useEffect(() => {
+    if (selectedDate && currentUser) {
+      fetchAvailability(selectedDate);
     }
+  }, [selectedDate, currentUser]);
 
-    const handleAddTimeSlot = async (hour: number) => {
-        if (!selectedDate || !currentUser) return
-
-        setIsLoading(true)
-        const dateKey = format(selectedDate, "yyyy-MM-dd")
-
-        try {
-            const newTimeSlot: TimeSlot = {
-                startTime: `${hour.toString().padStart(2, "0")}:00`,
-            }
-            const newAvailability: DayAvailability = {
-                date: dateKey,
-                timeSlots: availability ? [...availability.timeSlots, newTimeSlot] : [newTimeSlot],
-            }
-
-            await setRakiAvailability(newAvailability.date, [newTimeSlot])
-            setAvailability(newAvailability)
-
-            toast({
-                title: "Time slot added",
-                description: `Added ${hour}:00 to ${format(selectedDate, "MMMM d, yyyy")}`,
-            })
-        } catch (error) {
-            console.error("Failed to add time slot:", error)
-            toast({
-                title: "Error",
-                description: "Failed to add time slot. Please try again.",
-                variant: "destructive",
-            })
-        } finally {
-            setIsLoading(false)
-        }
+  const fetchAvailability = async (date: Date) => {
+    setIsLoading(true);
+    try {
+      const dateKey = format(date, "yyyy-MM-dd");
+      const data = await getRakiAvailability(currentUser?._id, dateKey);
+      setAvailability(data);
+    } catch (error) {
+      setAvailability(null);
+      console.error("Failed to fetch availability:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch availability. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    const handleRemoveTimeSlot = async (startTime: string) => {
-        if (!availability || !currentUser) return
+  const handleAddTimeSlot = async (hour: number) => {
+    if (!selectedDate || !currentUser) return;
 
-        setIsLoading(true)
+    setIsLoading(true);
+    const dateKey = format(selectedDate, "yyyy-MM-dd");
 
-        try {
-            const updatedTimeSlots = availability.timeSlots.filter((slot) => slot.startTime !== startTime)
-            const updatedAvailability: DayAvailability = {
-                ...availability,
-                timeSlots: updatedTimeSlots,
-            }
+    try {
+      const newTimeSlot: TimeSlot = {
+        startTime: `${hour.toString().padStart(2, "0")}:00`,
+      };
+      const newAvailability: DayAvailability = {
+        date: dateKey,
+        timeSlots: availability
+          ? [...availability.timeSlots, newTimeSlot]
+          : [newTimeSlot],
+      };
 
-            const dateKey = format(new Date(availability.date), "yyyy-MM-dd")
+      await setRakiAvailability(newAvailability.date, [newTimeSlot]);
+      setAvailability(newAvailability);
 
-            await removeRakiAvailability(dateKey, startTime)
-            setAvailability(updatedAvailability)
-
-            toast({
-                title: "Time slot removed",
-                description: `Removed time slot from ${format(new Date(availability.date), "MMMM d, yyyy")}`,
-            })
-        } catch (error) {
-            console.error("Failed to remove time slot:", error)
-            toast({
-                title: "Error",
-                description: "Failed to remove time slot. Please try again.",
-                variant: "destructive",
-            })
-        } finally {
-            setIsLoading(false)
-        }
+      toast({
+        title: "Time slot added",
+        description: `Added ${hour}:00 to ${format(
+          selectedDate,
+          "MMMM d, yyyy"
+        )}`,
+      });
+    } catch (error) {
+      console.error("Failed to add time slot:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add time slot. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    const isDateInPast = (date: Date) => {
-        return isBefore(startOfDay(date), startOfDay(new Date()))
+  const handleRemoveTimeSlot = async (startTime: string) => {
+    if (!availability || !currentUser) return;
+
+    setIsLoading(true);
+
+    try {
+      const updatedTimeSlots = availability.timeSlots.filter(
+        (slot) => slot.startTime !== startTime
+      );
+      const updatedAvailability: DayAvailability = {
+        ...availability,
+        timeSlots: updatedTimeSlots,
+      };
+
+      const dateKey = format(new Date(availability.date), "yyyy-MM-dd");
+
+      await removeRakiAvailability(dateKey, startTime);
+      setAvailability(updatedAvailability);
+
+      toast({
+        title: "Time slot removed",
+        description: `Removed time slot from ${format(
+          new Date(availability.date),
+          "MMMM d, yyyy"
+        )}`,
+      });
+    } catch (error) {
+      console.error("Failed to remove time slot:", error);
+      toast({
+        title: "Error",
+        description: "Failed to remove time slot. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <h1 className="text-3xl font-bold mb-6 text-primary-700">Manage Your Availability</h1>
+  const isDateInPast = (date: Date) => {
+    return isBefore(startOfDay(date), startOfDay(new Date()));
+  };
 
-            <div className="mb-6">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant={"outline"}
-                            className={cn("w-full justify-start text-left font-normal", !selectedDate && "text-muted-foreground")}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                        <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={(date) => date && setSelectedDate(date)}
-                            initialFocus
-                            disabled={(date) => isDateInPast(date)}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </div>
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <h1 className="text-3xl font-bold mb-6 text-primary-700">
+        Manage Your Availability
+      </h1>
 
-            {isDateInPast(selectedDate) ? (
-                <p className="text-muted-foreground text-center">Cannot edit availability for past dates.</p>
-            ) : (
-                <div className="space-y-4">
-                    <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
-                    <div className="grid grid-cols-4 gap-2">
-                        {HOURS.map((hour) => {
-                            const timeSlot = `${hour.toString().padStart(2, "0")}:00`
-                            console.log("Aneeqa",availability?.timeSlots)
-                            const isAvailable = availability?.timeSlots.some((slot) =>
-                                slot.startTime.replace(".", ":") === timeSlot
-                            )
-                            return (
-                                <motion.div
-                                    key={hour}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3, delay: hour * 0.02 }}
-                                >
-                                    <Button
-                                        variant={isAvailable ? "default" : "outline"}
-                                        className={cn(
-                                            "w-full h-12",
-                                            isAvailable && "bg-primary text-primary-foreground hover:bg-primary/90",
-                                        )}
-                                        onClick={() => (isAvailable ? handleRemoveTimeSlot(timeSlot) : handleAddTimeSlot(hour))}
-                                        disabled={isLoading}
-                                    >
-                                        {timeSlot}
-                                        {isAvailable ? <Trash2 className="ml-2 h-4 w-4" /> : <Plus className="ml-2 h-4 w-4" />}
-                                    </Button>
-                                </motion.div>
-                            )
-                        })}
-                    </div>
-                </div>
-            )}
+      <div className="mb-6">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? (
+                format(selectedDate, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={(date) => date && setSelectedDate(date)}
+              initialFocus
+              disabled={(date) => isDateInPast(date)}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
 
-            <AnimatePresence>
-                {availability && availability.timeSlots.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="mt-8"
-                    >
-                        <h3 className="text-lg font-semibold mb-2">Your Schedule</h3>
-                        <div className="space-y-2">
-                            {availability.timeSlots.map((slot, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 20 }}
-                                    className="flex justify-between items-center p-3 bg-secondary rounded-md"
-                                >
-                  <span>
-                    {slot.startTime}
-                      {/*- {format(addHours(parse(slot.startTime, "HH:mm", new Date()), 1), "HH:mm")}*/}
-                  </span>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleRemoveTimeSlot(slot.startTime)}
-                                        disabled={isLoading}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+      {isDateInPast(selectedDate) ? (
+        <p className="text-muted-foreground text-center">
+          Cannot edit availability for past dates.
+        </p>
+      ) : (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
+          <div className="grid grid-cols-4 gap-2">
+            {HOURS.map((hour) => {
+              const timeSlot = `${hour.toString().padStart(2, "0")}:00`;
+              const isAvailable = availability?.timeSlots.some(
+                (slot) => slot.startTime.replace(".", ":") === timeSlot
+              );
+              return (
+                <motion.div
+                  key={hour}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: hour * 0.02 }}
+                >
+                  <Button
+                    variant={isAvailable ? "default" : "outline"}
+                    className={cn(
+                      "w-full h-12",
+                      isAvailable &&
+                        "bg-primary text-primary-foreground hover:bg-primary/90"
+                    )}
+                    onClick={() =>
+                      isAvailable
+                        ? handleRemoveTimeSlot(timeSlot)
+                        : handleAddTimeSlot(hour)
+                    }
+                    disabled={isLoading}
+                  >
+                    {timeSlot}
+                    {isAvailable ? (
+                      <Trash2 className="ml-2 h-4 w-4" />
+                    ) : (
+                      <Plus className="ml-2 h-4 w-4" />
+                    )}
+                  </Button>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
-    )
-}
+      )}
 
+      <AnimatePresence>
+        {availability && availability.timeSlots.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mt-8"
+          >
+            <h3 className="text-lg font-semibold mb-2">Your Schedule</h3>
+            <div className="space-y-2">
+              {availability.timeSlots.map((slot, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="flex justify-between items-center p-3 bg-secondary rounded-md"
+                >
+                  <span>
+                    {slot.startTime.replace(".", ":")} -{" "}
+                    {format(
+                      addHours(
+                        parse(
+                          slot.startTime.replace(".", ":"),
+                          "HH:mm",
+                          new Date()
+                        ),
+                        1
+                      ),
+                      "HH:mm"
+                    )}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveTimeSlot(slot.startTime)}
+                    disabled={isLoading}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
