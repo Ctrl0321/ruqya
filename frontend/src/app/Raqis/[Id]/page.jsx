@@ -231,7 +231,7 @@ function Raqis() {
           <ReviewCard key={index} review={review} colorIndex={index} />
         ))}
       </div>
-      <Forth data={sampledata} title="Similar Raqis" />
+      <Forth data={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
     </div>
   );
 }

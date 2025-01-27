@@ -8,7 +8,7 @@ function Forth(props) {
     const slice = data.slice(0,4)
 
   return (
-    <div id="Forth" className="grid grid-cols-1 md:mx-24 mt-20 m-5 rounded-lg ">
+    <div id="Forth" className={`grid grid-cols-1 md:mx-24 mt-20 m-5 rounded-lg ${[props.className]} `}>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">{title}</h1>
         {data.length > 3 && (
