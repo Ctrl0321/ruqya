@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-// import bookingsData from "@/data/bookings.json"; // Assuming you have a bookings.json file with booking data
+import bookingsData from "@/data/sampledata.json";
+import Grid from "@/components/ui/layout/Grid";
+import Raqis from "@/components/cards/RaqisCard";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -16,20 +18,13 @@ function MyBookings() {
   }
 
   return (
-    <div className="min-h-screen  text-black">
+    <div className="min-h-screen text-black  mx-5 md:mx-10 mt-10 ">
       <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Grid>
         {bookings.map((booking, index) => (
-          <div key={index} className="p-4 border rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold">{booking.title}</h2>
-            <p className="text-gray-600">{booking.date}</p>
-            <p className="text-gray-600">{booking.time}</p>
-            <Link href={`/bookings/${booking.id}`} className="text-blue-500 mt-2 inline-block">
-              View Details
-            </Link>
-          </div>
+          <Raqis key={index} raqi={booking} />
         ))}
-      </div>
+      </Grid>
     </div>
   );
 }
