@@ -10,7 +10,22 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
 
 function Raqis() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    id: null,
+    name: null,
+    image: null,
+    bannerImage: null,
+    Country: null,
+    CountryCode: null,
+    Languages: null,
+    Experience: null,
+    about: null,
+    rating: null,
+    status: null,
+    bookedDate: null,
+    bookedTime: null,
+    bookedDuration: null,
+  });
   const params = useParams();
   const Id = params.Id;
   const [showFullAbout, setShowFullAbout] = useState(false);
@@ -29,13 +44,13 @@ function Raqis() {
     return <p className="min-h-screen mb-56 text-black">Loading...</p>;
   }
 
-  const chartData = [
-    { name: "5 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, fill: "#4caf50" },
-    { name: "4 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, fill: "#9c27b0" },
-    { name: "3 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, fill: "#ffeb3b" },
-    { name: "2 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, fill: "#03a9f4" },
-    { name: "1 ★", value: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, fill: "#ffeb3b" },
-  ];
+  const chartData = data.rating ? [
+    { name: "5 ★", value: data.rating.reviewBreakdown[0], fill: "#4caf50" },
+    { name: "4 ★", value: data.rating.reviewBreakdown[1], fill: "#9c27b0" },
+    { name: "3 ★", value: data.rating.reviewBreakdown[2], fill: "#ffeb3b" },
+    { name: "2 ★", value: data.rating.reviewBreakdown[3], fill: "#03a9f4" },
+    { name: "1 ★", value: data.rating.reviewBreakdown[4], fill: "#ffeb3b" },
+  ] : [];
 
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => {
@@ -54,6 +69,10 @@ function Raqis() {
       return (count / 1000).toFixed(count % 1000 === 0 ? 0 : 1) + "k";
     }
     return count.toString();
+  }
+
+  function formatRating(rating) {
+    return rating.toFixed(1);
   }
 
   return (
@@ -165,7 +184,7 @@ function Raqis() {
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-3">Average Rating</h2>
                 <div className="flex flex-row justify-start items-center gap-3">
-                  <div className="text-4xl font-bold">{data.rating ? data.rating.averageRating : 0}</div>
+                  <div className="text-4xl font-bold">{formatRating(data.rating.averageRating)}</div>
                   <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(data.rating.averageRating)}</div>
                 </div>
                 <div className="text-gray-600">Average rating on this year</div>
@@ -177,9 +196,9 @@ function Raqis() {
                 <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
 
                 <div className="flex flex-row text-3xl font-bold">
-                  {formatReviewsCount(data.rating ? data.rating.totalReviews : 0)}
-                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-1 px-2 items-center  ${data.rating && data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
-                    {data.rating ? data.rating.reviewsGrowth : 0}%{data.rating && data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+                  {formatReviewsCount(data.rating.totalReviews)}
+                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-1 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
+                    {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
                   </span>
                 </div>
 

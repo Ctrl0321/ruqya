@@ -29,7 +29,12 @@
     "CountryCode": "IN",
     "Languages": ["English", "Hindi"],
     "Experience": 3,
-    "rating": 4.5,
+    "rating": {
+      "averageRating": 4.5,
+      "totalReviews": 5000,
+      "reviewsGrowth": 15,
+      "reviewBreakdown": [40, 35, 15, 5, 5]
+    },
     "bookedDate": "2025-01-13",
     "bookedTime": "12:00",
     "bookedDuration": 60
