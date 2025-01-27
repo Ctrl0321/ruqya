@@ -8,6 +8,7 @@ import { FaFilter, FaTimes } from "react-icons/fa";
 import "rc-slider/assets/index.css";
 import Slider from "rc-slider";
 import Grid from "@/components/ui/layout/GridForBooking";
+import RatingInput from "@/components/ui/input/rating";
 
 // Main Page Component
 export default function BookRaqis() {
@@ -30,6 +31,7 @@ export default function BookRaqis() {
     },
     countries: [],
   });
+  const [rating, setRating] = useState(0);
 
   // State for mobile filter visibility
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -106,8 +108,13 @@ export default function BookRaqis() {
       result = result.filter((raqi) => raqi.bookedDuration === userSelections.availability.duration);
     }
 
+    // Filter by rating
+    if (rating > 0) {
+      result = result.filter((raqi) => raqi.rating && raqi.rating.averageRating >= rating);
+    }
+
     setFilteredData(result);
-  }, [userSelections]);
+  }, [userSelections, rating]);
 
   // Add this before the return statement
   const experienceLevels = sampledata
@@ -232,6 +239,12 @@ export default function BookRaqis() {
                   </select>
                 </div>
               </div>
+            </div>
+
+            {/* Rating Filter */}
+            <div className="filter-section pb-6">
+              <h2 className="text-lg font-semibold mb-4">Rating</h2>
+              <RatingInput rating={rating} setRating={setRating} />
             </div>
 
             {/* Debug section */}

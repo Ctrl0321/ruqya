@@ -76,7 +76,7 @@ function Raqis() {
   }
 
   return (
-    <div className="min-h-screen mb-56 text-black">
+    <div className="min-h-screen  md:mx-24 mb-56 text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
         <ol className="flex items-center space-x-2 mx-5 mt-5 text-sm text-muted-foreground">
           <li>
@@ -88,7 +88,7 @@ function Raqis() {
           <li>{data.name}</li>
         </ol>
       </nav>
-      {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
+      {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48  bg-gray-600"></div>}
 
       <div className="flex flex-col md:flex-row items-center mx-8">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
@@ -132,10 +132,12 @@ function Raqis() {
       {/* Mobile view */}
       <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-1 text-xl group mt-2">
         {data.name && (
-          <h1 className="text-4xl font-semibold flex flex-row">
+          <div className="text-4xl font-semibold flex flex-row items-center justify-center">
+          <h1 >
             {data.name}
-            <p className={`ml-5 m-2 px-3 p-1 rounded-2xl text-sm font-sans font-normal ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `do ${data.status}` : ""}</p>
           </h1>
+          <p className={`m-auto mb-1 ml-2 px-3 p-1 rounded-2xl text-sm font-sans font-normal ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `${data.status}` : ""}</p>
+          </div>
         )}
         {data.Country && (
           <div className="flex items-center space-x-1">
@@ -240,6 +242,8 @@ function Raqis() {
           </div>
         </div>
       )}
+
+      
     </div>
   );
 }
