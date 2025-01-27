@@ -123,7 +123,7 @@ export default function BookRaqis() {
     .sort((a, b) => a - b);
 
   return (
-    <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
+    <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-72">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li>

@@ -7,7 +7,7 @@ import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter
 
 function Footer() {
   return (
-    <footer className="relative z-100 w-full pt-16 mt-28">
+    <footer className="relative z-100 w-full pt-16 mt-40">
       <Triangle />
       <div className="bg-RuqyaLightPurple text-white text-sm">
         <div className="container px-4 mx-auto text-center md:text-left ">

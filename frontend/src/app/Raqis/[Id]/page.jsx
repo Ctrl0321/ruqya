@@ -25,11 +25,11 @@ function Raqis() {
   }, [Id]);
 
   if (!Id) {
-    return <p className="min-h-screen mb-56 text-black">No ID found.</p>;
+    return <p className="min-h-screen text-black">No ID found.</p>;
   }
 
   if (data === null) {
-    return <p className="min-h-screen mb-56 text-black">Loading...</p>;
+    return <p className="min-h-screen text-black">Loading...</p>;
   }
 
   const overallAverage = data.rating.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
@@ -62,7 +62,7 @@ function Raqis() {
   }
 
   return (
-    <div className="min-h-screen mb-56 text-black">
+    <div className="min-h-screen  text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
         <ol className="flex items-center space-x-2 mx-5 mt-5 text-sm text-muted-foreground">
           <li>
@@ -110,7 +110,7 @@ function Raqis() {
         <div className="flex-col items-center justify-center hidden md:flex ml-auto">
           <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-blue-400 p-4">
             <h3 className="mb-3">Want to have a Session ?</h3>
-            <Button href={"/raqis/book/" + data.id} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
+            <Button link={"/Raqis/" + data.id + '/book'} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
           </div>
         </div>
       </div>

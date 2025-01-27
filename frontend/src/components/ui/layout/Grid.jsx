@@ -13,11 +13,11 @@ const Grid = ({
     <div className={cn(
       'grid',
       `grid-cols-${Math.min(cols, 1)}`,
-      `md:grid-cols-2`,
-      `lg:grid-cols-3`,
-      `xl:grid-cols-4`, // Ensure one row for desktop view
-      `2xl:grid-cols-5`, // Ensure one row for desktop view
-      `3xl:grid-cols-6`, // Ensure one row for desktop view
+      `md:grid-cols-${Math.min(cols, 3)}`,
+      `lg:grid-cols-${Math.min(cols, 4)}`,
+      `xl:grid-cols-${cols}`, // Ensure one row for desktop view
+      `2xl:grid-cols-${cols}`, // Ensure one row for desktop view
+      `3xl:grid-cols-${cols}`, // Ensure one row for desktop view
       `gap-${gap}`,
       'my-4', // Margin
       className
