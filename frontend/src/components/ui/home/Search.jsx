@@ -15,7 +15,7 @@ function Search() {
         <Input type="text" placeholder="Language" />
       </div>
       <div className="flex items-center justify-center -mt-13">
-      <Button text="Search" color="RuqyaGreen" bg="true" className={"w-20 md:w-32 md:h-10 bg-RuqyaGreen  md:mt-0"} />
+      <Button text="Search" color="RuqyaGreen" bg="true" className={"w-20 md:w-32 md:h-10 bg-RuqyaGreen rounded-lg md:mt-0"} />
       </div>
     </div>
   );

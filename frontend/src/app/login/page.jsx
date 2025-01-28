@@ -69,8 +69,8 @@ function Login() {
                   <span className="px-2 bg-white text-gray-500">OR</span>
                 </div>
               </div>
-              <div className="mt-5">
-                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-full py-3 border-2" />
+              <div className="mt-5  rounded-3xl">
+                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" />
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}
