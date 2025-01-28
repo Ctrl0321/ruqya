@@ -20,6 +20,8 @@ export default function SettingsPage() {
     const [newPassword, setNewPassword] = useState('');
     const [reenterPassword, setReenterPassword] = useState('');
 
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const addLanguage = (lang: string) => {
         const validLanguage = languages.find((l) => l.label.toLowerCase() === lang.toLowerCase());
         if (validLanguage && !selectedLanguages.includes(validLanguage.label)) {
@@ -36,38 +38,36 @@ export default function SettingsPage() {
     );
 
     const validateProfile = () => {
-        if (!name) return 'Name is required';
-        if (!email || !/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)) return 'Valid email is required';
-        if (!selectedCountry) return 'Country is required';
-        if (selectedLanguages.length === 0) return 'At least one language is required';
-        return null;
+        const newErrors: Record<string, string> = {};
+        if (!name) newErrors.name = 'Name is required';
+        if (!email || !/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)) newErrors.email = 'Valid email is required';
+        if (!selectedCountry) newErrors.country = 'Country is required';
+        if (selectedLanguages.length === 0) newErrors.languages = 'At least one language is required';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const validateSecurity = () => {
-        if (!currentPassword) return 'Current password is required';
-        if (!newPassword) return 'New password is required';
-        if (newPassword !== reenterPassword) return 'Passwords do not match';
-        return null;
+        const newErrors: Record<string, string> = {};
+        if (!currentPassword) newErrors.currentPassword = 'Current password is required';
+        if (!newPassword) newErrors.newPassword = 'New password is required';
+        if (newPassword !== reenterPassword) newErrors.reenterPassword = 'Passwords do not match';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleProfileSubmit = () => {
-        const error = validateProfile();
-        if (error) {
-            alert(error);
-            return;
+        if (validateProfile()) {
+            // Call API for profile update
+            console.log('Profile submitted', { name, email, bro, selectedCountry, selectedLanguages });
         }
-        // Call API for profile update
-        console.log('Profile submitted', { name, email, bro, selectedCountry, selectedLanguages });
     };
 
     const handleSecuritySubmit = () => {
-        const error = validateSecurity();
-        if (error) {
-            alert(error);
-            return;
+        if (validateSecurity()) {
+            // Call API for password update
+            console.log('Security submitted', { currentPassword, newPassword });
         }
-        // Call API for password update
-        console.log('Security submitted', { currentPassword, newPassword });
     };
 
     return (
@@ -80,17 +80,33 @@ export default function SettingsPage() {
                     <div className="space-y-4">
                         <div>
                             <label className="block mb-1 font-medium">Name</label>
-                            <Input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" />
+                            <Input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter your name"
+                            />
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                         </div>
 
                         <div>
                             <label className="block mb-1 font-medium">Email</label>
-                            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
+                            <Input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                            />
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
 
                         <div>
                             <label className="block mb-1 font-medium">Bro</label>
-                            <Textarea value={bro} onChange={(e) => setBro(e.target.value)} placeholder="Write something here..." />
+                            <Textarea
+                                value={bro}
+                                onChange={(e) => setBro(e.target.value)}
+                                placeholder="Write something here..."
+                            />
                         </div>
 
                         <div>
@@ -105,6 +121,7 @@ export default function SettingsPage() {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
                         </div>
 
                         <div>
@@ -152,6 +169,7 @@ export default function SettingsPage() {
                                     </div>
                                 ))}
                             </div>
+                            {errors.languages && <p className="text-red-500 text-sm mt-1">{errors.languages}</p>}
                         </div>
 
                         <Button className="mt-4" onClick={handleProfileSubmit}>Save Profile</Button>
@@ -173,6 +191,7 @@ export default function SettingsPage() {
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 placeholder="Enter current password"
                             />
+                            {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>}
                         </div>
 
                         <div>
@@ -183,6 +202,7 @@ export default function SettingsPage() {
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 placeholder="Enter new password"
                             />
+                            {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
                         </div>
 
                         <div>
@@ -193,6 +213,7 @@ export default function SettingsPage() {
                                 onChange={(e) => setReenterPassword(e.target.value)}
                                 placeholder="Re-enter new password"
                             />
+                            {errors.reenterPassword && <p className="text-red-500 text-sm mt-1">{errors.reenterPassword}</p>}
                         </div>
 
                         <Button className="mt-4" onClick={handleSecuritySubmit}>Update Password</Button>
@@ -202,3 +223,4 @@ export default function SettingsPage() {
         </div>
     );
 }
+
