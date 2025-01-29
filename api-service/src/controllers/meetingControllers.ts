@@ -1,14 +1,27 @@
-import {AuthenticatedRequest} from "../@types/express";
-import {Response} from "express";
-import Meeting, {MeetingStatus} from "../models/meeting";
-import {validateAndConvertTimezone} from "../utils/timezone";
+import exp from "node:constants";
+
+require('dotenv').config();
+
+import { AuthenticatedRequest } from "../@types/express";
+import { Response } from "express";
 import moment from "moment-timezone";
+import { StreamClient } from "@stream-io/node-sdk";
+import { validateAndConvertTimezone } from "../utils/timezone";
+import Meeting, {MeetingStatus} from "../models/meeting";
 
 
+const apiKey = process.env.API_KEY || "";
+const secret = process.env.SECRET_KEY || "";
+const client = new StreamClient(apiKey, secret);
 
-interface DateRange {
-    start: Date;
-    end: Date;
+interface MeetingRequest {
+    meetingId: string;
+    topic: string;
+    date: string;
+    userId: string;
+    notificationSend?: boolean;
+    timeZone?: string;
+    duration: number;
 }
 
 interface StatisticsResponse {
@@ -24,6 +37,10 @@ interface StatisticsResponse {
     }[];
 }
 
+interface DateRange {
+    start: Date;
+    end: Date;
+}
 
 const convertMeetingDates = (meetings: any[], timeZone: string): any[] => {
     return meetings.map(meeting => ({
@@ -33,89 +50,32 @@ const convertMeetingDates = (meetings: any[], timeZone: string): any[] => {
     }));
 };
 
-export const getAllMeetings = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
+
+export const getAllMeetings = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
-
-        let validatedTimeZone: string;
-        try {
-            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
-        } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
-            });
-        }
+        const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
         const meetings = await Meeting.find();
+        if (!meetings.length) return res.status(404).json({ message: 'No meetings found' });
 
-        if (!meetings || meetings.length === 0) {
-            return res.status(404).json({ message: 'No meetings found' });
-        }
-
-        const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
-        res.status(200).json(convertedMeetings);
+        res.status(200).json(convertMeetingDates(meetings, validatedTimeZone));
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
-//     try {
-//         const { timeZone = 'UTC' } = req.query;
-//
-//         let validatedTimeZone: string;
-//         try {
-//             validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
-//         } catch (error) {
-//             return res.status(400).json({
-//                 message: error instanceof Error ? error.message : 'Invalid timezone'
-//             });
-//         }
-//
-//         const today = moment.tz(validatedTimeZone).startOf('day');
-//
-//         const meetings = await Meeting.find({
-//             date: { $gte: today.toDate() }
-//         });
-//
-//         if (!meetings || meetings.length === 0) {
-//             return res.status(404).json({ message: 'No meetings found' });
-//         }
-//
-//         const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
-//         res.status(200).json(convertedMeetings);
-//     } catch (error) {
-//         res.status(500).json({ message: 'Server error', error });
-//     }
-// };
-
 
 export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
-
-        let validatedTimeZone: string;
-        try {
-            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
-        } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone',
-            });
-        }
+        const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
         const now = moment.tz(validatedTimeZone);
         const endOfToday = moment.tz(validatedTimeZone).endOf('day');
 
-        const meetings = await Meeting.find({
-            date: { $gte: now.toDate(), $lte: endOfToday.toDate() },
-        });
-
-        if (!meetings || meetings.length === 0) {
-            return res.status(200).json([]);
-        }
-
-        const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
-        res.status(200).json(convertedMeetings);
+        const meetings = await Meeting.find({ date: { $gte: now.toDate(), $lte: endOfToday.toDate() } });
+        res.status(200).json(convertMeetingDates(meetings, validatedTimeZone));
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
@@ -125,145 +85,74 @@ export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: 
 export const addMeeting = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const rakiId = req.user?.id;
-        if (!rakiId) {
-            return res.status(401).json({ message: 'User ID not found in request' });
-        }
+        if (!rakiId) return res.status(401).json({ message: 'User ID not found in request' });
 
-        const { meetingId, topic, date, userId, notificationSend=false, timeZone = 'UTC' } = req.body;
-
-        if (!meetingId || !topic || !date || !userId) {
+        const { meetingId, topic, date, userId, notificationSend = false, timeZone = 'UTC', duration = 60 } = req.body as MeetingRequest;
+        if (!meetingId || !topic || !date || !userId || !duration) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
-        let validatedTimeZone: string;
-        try {
-            validatedTimeZone = validateAndConvertTimezone(timeZone);
-        } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
-            });
-        }
-
+        const validatedTimeZone = validateAndConvertTimezone(timeZone);
         const utcDate = moment.tz(date, validatedTimeZone).utc().toDate();
-        const dayStart = moment(utcDate).startOf('day');
-        const dayEnd = moment(utcDate).endOf('day');
 
-
-
+        // Check for scheduling conflicts
         const existingMeetings = await Meeting.find({
-            $or: [
-                { rakiId: rakiId },
-                { userId: userId }
-            ],
-            date: {
-                $gte: dayStart.toDate(),
-                $lte: dayEnd.toDate()
-            }
+            $or: [{ rakiId }, { userId }],
+            date: utcDate,
         });
 
         if (existingMeetings.length > 0) {
-            // Check which party has the conflict
-            const rakiConflict = existingMeetings.some(meeting => meeting.rakiId === rakiId);
-            const userConflict = existingMeetings.some(meeting => meeting.userId === userId);
-
-            let conflictMessage = '';
-            if (rakiConflict && userConflict) {
-                conflictMessage = 'Both Raki and User already have meetings scheduled for this date';
-            } else if (rakiConflict) {
-                conflictMessage = 'Raki already has a meeting scheduled for this date';
-            } else {
-                conflictMessage = 'User already has a meeting scheduled for this date';
-            }
-
-            return res.status(409).json({
-                message: 'Meeting scheduling conflict',
-                detail: conflictMessage,
-                conflictingMeetings: existingMeetings.map(meeting => ({
-                    ...meeting.toObject(),
-                    date: moment(meeting.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
-                }))
-            });
+            return res.status(409).json({ message: 'Meeting scheduling conflict', conflictingMeetings: existingMeetings });
         }
 
-        const meeting = new Meeting({
-            meetingId,
-            topic,
-            date: utcDate,
-            rakiId,
-            userId,
-            notificationSend: notificationSend ?? false,
+        // Create meeting in DB
+        const newMeeting = new Meeting({ meetingId, topic, date: utcDate, rakiId, userId, notificationSend, duration });
+        const savedMeeting = await newMeeting.save();
+
+        try {
+            console.log(`Creating Stream video call for meetingId: ${meetingId}`);
+
+            const call = client.video.call('default', meetingId);
+            const streamResponse = await call.create({
+                data: {
+                    created_by_id: rakiId,
+                    members: [{ user_id: rakiId, role: 'admin' }, { user_id: userId }],
+                    custom: { topic },
+                    settings_override: {
+                        recording: { mode: 'available' }
+                    }
+                },
+            });
+
+            console.log("Stream response:", streamResponse);
+        } catch (error: any) {
+            console.error("Stream API Error:", error?.message || error);
+            await Meeting.findByIdAndDelete(savedMeeting._id);
+            return res.status(500).json({ message: 'Failed to create Stream video call', error: error?.message || error });
+        }
+
+        res.status(201).json({
+            ...savedMeeting.toObject(),
+            date: moment(savedMeeting.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss'),
         });
 
-        const savedMeeting = await meeting.save();
-
-        const convertedMeeting = {
-            ...savedMeeting.toObject(),
-            date: moment(savedMeeting.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
-        };
-
-        res.status(201).json(convertedMeeting);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to add meeting', error });
+    } catch (error: any) {
+        console.error("General Error:", error?.message || error);
+        res.status(500).json({ message: 'Failed to add meeting', error: error?.message || error });
     }
 };
+
 
 export const getMeetingsByUserId = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const userId = req.user?.id;
-        if (!userId) {
-            return res.status(401).json({ message: 'User ID not found in request' });
-        }
+        if (!userId) return res.status(401).json({ message: 'User ID not found in request' });
 
         const { timeZone = 'UTC' } = req.query;
-
-        let validatedTimeZone: string;
-        try {
-            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
-        } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
-            });
-        }
+        const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
         const meetings = await Meeting.find({ userId });
-
-        if (!meetings || meetings.length === 0) {
-            return res.status(404).json({ message: 'No meetings found for this user' });
-        }
-
-        const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
-        res.status(200).json(convertedMeetings);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch meetings', error });
-    }
-};
-
-export const getMeetingsByRakiId = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
-    try {
-        const rakiId = req.user?.id;
-        if (!rakiId) {
-            return res.status(401).json({ message: 'User ID not found in request' });
-        }
-
-        const { timeZone = 'UTC' } = req.query;
-
-        let validatedTimeZone: string;
-        try {
-            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
-        } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
-            });
-        }
-
-        const meetings = await Meeting.find({ rakiId });
-
-        if (!meetings || meetings.length === 0) {
-            return res.status(404).json({ message: 'No meetings found for this Raki ID' });
-        }
-
-        const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
-        res.status(200).json(convertedMeetings);
+        res.status(200).json(convertMeetingDates(meetings, validatedTimeZone));
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch meetings', error });
     }
@@ -465,7 +354,6 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
                 break;
 
             case 'all':
-                // No date range needed for all-time stats
                 break;
 
             default:
@@ -501,43 +389,6 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
             response.averageMeetingsPerDay = Number((completedMeetings / daysDifference).toFixed(2));
         }
 
-        // if (dateRange) {
-        //     const dailyStats = await Meeting.aggregate([
-        //         {
-        //             $match: {
-        //                 rakiId,
-        //                 date: { $gte: dateRange.start, $lte: dateRange.end },
-        //                 status: { $ne: 'cancelled' }
-        //             }
-        //         },
-        //         {
-        //             $group: {
-        //                 _id: {
-        //                     $dateToString: {
-        //                         format: "%Y-%m-%d",
-        //                         date: "$date",
-        //                         timezone: validatedTimeZone
-        //                     }
-        //                 },
-        //                 meetings: { $sum: 1 },
-        //                 dailyRevenue: { $sum: MEETING_COST }
-        //             }
-        //         },
-        //         {
-        //             $sort: { _id: 1 }
-        //         }
-        //     ]);
-        //
-        //     response = {
-        //         ...response,
-        //         dailyBreakdown: dailyStats.map(day => ({
-        //             date: day._id,
-        //             meetings: day.meetings,
-        //             revenue: day.dailyRevenue
-        //         }))
-        //     };
-        // }
-
         res.status(200).json(response);
 
     } catch (error) {
@@ -548,3 +399,120 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
         });
     }
 };
+
+
+export const getMeetingsByRakiId = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const rakiId = req.user?.id;
+        if (!rakiId) {
+            return res.status(401).json({ message: 'User ID not found in request' });
+        }
+
+        const { timeZone = 'UTC' } = req.query;
+
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone'
+            });
+        }
+
+        const meetings = await Meeting.find({ rakiId });
+
+        if (!meetings || meetings.length === 0) {
+            return res.status(404).json({ message: 'No meetings found for this Raki ID' });
+        }
+
+        const convertedMeetings = convertMeetingDates(meetings, validatedTimeZone);
+        res.status(200).json(convertedMeetings);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch meetings', error });
+    }
+};
+
+export const getCallDetails = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
+    try {
+        const { meetingId } = req.params;
+
+        if (!meetingId) {
+            return res.status(400).json({ message: 'Meeting ID is required' });
+        }
+
+        try {
+            const call = client.video.call('default', meetingId);
+            const callDetails = await call.get();
+
+            return res.status(200).json({ callDetails });
+        } catch (error: any) {
+            if (error.code === 16) {
+                return res.status(404).json({ message: 'Meeting not found in GetStream', error: error.metadata });
+            }
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('Failed to fetch call details:', error);
+        res.status(500).json({ message: 'Failed to retrieve call details', error });
+    }
+};
+
+
+export const  getCallToken =async (req:AuthenticatedRequest,res:Response):Promise<any> =>{
+
+    const { userId,role } = req.body;
+
+    if (!userId || !role ) {
+        return res.status(400).json({ error: "userId and role required" });
+    }
+
+    try {
+        const token = client.generateUserToken({ user_id: userId, role });
+
+        res.json({ token });
+    } catch (error) {
+        console.error("Error generating token:", error);
+        res.status(500).json({ error: "Failed to generate token" });
+    }
+
+}
+
+export const startRecording = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
+    try {
+        const { meetingId } = req.body;
+        const call = client.video.call('default', meetingId);
+
+        await call.startRecording();
+        res.status(200).json({ message: 'Recording started' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to start recording', error });
+    }
+};
+
+export const stopRecording = async (req: AuthenticatedRequest, res: Response):Promise<any> => {
+    try {
+        const { meetingId } = req.body;
+        const call = client.video.call('default', meetingId);
+
+        await call.stopRecording();
+        res.status(200).json({ message: 'Recording stopped' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to stop recording', error });
+    }
+};
+
+// export const getRecording = async (req: AuthenticatedRequest, res: Response) => {
+//     try {
+//         const { meetingId } = req.params;
+//         const call = client.video.call('default', meetingId);
+//         const recordings = await call.getRecordings();
+//
+//         res.status(200).json({ recordings });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Failed to retrieve recordings', error });
+//     }
+// };
+
+
+
