@@ -13,7 +13,7 @@ const menuItems = [
   { icon: BookOpen, label: 'Rakis', href: '/admin/rakis' },
   { icon: Users, label: 'Users', href: '/admin/users' },
   { icon: Calendar, label: 'Availability', href: '/admin/availability' },
-  { icon: Calendar, label: 'Sessions', href: '/admin/classes' },
+  { icon: Calendar, label: 'Sessions', href: '/admin/sessions' },
   { icon: DollarSign, label: 'Revenue', href: '/admin/revenue' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },
 ];
