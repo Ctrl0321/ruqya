@@ -1,6 +1,11 @@
 import {  Request,  Response } from 'express';
 import User from '../models/user';
 import generateToken from '../utils/generateToken';
+import {StreamClient} from "@stream-io/node-sdk";
+
+const apiKey = process.env.API_KEY || "";
+const secret = process.env.SECRET_KEY || "";
+const client = new StreamClient(apiKey, secret);
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -20,6 +25,18 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         });
 
         if (user) {
+            console.log(`Registering user in Stream Video: ${user._id}`);
+
+            await client.upsertUsers([{
+                id: user.id,
+                name: user.name,
+                role: user.role,
+                image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+            }]);
+
+            console.log("User registered successfully in Stream Video.");
+
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
