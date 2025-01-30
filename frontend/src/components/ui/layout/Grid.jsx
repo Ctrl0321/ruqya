@@ -14,6 +14,7 @@ const Grid = ({
       'grid',
       `grid-cols-${Math.min(cols, 1)}`,
       `md:grid-cols-${Math.min(cols, 2)}`,
+      `ipad-landscape:grid-cols-${Math.min(cols, 3)}`,
       `lg:grid-cols-${Math.min(cols, 3)}`,
       `xl:grid-cols-${cols}`, // Ensure one row for desktop view
       `2xl:grid-cols-${cols}`, // Ensure one row for desktop view
@@ -28,3 +29,4 @@ const Grid = ({
 }
 
 export default Grid;
+

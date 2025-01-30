@@ -32,8 +32,8 @@ export default function Home() {
       </div>
       <Search />
       <Second />
-      <Third sampledata={sampledata} />
-      <Forth data={sampledata} title="Meet Our Expert Raqis" />
+      <Third raqiData={sampledata} />
+      <Forth raqiData={sampledata} title="Meet Our Expert Raqis" />
     </div>
   );
 }

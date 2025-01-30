@@ -18,6 +18,7 @@ const ResponsiveGrid = ({ children, data = [], breakpoints = {} }) => {
         else if (width >= 1024) count = breakpoints['lg'] || 3;
         else if (width >= 1180) count = breakpoints['ipad-landscape'] || 3;
         else if (width >= 768) count = breakpoints.ipad || 2;
+        else count = breakpoints.mobile || 1; 
         setVisibleItems(data.slice(0, count));
       }
     };
