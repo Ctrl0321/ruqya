@@ -44,7 +44,7 @@ function Login() {
               />
             </div>
 
-            <h1 className="text-2xl text-gray-700 text-center mb-8">Login</h1>
+            <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
             <form className="space-y-6">
               <div className="relative mb-4">
