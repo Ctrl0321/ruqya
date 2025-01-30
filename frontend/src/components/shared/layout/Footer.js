@@ -16,7 +16,7 @@ function Footer() {
             <div className="space-y-4 order-3 md:order-1">
               <div className="border-b border-[#424867] opacity-50 pb-4 md:hidden"></div>
               <h3 className="text-[#424867] text-xl font-medium mb-6 flex items-center justify-center md:justify-start gap-2">
-                <FaMosque className="text-[#424867]" /> {/* Add the icon here */}
+                <FaMosque className="text-[#424867]" /> 
                 Prophetic Ruqyah
               </h3>
               <div className="space-y-3">
@@ -44,10 +44,9 @@ function Footer() {
             </div>
 
             {/* Navigation Links */}
-            <div className="space-y-4 text-lg md:text-sm order-2 md:order-2">
+            <div className="flex items-center justify-center md:justify-start text-lg md:text-sm order-2 md:order-2">
               {/* <h3 className="text-[#424867] text-xl font-medium mb-6">Quick Links</h3> */}
-              <nav className="space-y-3">
-
+              <nav className="space-y-6">
               <Link href="/" className="block text-[#424867] hover:text-teal-600">
                   Home
                 </Link>
