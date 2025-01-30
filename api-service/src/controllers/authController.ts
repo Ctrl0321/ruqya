@@ -24,13 +24,22 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             role
         });
 
+        let getStreamAdmin="user"
+
+        if (user.role==="admin"){
+            getStreamAdmin="host"
+        }
+        else if (user.role==="super-admin"){
+            getStreamAdmin="admin"
+        }
+
         if (user) {
             console.log(`Registering user in Stream Video: ${user._id}`);
 
             await client.upsertUsers([{
                 id: user.id,
                 name: user.name,
-                role: user.role,
+                role: getStreamAdmin,
                 image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
             }]);
 

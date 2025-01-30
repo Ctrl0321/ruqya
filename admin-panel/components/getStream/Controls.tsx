@@ -1,6 +1,5 @@
-"use client"
+'use client'
 
-import React from "react";
 import {
     SpeakingWhileMutedNotification,
     ToggleAudioPublishingButton,
@@ -9,8 +8,7 @@ import {
     RecordCallButton,
     ReactionsButton,
     CancelCallButton,
-} from "@stream-io/video-react-sdk";
-import { NoiseCancellationButton } from "./NoiseCancellationButton";
+} from '@stream-io/video-react-sdk';
 
 interface ControlsProps {
     onLeave: () => void;
@@ -24,7 +22,6 @@ export const Controls: React.FC<ControlsProps> = ({ onLeave }) => (
         <ToggleVideoPublishingButton />
         <ScreenShareButton />
         <RecordCallButton />
-        <NoiseCancellationButton />
         <ReactionsButton />
         <CancelCallButton onLeave={onLeave} />
     </div>

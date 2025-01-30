@@ -242,6 +242,43 @@ export const removeRakiAvailability = async (date: string, startTime:string) => 
 // }
 
 
+export const verifyMeetingAccess = async (callId: string, userId: string) => {
+    try {
+        const response = await api.get(`ruqya-api/meeting/getCallDetails/${callId}`);
+        const { callDetails } = response.data;
+
+        // Extract members from the call details
+        const members = callDetails?.members ?? [];
+
+        // Find the user in the members array
+        const user = members.find((member: { user_id: string }) => {
+            console.log("Checking member:", member.user_id);
+            return member.user_id === userId.toString(); // Ensure comparison works
+        });
+
+        console.log("Found User:", user, "All Members:", members, "Input User ID:", userId);
+
+        if (!user) {
+            throw new Error('Unauthorized');
+        }
+
+        return {
+            role: user.role || 'member',
+            authorized: true
+        };
+    } catch (error) {
+        throw new Error('Meeting verification failed');
+    }
+};
+
+
+
+export const getStreamToken = async (userId: string, role: string) => {
+    const response = await api.post(`ruqya-api/meeting/getCallToken`, { userId, role });
+    return response.data.token;
+};
+
+
 
 export default api;
 

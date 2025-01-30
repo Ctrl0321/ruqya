@@ -1,95 +1,95 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useRef, useState, ReactNode, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import {
-    StreamVideoClient,
-    Call,
-    CallState,
-    CameraManager,
-    MicrophoneManager
-} from "@stream-io/video-react-sdk";
-import { LoadingScreen } from "./LoadingScreen";
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { StreamVideoClient } from '@stream-io/video-react-sdk';
+import { useRouter } from 'next/navigation';
+import {getStreamToken, verifyMeetingAccess} from "@/lib/api";
+import {useAuth} from "@/contexts/AuthContexts";
 
-interface MeetingProviderProps {
-    children: (props: { client: StreamVideoClient; call: Call }) => ReactNode;
-    userId: string;
-    meetingId: string;
+interface MeetingContextType {
+    client: StreamVideoClient | null;
+    call: any | null;
+    error: string | null;
 }
 
-export const MeetingProvider: React.FC<MeetingProviderProps> = ({ children, userId, meetingId }) => {
+const MeetingContext = createContext<MeetingContextType>({
+    client: null,
+    call: null,
+    error: null
+});
+
+export const useMeeting = () => useContext(MeetingContext);
+
+export const MeetingProvider: React.FC<{
+    children: React.ReactNode;
+    userId: string;
+    callId: string;
+}> = ({ children, userId, callId }) => {
+    const { user: currentUser } = useAuth();
     const [token, setToken] = useState<string | null>(null);
     const [client, setClient] = useState<StreamVideoClient | null>(null);
-    const [call, setCall] = useState<Call | null>(null);
+    const [call, setCall] = useState<any | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+    const router = useRouter();
     const hasLeft = useRef(false);
 
-    // Check meeting authorization and fetch token
-    const initializeMeeting = useCallback(async () => {
-        try {
-            const meetingResponse = await axios.get(`${process.env.REACT_APP_API_URL}/meetings/${meetingId}`);
-            const { rakiId, userId: participantId } = meetingResponse.data;
-
-            if (userId !== rakiId && userId !== participantId) {
-                setError("You are not authorized to join this meeting");
-                return;
-            }
-
-            const role = userId === rakiId ? "admin" : "member";
-
-            const tokenResponse = await axios.post(`${process.env.REACT_APP_API_URL}/getstream-token`, {
-                userId,
-                role,
-            });
-
-            setToken(tokenResponse.data.token);
-        } catch (error: any) {
-            console.error("Error initializing meeting:", error);
-            setError(error.response?.status === 404 ? "Meeting not found" : "Failed to initialize meeting");
-            navigate("/");
-        }
-    }, [userId, meetingId, navigate]);
-
     useEffect(() => {
-        if (userId && meetingId) {
+        const initializeMeeting = async () => {
+            try {
+                const { role } = await verifyMeetingAccess(callId, userId);
+                const streamToken = await getStreamToken(userId, role);
+                setToken(streamToken);
+            } catch (error) {
+                setError('Unauthorized access');
+                // router.push('/');
+            }
+        };
+
+        if (userId && callId) {
             initializeMeeting();
         }
-    }, [userId, meetingId, initializeMeeting]);
+    }, [userId, callId]);
 
     useEffect(() => {
         if (!token) return;
 
         const clientInstance = new StreamVideoClient({
-            apiKey: process.env.REACT_APP_API_KEY || "",
-            user: {
-                id: userId,
-                name: userId,
-            },
+            apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
+            user: { id: userId, name: userId },
             token,
         });
 
-        const callInstance:any = clientInstance.call("default", meetingId);
+        const callInstance:any = clientInstance.call('default', callId);
         setClient(clientInstance);
         setCall(callInstance);
 
+        // const joinCall = async () => {
+        //     try {
+        //         await callInstance.join({ create: false });
+        //     } catch (error) {
+        //         setError('Failed to join meeting');
+        //         router.push('/');
+        //     }
+        // };
+
         const joinCall = async () => {
             try {
+                console.log("Joining call with callId:", callId);
                 await callInstance.join({ create: false });
+                console.log("Successfully joined the call");
             } catch (error) {
-                console.error("Error joining call:", error);
-                setError("Failed to join meeting");
-                navigate("/");
+                console.error("Failed to join meeting:", error);
+                setError('Failed to join meeting');
+                router.push('/');
             }
         };
 
         joinCall();
 
-        callInstance.on("leave", () => {
+        callInstance.on('leave', () => {
             if (!hasLeft.current) {
                 hasLeft.current = true;
-                navigate("/");
+                router.push('/');
             }
         });
 
@@ -100,42 +100,11 @@ export const MeetingProvider: React.FC<MeetingProviderProps> = ({ children, user
             }
             clientInstance?.disconnectUser();
         };
-    }, [token, userId, meetingId, navigate]);
+    }, [token, userId, callId]);
 
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold text-red-600 mb-4">{error}</h2>
-                    <button
-                        onClick={() => navigate("/")}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        Return Home
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    if (!client || !call || !token) {
-        return <LoadingScreen />;
-    }
-
-    // Use useMemo to ensure `call` remains a valid type
-    const wrappedCall: Call = useMemo(() => {
-        if (!call) return null as unknown as Call; // Ensure `call` is always defined
-
-        return {
-            ...call,
-            leave: () => {
-                if (!hasLeft.current) {
-                    hasLeft.current = true;
-                    call.leave();
-                }
-            },
-        } as Call;
-    }, [call]);
-
-    return <>{children({ client, call: wrappedCall })}</>;
+    return (
+        <MeetingContext.Provider value={{ client, call, error }}>
+            {children}
+        </MeetingContext.Provider>
+    );
 };
