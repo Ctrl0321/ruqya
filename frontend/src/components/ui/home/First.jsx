@@ -21,8 +21,8 @@ function First() {
             <p className="text-sm mt-5 md:text-base md:ml-8 mx-5">Connect with expert Raqis for personalized spiritual healing and guidance.</p>
             <br />
             <div className="flex flex-row justify-center md:justify-start mb-8 space-x-4 mx-5 md:ml-8">
-              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="px-8 py-3" />
-              <Button text="Learn Ruqyah" className="px-8 py-3 font-bold border-[#36454F] text-[#596571]"/>
+              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="px-8 py-3 rounded-lg" />
+              <Button text="Learn Ruqyah" className="px-8 py-3 font-bold border-[#36454F] text-[#596571] rounded-lg"/>
             </div>
           </div>
         </div>

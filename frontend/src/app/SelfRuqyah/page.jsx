@@ -45,7 +45,7 @@ export default function RuqyahPage() {
                   <FileIcon className="h-8 w-8 text-red-500" />
                   <span>PDF Name Goes Here.pdf</span>
                 </div>
-                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700">
+                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700 rounded-lg">
                   
                 </Button>
               </div>
@@ -54,7 +54,7 @@ export default function RuqyahPage() {
                   <Music2Icon className="h-8 w-8 text-teal-500" />
                   <span>MP3 name goes here</span>
                 </div>
-                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700">
+                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700 rounded-lg">
                   Download
                 </Button>
               </div>

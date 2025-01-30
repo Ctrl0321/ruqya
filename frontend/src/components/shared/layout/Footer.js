@@ -68,7 +68,7 @@ function Footer() {
               <p className="text-[#424867] mb-6">to get the latest news about health from our experts</p>
               <div className="flex justify-center items-center gap-2 p-2 bg-white rounded-lg">
                 <Input type="email" placeholder="example@gmail.com" className="border-none bg-transparent" />
-                <Button color="RuqyaGreen" bg={true} text="Subscribe" />
+                <Button color="RuqyaGreen" bg={true} text="Subscribe" className="rounded-lg" />
               </div>
             </div>
           </div>

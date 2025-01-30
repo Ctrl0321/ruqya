@@ -106,7 +106,7 @@ const BookingCard = ({ Booking }) => {
           </div>
         </div>
       </div>
-      <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl" disabled={isSessionWithinOneHour(Booking.bookedDate, Booking.bookedTime) && isSessionActive(Booking.bookedDate, Booking.bookedTime)} />
+      {/* <Button text="Book a Session" color="RuqyaGreen"  bg={true} className="rounded-xl " disabled={isSessionWithinOneHour(Booking.bookedDate, Booking.bookedTime) && isSessionActive(Booking.bookedDate, Booking.bookedTime)} /> */}
     </div>
   );
 };
