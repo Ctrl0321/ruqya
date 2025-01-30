@@ -55,7 +55,7 @@ export const MeetingProvider: React.FC<{
 
         const clientInstance = new StreamVideoClient({
             apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
-            user: { id: userId, name: userId },
+            user: { id: userId, name: currentUser?.name },
             token,
         });
 
@@ -63,14 +63,6 @@ export const MeetingProvider: React.FC<{
         setClient(clientInstance);
         setCall(callInstance);
 
-        // const joinCall = async () => {
-        //     try {
-        //         await callInstance.join({ create: false });
-        //     } catch (error) {
-        //         setError('Failed to join meeting');
-        //         router.push('/');
-        //     }
-        // };
 
         const joinCall = async () => {
             try {

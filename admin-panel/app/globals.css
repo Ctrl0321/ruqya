@@ -98,3 +98,53 @@ body {
    flex-grow: 0 !important;
   overflow-y: hidden;
 }
+
+.str-video__call-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem !important;
+  padding: 0.6rem 0.6rem !important;
+  background-color: #a3a3a3;
+  border-radius: 25px;
+  width: fit-content;
+  margin: 30px auto ;
+}
+
+.noise-btn{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: black;
+  cursor: pointer;
+  display:flex ;
+  justify-content: center;
+  align-items: center;
+}
+
+.noise-btn svg{
+  color: white;
+}
+
+.react-tooltip {
+  background-color: #000; /* Black background */
+  color: #fff;           /* White text */
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+.my-icon-enabled {
+  background-color: red;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.my-icon-disabled {
+  background-color: grey;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+}

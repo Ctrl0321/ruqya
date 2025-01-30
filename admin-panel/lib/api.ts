@@ -264,7 +264,8 @@ export const verifyMeetingAccess = async (callId: string, userId: string) => {
 
         return {
             role: user.role || 'member',
-            authorized: true
+            authorized: true,
+            name:user.name
         };
     } catch (error) {
         throw new Error('Meeting verification failed');
