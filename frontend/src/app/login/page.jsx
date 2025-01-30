@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <main className="min-h-screen flex items-center justify-center p-4 relative text-sm md:text-lg">
       <Image src={bg} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
@@ -46,15 +49,27 @@ function Login() {
             <form className="space-y-6">
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-2 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" placeholder="Enter your Email Address here" className="" />
+                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
+                  <Input
+                    type="email"
+                    placeholder="Enter your Email Address here"
+                    className="text-sm"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-2 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" placeholder="Enter your password" className="" />
+                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
+                  <Input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="text-sm"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
               </div>
 

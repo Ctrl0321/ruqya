@@ -44,7 +44,7 @@ const BookSessionPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCardClick = () => {
+  const handleButtonClick = () => {
     if (validateForm()) {
       // Handle booking logic here
       alert(`Booking session with Raqi ID: ${Id}\nDate: ${selectedDate.toDateString()}\nTime: ${selectedTime}`);
@@ -119,9 +119,10 @@ const BookSessionPage = () => {
         </form>
       </div>
       <div className="w-1/2 mx-5">
-        <div className="border border-gray-300 rounded-lg shadow-lg p-4" onClick={handleCardClick}>
+        <div className="border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
           {bookingData ? <BookingCard Booking={bookingData} /> : <p>No booking data available.</p>}
+          <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
         </div>
       </div>
     </div>
