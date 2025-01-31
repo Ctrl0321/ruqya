@@ -13,8 +13,8 @@ const userTimeZone = getUserTimeZone();
 export const login = async (email, password) => {
     const response = await api.post('ruqya-api/auth/login', { email, password });
     const { token } = response.data;
-    // localStorage.setItem('token', token);
-    // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    localStorage.setItem('fe-token', token);
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return response.data;
 }
 
@@ -24,7 +24,7 @@ export const getUserProfile = async (id) => {
 };
 
 export const getOwnProfile = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -52,7 +52,7 @@ export const getUsers = async () => {
 
 export const updateUserRole=async (userId, newRole)=>{
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -70,7 +70,7 @@ export const getRakis = async () => {
 
 export const updateUserStatus=async (userId, newRole)=>{
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -84,7 +84,7 @@ export const updateUserStatus=async (userId, newRole)=>{
 }
 
 export const getTodaySessions = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -98,7 +98,7 @@ export const getTodaySessions = async () => {
     return response.data
 };
 export const cancelSession=async (meetingId, note)=>{
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -111,7 +111,7 @@ export const cancelSession=async (meetingId, note)=>{
     return response.data
 }
 export const rescheduleSession=async (meetingId,newDate)=>{
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -127,7 +127,7 @@ export const rescheduleSession=async (meetingId,newDate)=>{
 }
 
 export  const getReviews= async (rakiId)=>{
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -151,7 +151,7 @@ export  const getReviews= async (rakiId)=>{
 export const getRevenueData = async (filter) => {
     const { filterType, startDate, endDate } = filter;
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('fe-token');
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
@@ -175,7 +175,7 @@ export const getRevenueData = async (filter) => {
 
 
 export const getRakiAvailability = async (rakiId, date) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("fe-token")
     if (!token) {
         throw new Error("No token found. Please log in.")
     }
@@ -195,7 +195,7 @@ export const getRakiAvailability = async (rakiId, date) => {
 }
 
 export const setRakiAvailability = async (date,timeSlots) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("fe-token")
     if (!token) {
         throw new Error("No token found. Please log in.")
     }
@@ -211,7 +211,7 @@ export const setRakiAvailability = async (date,timeSlots) => {
 }
 
 export const removeRakiAvailability = async (date, startTime) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("fe-token")
     if (!token) {
         throw new Error("No token found. Please log in.")
 

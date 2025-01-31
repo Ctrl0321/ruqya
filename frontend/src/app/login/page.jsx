@@ -7,12 +7,40 @@ import { useEffect, useState } from "react";
 
 // import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
+import {useRouter} from "next/navigation";
+import {login} from "@/lib/api";
 
 const bg = ""
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setLoading] = useState(false)
+  const router = useRouter()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+
+    console.log("Iam here")
+
+    try {
+      const response = await login(email, password)
+
+      if (response && response.role === "user") {
+        setLoading(false)
+        router.push("/");
+
+      } else {
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false)
+    }
+  };
+
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 relative text-sm md:text-lg">
@@ -48,7 +76,7 @@ function Login() {
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
@@ -76,7 +104,7 @@ function Login() {
               </div>
 
               <div className="mt-10">
-                <Button type="submit" bg={true} text="Log In" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
+                <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" >Login</button>
               </div>
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
