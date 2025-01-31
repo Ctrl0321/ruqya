@@ -27,10 +27,9 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import {
-  getUsers,
   updateUserStatus,
   updateUserRole,
-  getReviews,
+  getReviews, getRakis,
 } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContexts";
 
@@ -72,7 +71,7 @@ export default function TutorsPage() {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const tutorData = await getUsers();
+        const tutorData = await getRakis();
         setTutors(tutorData);
         setFilteredTutors(tutorData);
       } catch (error) {

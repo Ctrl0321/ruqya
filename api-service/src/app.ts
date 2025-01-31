@@ -7,6 +7,8 @@ import userRoutes from "./routes/userRoutes";
 import rakiAvailabilityRoutes from "./routes/rakiAvailabilityRoutes";
 import meetingRoutes from "./routes/meetingRoutes";
 import reviewRoutes from "./routes/reviewRoutes"
+import getStreamRouted from "./routes/getStreamRoutes"
+
 
 dotenv.config();
 connectDB();
@@ -33,6 +35,8 @@ app.use('/ruqya-api/user', userRoutes);
 app.use('/ruqya-api/raki', rakiAvailabilityRoutes);
 app.use('/ruqya-api/meeting', meetingRoutes);
 app.use('/ruqya-api/review', reviewRoutes);
+app.use('/ruqya-api/get-stream', getStreamRouted);
+
 
 
 export default app;

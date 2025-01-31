@@ -29,8 +29,8 @@ const userSchema: Schema<IUser> = new Schema({
     mobileNumber: { type: String },
     age: { type: Number },
     firstTimeLogin:{type:Boolean},
-    yearOfExperience: { type: Number, required: function() { return this.role === 'admin'; } },
-    description: { type: String, required: function() { return this.role === 'admin'; } },
+    yearOfExperience: { type: Number },
+    description: { type: String },
 });
 
 userSchema.pre('save', async function (next) {

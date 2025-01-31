@@ -2,10 +2,9 @@ import {  Request,  Response } from 'express';
 import User from '../models/user';
 import generateToken from '../utils/generateToken';
 import {StreamClient} from "@stream-io/node-sdk";
+import {client, serverClientChat} from "../config/streamConfig";
+import {getStreamAdminRole} from "../utils/getStreamAdminRole";
 
-const apiKey = process.env.API_KEY || "";
-const secret = process.env.SECRET_KEY || "";
-const client = new StreamClient(apiKey, secret);
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -24,14 +23,6 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             role
         });
 
-        let getStreamAdmin="user"
-
-        if (user.role==="admin"){
-            getStreamAdmin="host"
-        }
-        else if (user.role==="super-admin"){
-            getStreamAdmin="admin"
-        }
 
         if (user) {
             console.log(`Registering user in Stream Video: ${user._id}`);
@@ -39,7 +30,14 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             await client.upsertUsers([{
                 id: user.id,
                 name: user.name,
-                role: getStreamAdmin,
+                role: getStreamAdminRole({role:user.role}),
+                image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+            }]);
+
+            await serverClientChat.upsertUsers([{
+                id: user.id,
+                name: user.name,
+                role: getStreamAdminRole({role:user.role}),
                 image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
             }]);
 

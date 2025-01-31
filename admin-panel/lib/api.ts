@@ -58,6 +58,7 @@ export const getUsers = async () => {
     return response.data;
 };
 
+
 export const updateUserRole=async (userId:string, newRole:string)=>{
 
     const token = localStorage.getItem('token');
@@ -244,7 +245,7 @@ export const removeRakiAvailability = async (date: string, startTime:string) => 
 
 export const verifyMeetingAccess = async (callId: string, userId: string) => {
     try {
-        const response = await api.get(`ruqya-api/meeting/getCallDetails/${callId}`);
+        const response = await api.get(`ruqya-api/get-stream/getCallDetails/${callId}`);
         const { callDetails } = response.data;
 
         // Extract members from the call details
@@ -275,9 +276,15 @@ export const verifyMeetingAccess = async (callId: string, userId: string) => {
 
 
 export const getStreamToken = async (userId: string, role: string) => {
-    const response = await api.post(`ruqya-api/meeting/getCallToken`, { userId, role });
+    const response = await api.post(`ruqya-api/get-stream/getCallToken`, { userId, role });
     return response.data.token;
 };
+
+export const getStreamChatToken = async (userId: string) => {
+    const response = await api.post(`ruqya-api/get-stream/getuserToken`, { userId });
+    return response.data.token;
+};
+
 
 
 

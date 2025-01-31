@@ -3,6 +3,9 @@ import User, {IUser} from '../models/user';
 import {AuthenticatedRequest} from "../@types/express";
 import moment from "moment-timezone";
 import {getAllCountries, getTimezone} from "countries-and-timezones";
+import generateToken from "../utils/generateToken";
+import {client, serverClientChat} from "../config/streamConfig";
+import {getStreamAdminRole} from "../utils/getStreamAdminRole";
 
 
 
@@ -100,6 +103,20 @@ export const changePassword = async (req: AuthenticatedRequest, res: Response): 
         user.password = newPassword;
         await user.save();
 
+        await client.upsertUsers([{
+            id: user.id,
+            name: user.name,
+            role: getStreamAdminRole({role:user.role}),
+            image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+        }]);
+
+        await serverClientChat.upsertUsers([{
+            id: user.id,
+            name: user.name,
+            role: getStreamAdminRole({role:user.role}),
+            image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+        }]);
+
         res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -119,6 +136,23 @@ export const updateUserRole = async (req: AuthenticatedRequest, res: Response): 
 
         user.role = role;
         await user.save();
+
+        await client.upsertUsers([{
+            id: user.id,
+            name: user.name,
+            role: getStreamAdminRole({role:user.role}),
+            image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+        }]);
+
+        await serverClientChat.upsertUsers([{
+            id: user.id,
+            name: user.name,
+            role: getStreamAdminRole({role:user.role}),
+            image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+        }]);
+
+        console.log("User updated successfully in Stream Video.");
+
 
         res.status(200).json({ message: `Role updated to ${role} for user ${user.name}` });
     } catch (error) {
