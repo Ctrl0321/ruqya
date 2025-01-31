@@ -31,7 +31,7 @@ export default function BookRaqis() {
     },
     countries: [],
   });
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(3.5);
 
   // State for mobile filter visibility
   const [isFilterVisible, setIsFilterVisible] = useState(false);

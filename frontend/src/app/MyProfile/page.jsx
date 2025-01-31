@@ -124,9 +124,11 @@ const MyProfile = () => {
           <div className="bg-white rounded-lg relative w-full max-w-3xl mx-4 md:mx-0 shadow-lg">
             <div className="bg-gray-200 p-4 flex justify-between rounded-t-lg items-center">
               <span className="text-gray-600 text-lg">Edit Profile Details</span>
-              <button onClick={handleClosePopup} className="text-red-600 text-xl font-bold">
+              <div className="w-7 h-7 bg-red-600 rounded-sm flex items-center justify-center">
+              <button onClick={handleClosePopup} className="text-white -mt-1 text-lg font-bold">
                 &times;
               </button>
+              </div>
             </div>
             <div className="p-6 overflow-y-auto max-h-[80vh]">
               <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
@@ -198,7 +200,7 @@ const MyProfile = () => {
                   </div>
                 </div>
                 <div className="relative mb-6">
-                  <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Mobile Number</label>
+                  <label className="te`x`t-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Mobile Number</label>
                   <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
                     <Input type="number" name="mobile" defaultValue={popupData.mobile} onChange={handleChange} placeholder="Mobile Number" className="text-sm w-full" />
                   </div>
