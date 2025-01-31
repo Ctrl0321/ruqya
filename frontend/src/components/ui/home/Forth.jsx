@@ -4,11 +4,11 @@ import RaqisCard from "@/components/cards/RaqisCard";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import Grid from "@/components/ui/layout/Grid"; 
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
+import {isArray} from "node:util";
 
 function Forth(props) {
-    const { raqiData, title } = props;
-    // const slice = raqiData.slice(0,4)
-
+    const { raqiData = [], title } = props;
+    // const slice = raqiData?.slice(0, 4) || [];
 
   if (!raqiData) {
     return null;

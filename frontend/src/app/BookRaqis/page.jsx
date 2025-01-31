@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RaqisCard from "@/components/cards/RaqisCard";
 import sampledata from "@/data/sampledata";
-import { FaFilter, FaTimes } from "react-icons/fa";
+import {FaFilter, FaRegCalendarAlt, FaTimes} from "react-icons/fa";
 import "rc-slider/assets/index.css";
 import Slider from "rc-slider";
 import Grid from "@/components/ui/layout/GridForBooking";
@@ -31,7 +31,7 @@ export default function BookRaqis() {
     },
     countries: [],
   });
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
 
   // State for mobile filter visibility
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -225,19 +225,24 @@ export default function BookRaqis() {
               <div className="space-y-4 bg-white/50 p-4 rounded-lg">
                 <div>
                   <label className="text-sm text-gray-600 block mb-1">Date</label>
-                  <input type="date" value={userSelections.availability.date || ""} onChange={(e) => handleDateChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm" />
+                    <input
+                        type="date"
+                        value={userSelections.availability.date || ""}
+                        onChange={(e) => handleDateChange(e.target.value)}
+                        className="w-full rounded-md border border-gray-300 text-sm pl-10 p-2 focus:border-primary focus:ring-primary"
+                    />
                 </div>
-                <div>
-                  <label className="text-sm text-gray-600 block mb-1">Duration (minutes)</label>
-                  <select value={userSelections.availability.duration || ""} onChange={(e) => handleDurationChange(e.target.value)} className="w-full rounded-md border-gray-300 text-sm">
-                    <option value="">Any duration</option>
-                    {availableDurations.map((duration) => (
-                      <option key={duration} value={duration}>
-                        {duration} min
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {/*<div>*/}
+                {/*  <label className="text-sm text-gray-600 block mb-1">Duration (minutes)</label>*/}
+                {/*  <select value={userSelections.availability.duration || ""} onChange={(e) => handleDurationChange(e.target.value)} className="w-full rounded-md border border-gray-300 text-sm pl-10 p-2 focus:border-primary focus:ring-primary">*/}
+                {/*    <option value="">Any duration</option>*/}
+                {/*    {availableDurations.map((duration) => (*/}
+                {/*      <option key={duration} value={duration}>*/}
+                {/*        {duration} min*/}
+                {/*      </option>*/}
+                {/*    ))}*/}
+                {/*  </select>*/}
+                {/*</div>*/}
               </div>
             </div>
 
