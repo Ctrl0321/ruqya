@@ -1,9 +1,12 @@
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import { FaGlobe, FaCalendarAlt } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
+import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 
 const MyBookingCard = ({ booking }) => {
+  const [showPopup, setShowPopup] = useState(false);
   const Languages = booking.Languages;
   const calculateEndTime = (startTime, duration) => {
     const [hours, minutes] = startTime.split(":").map(Number);
@@ -100,7 +103,15 @@ const MyBookingCard = ({ booking }) => {
           </div>
         </div>
       </div>
-      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-auto" disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)} />
+      <Button
+        text="Add a Review"
+        color="RuqyaGreen"
+        bg={true}
+        className="rounded-xl mt-auto"
+        disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)}
+        onClick={() => setShowPopup(true)}
+      />
+      {showPopup && <ReviewRaqiPopup raqiData={booking} onClose={() => setShowPopup(false)} />}
     </div>
   );
 };
