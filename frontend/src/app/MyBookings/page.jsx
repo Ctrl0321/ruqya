@@ -5,6 +5,7 @@ import bookingsData from "@/data/sampledata.json";
 import Grid from "@/components/ui/layout/GridForMyBooking";
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import CompletedMyBookingCard from "@/components/cards/CompletedMyBookingCard";
+import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);

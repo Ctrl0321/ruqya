@@ -5,7 +5,7 @@ const Input = ({ type, placeholder, className, value, onChange }) => {
     <input
       type={type}
       placeholder={placeholder}
-      className={`p-2 rounded w-full focus:outline-none ${className}`}
+      className={`rounded w-full focus:outline-none ${className}`}
       value={value}
       onChange={onChange}
     />

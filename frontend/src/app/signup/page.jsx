@@ -41,7 +41,7 @@ function SignUp() {
               />
             </div>
 
-            <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold">Registration</h1>
+            <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold pb-3 border-b-2">Registration</h1>
 
             <form className="space-y-6">
               <div className="relative mb-4">
@@ -54,7 +54,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" placeholder="Enter your Email Address here" className="text-sm" />
+                  <Input type="email" placeholder="Enter your Email Address here" className="text-sm " />
                 </div>
               </div>
 
