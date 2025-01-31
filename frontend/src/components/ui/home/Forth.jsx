@@ -7,7 +7,12 @@ import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
 
 function Forth(props) {
     const { raqiData, title } = props;
-    const slice = raqiData.slice(0,4)
+    // const slice = raqiData.slice(0,4)
+
+
+  if (!raqiData) {
+    return null;
+  }
 
   return (
     <div id="Forth" className={`flex flex-col mx-7 md:mx-12 lg:mx-14 mt-20 m-5 rounded-lg ${[props.className]} `}>

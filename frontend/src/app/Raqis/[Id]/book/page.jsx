@@ -123,7 +123,6 @@ const BookSessionPage = () => {
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
           {bookingData ? (
             <>
-              {" "}
               <BookingCard Booking={bookingData} />
               <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
             </>

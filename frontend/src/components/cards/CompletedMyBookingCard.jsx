@@ -44,7 +44,7 @@ const MyBookingCard = ({ booking }) => {
 
       if (daysSinceCompletion < 7) {
         const dayOfWeek = completedDate.toLocaleDateString('en-US', { weekday: 'long' });
-        return `Completed on Last ${dayOfWeek}`;
+        return `Completed on  ${`Last ` + dayOfWeek}`;
       } else {
         return `Completed on ${completedDate.toLocaleDateString()}`;
       }
@@ -64,9 +64,9 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:max-w-[450px] text-left shadow-md p-4 mb-4 ">
+    <div className="bg-white rounded-xl md:max-w-[450px] text-left shadow-md p-4 mb-4 flex flex-col justify-between h-full">
       <div className="flex flex-col gap-4">
-        <div className="flex flex-row gap-4 mb-2">
+        <div className="flex flex-row gap-4 mb-0">
           <div className="col-span-3 rounded-lg">
             <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
           </div>
@@ -100,7 +100,7 @@ const MyBookingCard = ({ booking }) => {
           </div>
         </div>
       </div>
-      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl" disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)} />
+      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-auto" disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)} />
     </div>
   );
 };
