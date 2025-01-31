@@ -4,6 +4,7 @@ import Link from "next/link";
 import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
+import { signIn, useSession } from 'next-auth/react'; // Import signIn and useSession from next-auth/react
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
@@ -11,6 +12,13 @@ import logo from "@/assets/images/logo.png";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { data: session } = useSession(); // Use useSession hook
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Use NextAuth.js signIn method
+    await signIn("credentials", { email, password });
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 relative text-sm md:text-lg">
@@ -46,7 +54,7 @@ function Login() {
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
@@ -85,7 +93,7 @@ function Login() {
                 </div>
               </div>
               <div className="mt-5  rounded-3xl">
-                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" />
+                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" onClick={() => signIn('google')} />
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}
