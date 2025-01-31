@@ -22,15 +22,15 @@ const userSchema: Schema<IUser> = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'raki', 'user'], default: 'user' },
+    role: { type: String, enum: ['super-admin', 'admin', 'user'], default: 'user' },
     country: { type: String },
     timezone: { type: String },
     languages: { type: [String] },
     mobileNumber: { type: String },
     age: { type: Number },
     firstTimeLogin:{type:Boolean},
-    yearOfExperience: { type: Number, required: function() { return this.role === 'raki'; } },
-    description: { type: String, required: function() { return this.role === 'raki'; } },
+    yearOfExperience: { type: Number, required: function() { return this.role === 'admin'; } },
+    description: { type: String, required: function() { return this.role === 'admin'; } },
 });
 
 userSchema.pre('save', async function (next) {
