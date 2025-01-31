@@ -1,42 +1,35 @@
-import React, { useState } from 'react';
-import { FaStar } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaStar } from "react-icons/fa";
 
 const RatingInput = ({ rating, setRating }) => {
   const [hover, setHover] = useState(null);
 
   const handleRatingClick = (ratingValue) => {
-    if (rating === ratingValue) {
-      setRating(0); // Remove rating if the same star is clicked again
-    } else {
-      setRating(ratingValue);
-    }
+    setRating(rating === ratingValue ? 0 : ratingValue);
   };
 
   return (
-    <div className="rating-input flex items-center">
-      {[...Array(5)].map((star, index) => {
-        const ratingValue = index + 1;
-
-        return (
-          <label key={index} className="cursor-pointer">
-            <input
-              type="radio"
-              name="rating"
-              value={ratingValue}
-              onClick={() => handleRatingClick(ratingValue)}
-              className="hidden"
-            />
-            <FaStar
-              size={24}
-              color={ratingValue <= (hover || rating) ? "#ffc107" : "#FFFFeF"}
-              onMouseEnter={() => setHover(ratingValue)}
-              onMouseLeave={() => setHover(null)}
-            />
-          </label>
-        );
-      })}
-      <span className="ml-2 text-gray-600">{rating}</span>
-    </div>
+      <div className="flex items-center space-x-1">
+        {[...Array(5)].map((_, index) => {
+          const ratingValue = index + 1;
+          return (
+              <button
+                  key={index}
+                  onClick={() => handleRatingClick(ratingValue)}
+                  onMouseEnter={() => setHover(ratingValue)}
+                  onMouseLeave={() => setHover(null)}
+                  className="transition-transform transform hover:scale-110 focus:outline-none"
+              >
+                <FaStar
+                    size={30}
+                    className="transition-colors duration-200"
+                    color={ratingValue <= (hover || rating) ? "#FFC107" : "#8e8e8f"}
+                />
+              </button>
+          );
+        })}
+        <span className="ml-2 text-gray-600 text-lg font-medium">{rating || "0"}</span>
+      </div>
   );
 };
 
