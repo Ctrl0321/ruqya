@@ -72,7 +72,7 @@ const BookSessionPage = () => {
     for (let i = 0; i < 24; i++) {
       const hour = i % 12 === 0 ? 12 : i % 12;
       const period = i < 12 ? "AM" : "PM";
-      const time = `${hour.toString().padStart(2, '0')}:00 ${period}`;
+      const time = `${hour.toString().padStart(2, "0")}:00 ${period}`;
       times.push(time);
     }
     return times;
@@ -98,8 +98,8 @@ const BookSessionPage = () => {
             <label className="block text-gray-700">Select Date:</label>
             <div className="mt-1 flex gap-2 overflow-x-auto w-full">
               {getUpcomingDates().map((date, index) => (
-                <div key={index} className={`p-3 border rounded-md cursor-pointer flex-1 text-center ${selectedDate.toDateString() === date.toDateString() ? 'bg-RuqyaGreen text-white' : 'bg-LightGray'}`} onClick={() => handleDateChange(date)}>
-                  {date.getDate()} {date.toLocaleDateString('en-US', { weekday: 'short' })}
+                <div key={index} className={`p-3 border rounded-md cursor-pointer flex-1 text-center ${selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
+                  {date.getDate()} {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </div>
               ))}
             </div>
@@ -109,7 +109,7 @@ const BookSessionPage = () => {
             <label className="block text-gray-700">Select Time:</label>
             <div className="mt-1 grid grid-cols-4 gap-2">
               {getAvailableTimes().map((time, index) => (
-                <div key={index} className={`p-3 border rounded-md cursor-pointer text-center ${selectedTime === time ? 'bg-RuqyaGreen text-white' : 'bg-LightGray'}`} onClick={() => handleTimeChange({ target: { value: time } })}>
+                <div key={index} className={`p-3 border rounded-md cursor-pointer text-center ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleTimeChange({ target: { value: time } })}>
                   {time}
                 </div>
               ))}
@@ -121,8 +121,15 @@ const BookSessionPage = () => {
       <div className="w-1/2 mx-5">
         <div className="border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
-          {bookingData ? <BookingCard Booking={bookingData} /> : <p>No booking data available.</p>}
-          <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
+          {bookingData ? (
+            <>
+              {" "}
+              <BookingCard Booking={bookingData} />
+              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
+            </>
+          ) : (
+            <p>No booking data available.</p>
+          )}
         </div>
       </div>
     </div>

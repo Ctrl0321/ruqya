@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Input from "@/components/ui/input/input";
+import Input from "@/components/ui/dump/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
 
-import bg from "@/assets/images/bg.jpeg";
+// import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
+
+const bg = ""
 
 function Login() {
   const [email, setEmail] = useState("");

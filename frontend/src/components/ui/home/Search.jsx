@@ -1,6 +1,6 @@
 import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
 import Button from "@/components/ui/buttons/DefaultButton";
-import Input from "@/components/ui/input/input";
+import Input from "@/components/ui/dump/input";
 
 function Search() {
   return (
