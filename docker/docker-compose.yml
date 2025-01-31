@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+#  backend:
+#    build:
+#      context: ../server
+#    ports:
+#      - "1337:1337"
+#    networks:
+#      - app-network
+#    volumes:
+#      - /root/smartEdu/tuto/logs:/usr/src/app/logs
+#
+#  frontend:
+#    build:
+#      context: ../client
+#    ports:
+#      - "8080:80"
+#    networks:
+#      - app-network
+#      volumes:
+#        - /root/usr/share/nginx/html:/usr/share/nginx/html
+
+  mongo-ruqya:
+    image: mongo:4.4
+    volumes:
+      - /d/backup/mongo/ruqya:/data/db
+    networks:
+      - app-network
+    ports:
+      - "27317:27017"
+    restart: always
+
+
+networks:
+  app-network:
+
