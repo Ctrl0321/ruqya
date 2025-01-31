@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {getUserTimeZone} from "@/lib/utils";
-import {DayAvailability, TimeSlot} from "@/app/admin/availability/page";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -14,8 +13,8 @@ const userTimeZone = getUserTimeZone();
 export const login = async (email, password) => {
     const response = await api.post('ruqya-api/auth/login', { email, password });
     const { token } = response.data;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // localStorage.setItem('token', token);
+    // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return response.data;
 }
 
