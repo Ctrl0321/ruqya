@@ -4,7 +4,7 @@ import Button from "@/components/ui/buttons/DefaultButton";import Image from "ne
 function First() {
   return (
     <>
-      <div id="first" className="flex flex-col items-center justify-center bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-white min-h-60vh md:min-h-70vh">
+      <div id="first" className="flex flex-col items-center justify-center md:bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-mobilePurple min-h-65vh md:min-h-70vh">
         <div className="flex flex-col items-center justify-center md:flex-row  md:space-x-8 mx-5 w-full md:mx-48">
           <div className="flex items-center justify-center rounded-lg m-5 md:mx-10 order-1 md:order-2 md:w-full">
             <img src={"https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg"} alt="men-meditation" className="rounded-lg object-cover  md:h-[600] object-center relative z-0" />
