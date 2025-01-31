@@ -58,7 +58,10 @@ const MyProfile = () => {
     alert(`Updated Data:\n${JSON.stringify({
       firstName: popupData.firstName,
       email: popupData.email,
+      gender: popupData.gender,
+      dob: popupData.dob,
       country: popupData.country,
+      language: popupData.language,
       mobile: popupData.mobile,
     }, null, 2)}`);
   };
