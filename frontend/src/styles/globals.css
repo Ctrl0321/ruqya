@@ -35,7 +35,31 @@
   line-height: normal;
 }
 
+input {
+  background-color: white !important; /* Ensure the background is white */
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem; /* Adjust as needed */
+}
 
+input:focus {
+  background-color: white !important; /* Ensure the background remains white on focus */
+}
+
+input:-webkit-autofill {
+  background-color: white !important;
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: black !important;
+}
+
+select {
+  background-color: white !important; /* Ensure the background is white */
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem; /* Adjust as needed */
+}
 
 body {
   font-family: 'Full Sans LC', sans-serif;

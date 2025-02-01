@@ -71,6 +71,7 @@ function SignUp() {
                   <Input type="password" placeholder="Re-enter your created password" className="text-sm" />
                 </div>
               </div>
+
               <div className="mt-10">
                 <Button type="submit" bg={true} text="Sign Up" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
               </div>
