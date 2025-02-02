@@ -41,6 +41,10 @@ const ReviewsSection = () => {
     { name: "1 ★", value: data.reviewBreakdown[4], fill: "#ffeb3b" },
   ];
 
+  return(
+    <Loading></Loading>
+  )
+
   return (
     <div className="p-4">
       {showError && <ErrorMessage message={errorMessage} />}
