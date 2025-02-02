@@ -5,6 +5,7 @@ import Button from "@/components/ui/buttons/DefaultButton";
 import SampleData from "@/data/sampledata.json";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import GridForRaqiBooking from "@/components/ui/layout/GridForRaqiBooking";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -168,11 +169,11 @@ const BookSessionPage = () => {
         return (
           <div ref={dateRef}>
             <h2 className="text-xl font-semibold mb-4">Select Date</h2>
-            <div className="mt-1 flex gap-2 overflow-x-auto w-full">
+            <GridForRaqiBooking minWidth="120px">
               {getUpcomingDates().map((date, index) => (
                 <div 
                   key={index} 
-                  className={`p-3 border rounded-md cursor-pointer flex-1 text-center 
+                  className={`p-3 border rounded-md cursor-pointer text-center 
                     ${selectedDate && selectedDate.toDateString() === date.toDateString() 
                       ? "bg-RuqyaGreen text-white" 
                       : "bg-LightGray hover:bg-gray-200"}`} 
@@ -181,14 +182,14 @@ const BookSessionPage = () => {
                   {date.getDate()} {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </div>
               ))}
-            </div>
+            </GridForRaqiBooking>
           </div>
         );
       case 2:
         return (
           <div ref={timeRef}>
             <h2 className="text-xl font-semibold mb-4">Select Time</h2>
-            <div className="mt-1 grid grid-cols-4 gap-2">
+            <GridForRaqiBooking minWidth="100px">
               {getAvailableTimes().map((time, index) => (
                 <div 
                   key={index} 
@@ -201,7 +202,7 @@ const BookSessionPage = () => {
                   {time}
                 </div>
               ))}
-            </div>
+            </GridForRaqiBooking>
           </div>
         );
       case 3:
