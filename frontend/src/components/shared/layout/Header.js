@@ -103,101 +103,134 @@ const Header = () => {
             </div>
           </div>
           <div className="md:hidden sm:block z-50">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 focus:outline-none">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}></path>
-              </svg>
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className="text-gray-700 focus:outline-none w-8 h-8 relative"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            >
+              <span className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out ${isOpen ? 'rotate-45 translate-y-0' : '-translate-y-2'}`} />
+              <span className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out ${isOpen ? 'opacity-0' : 'opacity-100'}`} />
+              <span className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out ${isOpen ? '-rotate-45 translate-y-0' : 'translate-y-2'}`} />
             </button>
           </div>
         </div>
-        {isOpen && (
-          <>
-            <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsOpen(false)} />
-            <div className="md:hidden fixed right-0 top-0 h-full w-[80%] max-w-[320px] bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out">
-              <div className="flex flex-col h-full overflow-y-auto">
-                <div className="p-4 border-b border-gray-200">
-                  <Link href="/" onClick={handleLinkClick}>
-                    <img src="/logo.png" alt="Ruqya logo" width="120" className="mx-auto" />
-                  </Link>
-                </div>
+        {/* Mobile Menu */}
+        <div 
+          className={`md:hidden fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+            isOpen ? 'opacity-50 z-40' : 'opacity-0 pointer-events-none'
+          }`} 
+          onClick={() => setIsOpen(false)} 
+        />
+        <div 
+          className={`md:hidden fixed right-0 top-0 h-full w-[80%] max-w-[320px] bg-white z-50 shadow-xl transform transition-all duration-300 ease-in-out ${
+            isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col h-full overflow-y-auto">
+            <div className="p-4 border-b border-gray-200 relative">
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="absolute right-4 top-4 p-2 hover:bg-gray-100 rounded-full transition-all duration-200 transform hover:rotate-90"
+                aria-label="Close menu"
+              >
+                <svg 
+                  className="w-5 h-5 text-gray-600" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth="2" 
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <Link href="/" onClick={handleLinkClick}>
+                <img 
+                  src="/logo.png" 
+                  alt="Ruqya logo" 
+                  width="120" 
+                  className="mx-auto transform transition-transform duration-300 hover:scale-105" 
+                />
+              </Link>
+            </div>
+            <div className="flex flex-col p-4 space-y-3">
+              <Link 
+                href="/" 
+                className={`${isActive("/")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
+                onClick={handleLinkClick}
+              >
+                Home
+              </Link>
+              <Link 
+                href="/BookRaqis" 
+                className={`${isActive("/BookRaqis")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
+                onClick={handleLinkClick}
+              >
+                Book Raqis
+              </Link>
+              <Link 
+                href="/SelfRuqyah" 
+                className={`${isActive("/SelfRuqyah")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
+                onClick={handleLinkClick}
+              >
+                Self-Ruqyah
+              </Link>
+              
+              <div className="border-t border-gray-200 pt-3">
+                <button
+                  onClick={() => setMobileProfileDropdownOpen(!mobileProfileDropdownOpen)}
+                  className={`${isActive("/MyProfile")} w-full px-4 py-3 rounded-lg flex items-center justify-between ${
+                    mobileProfileDropdownOpen ? "bg-RuqyaGreen text-white" : "hover:bg-gray-100"
+                  } transition-colors duration-200`}
+                >
+                  <span>My Profile</span>
+                  <svg 
+                    className={`w-4 h-4 transform transition-transform duration-200 ${
+                      mobileProfileDropdownOpen ? 'rotate-180' : ''
+                    }`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
                 
-                <div className="flex flex-col p-4 space-y-3">
-                  <Link 
-                    href="/" 
-                    className={`${isActive("/")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
-                    onClick={handleLinkClick}
-                  >
-                    Home
-                  </Link>
-                  <Link 
-                    href="/BookRaqis" 
-                    className={`${isActive("/BookRaqis")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
-                    onClick={handleLinkClick}
-                  >
-                    Book Raqis
-                  </Link>
-                  <Link 
-                    href="/SelfRuqyah" 
-                    className={`${isActive("/SelfRuqyah")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} 
-                    onClick={handleLinkClick}
-                  >
-                    Self-Ruqyah
-                  </Link>
-                  
-                  <div className="border-t border-gray-200 pt-3">
-                    <button
-                      onClick={() => setMobileProfileDropdownOpen(!mobileProfileDropdownOpen)}
-                      className={`${isActive("/MyProfile")} w-full px-4 py-3 rounded-lg flex items-center justify-between ${
-                        mobileProfileDropdownOpen ? "bg-RuqyaGreen text-white" : "hover:bg-gray-100"
-                      } transition-colors duration-200`}
+                {mobileProfileDropdownOpen && (
+                  <div className="mt-2 bg-gray-50 rounded-lg">
+                    <Link 
+                      href="/MyProfile" 
+                      className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center rounded-t-lg" 
+                      onClick={handleLinkClick}
                     >
-                      <span>My Profile</span>
-                      <svg 
-                        className={`w-4 h-4 transform transition-transform duration-200 ${
-                          mobileProfileDropdownOpen ? 'rotate-180' : ''
-                        }`} 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                      </svg>
-                    </button>
-                    
-                    {mobileProfileDropdownOpen && (
-                      <div className="mt-2 bg-gray-50 rounded-lg">
-                        <Link 
-                          href="/MyProfile" 
-                          className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center rounded-t-lg" 
-                          onClick={handleLinkClick}
-                        >
-                          <FaEdit className="w-4 h-4 mr-3" />
-                          View Profile
-                        </Link>
-                        <Link 
-                          href="/MyBookings" 
-                          className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center" 
-                          onClick={handleLinkClick}
-                        >
-                          <FaBookBookmark className="w-4 h-4 mr-3" />
-                          My Bookings
-                        </Link>
-                        <Link 
-                          href="/Logout" 
-                          className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center rounded-b-lg" 
-                          onClick={handleLinkClick}
-                        >
-                          <LuLogOut className="w-4 h-4 mr-3" />
-                          Logout
-                        </Link>
-                      </div>
-                    )}
+                      <FaEdit className="w-4 h-4 mr-3" />
+                      View Profile
+                    </Link>
+                    <Link 
+                      href="/MyBookings" 
+                      className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center" 
+                      onClick={handleLinkClick}
+                    >
+                      <FaBookBookmark className="w-4 h-4 mr-3" />
+                      My Bookings
+                    </Link>
+                    <Link 
+                      href="/Logout" 
+                      className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center rounded-b-lg" 
+                      onClick={handleLinkClick}
+                    >
+                      <LuLogOut className="w-4 h-4 mr-3" />
+                      Logout
+                    </Link>
                   </div>
-                </div>
+                )}
               </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </nav>
     </header>
   );
