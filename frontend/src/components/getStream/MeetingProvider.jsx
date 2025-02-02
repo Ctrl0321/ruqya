@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {getStreamToken, verifyMeetingAccess} from "@/lib/api";
 import {useAuth} from "@/contexts/AuthContexts";
 
-const MeetingContext = createContext<MeetingContextType>({
+const MeetingContext = createContext({
     client: null,
     call: null,
     error: null
@@ -16,10 +16,10 @@ export const useMeeting = () => useContext(MeetingContext);
 
 export const MeetingProvider = ({ children, userId, callId }) => {
     const { user: currentUser } = useAuth();
-    const [token, setToken] = useState<string | null>(null);
-    const [client, setClient] = useState<StreamVideoClient | null>(null);
-    const [call, setCall] = useState<any | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [token, setToken] = useState(null);
+    const [client, setClient] = useState(null);
+    const [call, setCall] = useState(null);
+    const [error, setError] = useState(null);
     const router = useRouter();
     const hasLeft = useRef(false);
 
