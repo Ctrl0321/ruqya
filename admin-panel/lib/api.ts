@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {getUserTimeZone} from "@/lib/utils";
-import {DayAvailability, TimeSlot} from "@/app/admin/availability/page";
+import { TimeSlot} from "@/app/admin/availability/page";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -125,7 +125,6 @@ export const rescheduleSession=async (meetingId:string,newDate:string)=>{
         throw new Error("No token found. Please log in.");
     }
 
-    console.log("Messi ankara",newDate)
     // const response = await api.post('ruqya-api/meeting/reschedule', { meetingId, newDate },{
     //     headers: {
     //         Authorization: `Bearer ${token}`,
@@ -269,7 +268,7 @@ export const verifyMeetingAccess = async (callId: string, userId: string) => {
             name:user.name
         };
     } catch (error) {
-        throw new Error('Meeting verification failed');
+        throw new Error('Meeting verification failed',error);
     }
 };
 

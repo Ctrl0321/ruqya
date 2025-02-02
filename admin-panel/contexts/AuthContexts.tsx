@@ -2,17 +2,26 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import {getOwnProfile, getUserProfile} from "@/lib/api";
+import {getOwnProfile} from "@/lib/api";
 
-interface User {
+export interface UserDto {
     _id: string
     name: string
     email: string
     role: 'super-admin' | 'admin' | 'user'
+    country:string
+    languages:string[]
+    mobileNumber:string
+    yearOfExperience?:number
+    description?:string
+    firstTimeLogin?:boolean
+    googleId?:string
+    age:number
+    password:string
 }
 
 interface AuthContextType {
-    user: User | null
+    user: UserDto | null
     login: (token: string) => Promise<void>
     logout: () => Promise<void>
     isLoading: boolean
@@ -21,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<UserDto | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
 
