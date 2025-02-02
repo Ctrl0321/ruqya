@@ -14,6 +14,7 @@ export interface IUser extends Document {
     firstTimeLogin:boolean,
     age:number,
     role: string;
+    googleId:string
     password: string;
     matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
@@ -21,12 +22,13 @@ export interface IUser extends Document {
 const userSchema: Schema<IUser> = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String},
     role: { type: String, enum: ['super-admin', 'admin', 'user'], default: 'user' },
     country: { type: String },
     timezone: { type: String },
     languages: { type: [String] },
     mobileNumber: { type: String },
+    googleId:{type:String},
     age: { type: Number },
     firstTimeLogin:{type:Boolean},
     yearOfExperience: { type: Number },
