@@ -10,6 +10,7 @@ export const useChatClient = (userId: string, otherUserId: string) => {
     const [client, setClient] = useState<StreamChat | null>(null);
     const [channel, setChannel] = useState<StreamChannel | null>(null);
 
+
     const chatClientRef = useRef<StreamChat | null>(null);
 
     useEffect(() => {
@@ -30,17 +31,32 @@ export const useChatClient = (userId: string, otherUserId: string) => {
                     await currentClient.connectUser({ id: userId }, token);
                 }
 
-                const channelId = `dm_${userId}_${otherUserId}`;
-                const dmChannel = currentClient.channel("messaging", channelId, {
-                    name: "Private Chat",
-                    members: [userId, otherUserId],
-                    created_by_id: userId,
-                });
+                const sortedMembers = [userId, otherUserId].sort();
+                const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]}`;
 
-                await dmChannel.watch();
+                // Query existing channels first
+                const channels = await currentClient.queryChannels({
+                    id: channelId,
+                    type: 'messaging',
+                    members: { $in: [userId] }
+                }, {}, { watch: true, state: true });
+
+                let chatChannel;
+
+                if (channels.length === 0) {
+                    // Only create a new channel if none exists
+                    chatChannel = currentClient.channel('messaging', channelId, {
+                        members: sortedMembers,
+                        created_by_id: userId,
+                    });
+                    await chatChannel.watch();
+                } else {
+                    // Use existing channel
+                    chatChannel = channels[0];
+                }
 
                 if (isMounted) {
-                    setChannel(dmChannel);
+                    setChannel(chatChannel);
                     setClient(currentClient);
                 }
             } catch (error) {
