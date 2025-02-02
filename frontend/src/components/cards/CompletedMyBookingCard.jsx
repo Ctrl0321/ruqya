@@ -4,10 +4,17 @@ import { FaGlobe, FaCalendarAlt } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
+import { languages } from "@/lib/constance";
 
 const MyBookingCard = ({ booking }) => {
   const [showPopup, setShowPopup] = useState(false);
   const Languages = booking.Languages;
+
+  const getLanguageLabel = (value) => {
+    const language = languages.find(lang => lang.value === value);
+    return language ? language.label : value;
+  };
+
   const calculateEndTime = (startTime, duration) => {
     const [hours, minutes] = startTime.split(":").map(Number);
     const endTime = new Date();
@@ -89,7 +96,7 @@ const MyBookingCard = ({ booking }) => {
                 {Languages ? (
                   Languages.map((lang, index) => (
                     <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] rounded-md">
-                      {lang}
+                      {getLanguageLabel(lang)}
                     </span>
                   ))
                 ) : (

@@ -12,6 +12,7 @@ import review from "@/data/review.json";
 import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
 import Loading from "@/components/shared/common/LoadingSpinner";
+import { languages } from "@/lib/constance";
 
 function Raqis() {
   const [data, setData] = useState(null);
@@ -62,6 +63,11 @@ function Raqis() {
     return count.toString();
   }
 
+  const getLanguageLabel = (value) => {
+    const language = languages.find(lang => lang.value === value);
+    return language ? language.label : value;
+  };
+
   return (
     <div className="min-h-screen  text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
@@ -100,7 +106,7 @@ function Raqis() {
             <div className="flex items-center space-x-2">
               {data.Languages.map((lang, index) => (
                 <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
-                  {lang.toUpperCase()}
+                  {getLanguageLabel(lang)}
                 </span>
               ))}
             </div>
@@ -134,7 +140,7 @@ function Raqis() {
           <div className="flex items-center space-x-2">
             {data.Languages.map((lang, index) => (
               <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
-                {lang.toUpperCase()}
+                {getLanguageLabel(lang)}
               </span>
             ))}
           </div>
