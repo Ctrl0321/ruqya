@@ -14,7 +14,7 @@
     },
     "CountryCode": "LK",
     "bookedDate": "2025-02-12",
-    "Languages": ["en", "ar"],
+    "Languages": ["en", "ar", "hi"],
     "Experience": 5,
     "bookedTime": "18:00",
     "bookedDuration": 120

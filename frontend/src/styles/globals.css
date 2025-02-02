@@ -128,3 +128,65 @@ select {
 .button-default {
   padding: 0.75rem 0; /* py-3 */
 }
+
+/* for raqicard */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes scrollX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50%));
+  }
+}
+
+.languages-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  display: inline-flex;
+}
+
+.languages-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.languages-scroll.animate {
+  animation: scrollX 15s linear infinite;
+}
+
+.languages-scroll.animate:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollX {
+0% {
+  transform: translateX(0);
+}
+100% {
+  transform: translateX(-50%);
+}
+}
+
+.animate-scrollX {
+animation: scrollX 15s linear infinite;
+-webkit-user-select: none;
+user-select: none;
+cursor: grab;
+}
+
+.animate-scrollX:active {
+cursor: grabbing;
+animation-play-state: paused;
+}
+
+.pause-animation {
+animation-play-state: paused;
+}
