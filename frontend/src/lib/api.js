@@ -236,7 +236,7 @@ export const removeRakiAvailability = async (date, startTime) => {
 
 export const verifyMeetingAccess = async (callId, userId) => {
     try {
-        const response = await api.get(`ruqya-api/meeting/getCallDetails/${callId}`);
+        const response = await api.get(`ruqya-api/get-stream/getCallDetails/${callId}`);///getCallDetails/:meetingId
         const { callDetails } = response.data;
 
         // Extract members from the call details
@@ -267,7 +267,7 @@ export const verifyMeetingAccess = async (callId, userId) => {
 
 
 export const getStreamToken = async (userId, role) => {
-    const response = await api.post(`ruqya-api/meeting/getCallToken`, { userId, role });
+    const response = await api.post(`ruqya-api/get-stream/getCallToken`, { userId, role });
     return response.data.token;
 };
 

@@ -18,7 +18,7 @@ interface MeetingRequest {
     meetingId: string;
     topic: string;
     date: string;
-    userId: string;
+    rakiId: string;
     notificationSend?: boolean;
     timeZone?: string;
     duration: number;
@@ -84,11 +84,11 @@ export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: 
 
 export const addMeeting = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
-        const rakiId = req.user?.id;
-        if (!rakiId) return res.status(401).json({ message: 'User ID not found in request' });
+        const userId = req.user?.id;
+        if (!userId) return res.status(401).json({ message: 'User ID not found in request' });
 
-        const { meetingId, topic, date, userId, notificationSend = false, timeZone = 'UTC', duration = 60 } = req.body as MeetingRequest;
-        if (!meetingId || !topic || !date || !userId || !duration) {
+        const { meetingId, topic, date, rakiId, notificationSend = false, timeZone = 'UTC', duration = 60 } = req.body as MeetingRequest;
+        if (!meetingId || !topic || !date || !rakiId || !duration) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
