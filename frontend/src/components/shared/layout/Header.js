@@ -14,7 +14,7 @@ const Header = () => {
   const pathname = usePathname();
 
   const isActive = (path) => (pathname === path ? "text-RuqyaGreen" : "text-gray-700");
-  const isCurrent = (path) => (pathname === path ? "bg-gradient-to-l from-[#E6E6FA33] to-[#E6E6FA] bg-[#FFFFFF]" : "bg-white");
+  const isCurrent = (path) => (pathname === path ? "bg-gradient-to-l from-[#E6E6FA33] to-[#E6E6FA] bg-RuqyaLightPurple md:bg-white" : "bg-white");
 
   const handleLinkClick = () => {
     setTimeout(() => {
@@ -44,19 +44,19 @@ const Header = () => {
             <img src="/nav-line.svg" alt="Navigation Center" width="1600" />
           </div>
           <div className="hidden md:flex space-x-8 gap-5">
-            <Link href="/" className={`${isActive("/")} hover:text-gray-900`}>
+            <Link href="/" className={`${isActive("/")} hover:text-gray-900 text-center`}>
               Home
             </Link>
-            <Link href="/BookRaqis" className={`${isActive("/BookRaqis")} w-24 hover:text-gray-900`}>
+            <Link href="/BookRaqis" className={`${isActive("/BookRaqis")} w-24 text-center hover:text-gray-900`}>
               Book Raqis
             </Link>
-            <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} w-24 hover:text-gray-900`}>
+            <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} w-24 text-center hover:text-gray-900`}>
               Self-Ruqyah
             </Link>
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className={`${isActive("/MyProfile")} w-24 hover:text-gray-900 flex items-center`}
+                className={`${isActive("/MyProfile")} w-24 hover:text-gray-900 flex items-center md:w-32`}
               >
                 My Profile
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
