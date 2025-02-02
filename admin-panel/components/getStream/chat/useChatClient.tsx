@@ -8,13 +8,13 @@ import { useAuth } from "@/contexts/AuthContexts";
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY_CHAT || "";
 
 
-const createChannelName = (currentUser: string, otherUser: string) => {
-    if (!currentUser || !otherUser) return "";
-    // return `${otherUser.firstName || otherUser.name || otherUser.id}'s Chat`;
-    return `${otherUser}'s Chat`;
-};
+// const createChannelName = (currentUser: string, otherUser: string) => {
+//     if (!currentUser || !otherUser) return "";
+//     // return `${otherUser.firstName || otherUser.name || otherUser.id}'s Chat`;
+//     return `${otherUser}'s Chat`;
+// };
 
-export const useChatClient = (userId: string, otherUserId: string) => {
+export const useChatClient = (userId: string, otherUserId:string="") => {
     const [client, setClient] = useState<StreamChat | null>(null);
     const [channel, setChannel] = useState<StreamChannel | null>(null);
     const [allChannels, setAllChannels] = useState<StreamChannel[]>([]);
@@ -69,31 +69,38 @@ export const useChatClient = (userId: string, otherUserId: string) => {
                     setClient(currentClient);
                 }
 
+
                 if (currentUser?.role === "super-admin") {
                     const adminChannels = await fetchAdminChannels(currentClient);
 
-                    if (otherUserId) {
-                        const sortedMembers = [userId, otherUserId].sort();
-                        const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]}`;
+                    // if (otherUserId) {
+                    //     const sortedMembers = [userId, otherUserId ?? ""].sort();
+                    //     const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]?? ""}`;
 
                         // Find existing channel
-                        const existingChannel = adminChannels.find(ch => ch.id === channelId);
+                        // const existingChannel = adminChannels.find(ch => ch.id === channelId);
 
-                        if (existingChannel) {
-                            await selectChannel(existingChannel);
-                        } else {
-                            const channelName = createChannelName(userId, otherUserId);
-
-                            const newChannel = currentClient.channel('messaging', channelId, {
-                                members: sortedMembers,
-                                created_by_id: userId,
-                                name: channelName,
-
-                            });
-                            await newChannel.watch();
-                            setChannel(newChannel);
-                        }
+                    if (adminChannels.length > 0) {
+                        await selectChannel(adminChannels[0]); // ✅ Pass the first channel
+                    } else {
+                        setChannel(null);
                     }
+                        //
+                        // if (adminChannels) {
+                        //     await selectChannel(adminChannels);
+                        // } else {
+                        //     const channelName = createChannelName(userId, otherUserId);
+                        //
+                        //     const newChannel = currentClient.channel('messaging', channelId, {
+                        //         members: sortedMembers,
+                        //         created_by_id: userId,
+                        //         name: channelName,
+                        //
+                        //     });
+                        //     await newChannel.watch();
+                        //     setChannel(null);
+                        // }
+                    // }
                 } else {
                     if (otherUserId) {
                         const sortedMembers = [userId, otherUserId].sort();

@@ -11,6 +11,8 @@ import {CancelSessionDialog} from '@/components/CancelSessionDialog'
 import {RescheduleSessionDialog} from '@/components/ResheduledSessionDialog'
 import {DateRangeFilter} from '@/components/DateRangeFilter'
 import {formatDateTimeWithOffset} from "@/lib/utils";
+import {useChat} from "@/components/getStream/chat/ChatContextProvider";
+import {ChatWidgetWrapper} from "@/components/getStream/chat/ChatWidgetWrapper";
 
 interface Session {
     meetingId: string;
@@ -23,6 +25,12 @@ interface Session {
 
 
 export default function AdminDashboard() {
+    // const { setUserId } = useChat();
+
+    // const handleStartChat = (otherUser:string) => {
+    //     setUserId(otherUser);
+    //     // setOtherUserData(otherUser);
+    // };
     const { user } = useAuth()
     const [revenueData, setRevenueData] = useState({
         totalMeetings: 0,
@@ -258,6 +266,10 @@ export default function AdminDashboard() {
                 onClose={() => setRescheduleSessionId(null)}
                 onConfirm={(newDate) => rescheduleSessionId && handleRescheduleSession(rescheduleSessionId, newDate)}
             />
+            {/*<button onClick={() => handleStartChat("679bbab33d6f1d2003462724")}>*/}
+            {/*    Chat with user*/}
+            {/*</button>*/}
+            <ChatWidgetWrapper/>
         </div>
     )
 }
