@@ -19,6 +19,7 @@ import Forth from "@/components/ui/home/Forth";
 import sampledata from "@/data/sampledata";
 
 export default function Home() {
+ 
   return (
     <div className="bg-white color-header min-h-screen text-center md:text-left">
       <First className="" />

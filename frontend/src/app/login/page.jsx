@@ -7,10 +7,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api";
 
-// import bg from "@/assets/images/bg.jpeg";
+import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
-const bg = "";
 
 function Login() {
   const [email, setEmail] = useState("");

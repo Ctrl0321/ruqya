@@ -4,7 +4,7 @@ const Input = ({ type, placeholder, className, value, onChange }) => {
     <input
       type={type}
       placeholder={placeholder}
-      className={className +` bg-white`}
+      className={className}
       value={value}
       onChange={onChange}
     />

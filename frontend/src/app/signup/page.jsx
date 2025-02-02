@@ -28,7 +28,7 @@ function SignUp() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto mt-20">
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
