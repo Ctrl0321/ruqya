@@ -7,7 +7,7 @@ import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter
 
 function Footer() {
   return (
-    <footer className="relative w-full z-100 pt-16 mt-56"> {/* I dont tink z index working */}
+    <footer className="relative w-full z-100 pt-16 mt-48"> {/* I dont tink z index working */}
       <Triangle />
       <div className="bg-RuqyaLightPurple text-white">
         <div className="px-4 mx-auto text-center md:text-left ">

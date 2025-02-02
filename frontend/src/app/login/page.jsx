@@ -56,7 +56,7 @@ function Login() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto -mt-5 md:mt-20">
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -65,7 +65,7 @@ function Login() {
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
@@ -80,12 +80,12 @@ function Login() {
                 </div>
               </div>
 
-              <div className="mt-10">
-                <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" onClick={handleSubmit}>
+              <div className="mt-5">
+                <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3" onClick={handleSubmit}>
                   Login
                 </button>
               </div>
-              <div className="relative my-6">
+              <div className="relative my-3">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
