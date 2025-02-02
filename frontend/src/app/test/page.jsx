@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
 import { FaStar } from "react-icons/fa";
+import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 
 import { motion } from "framer-motion";
 import Loading from "@/components/shared/common/LoadingSpinner";
@@ -13,6 +14,17 @@ const ReviewsSection = () => {
     reviewsGrowth: 21,
     reviewBreakdown: [50, 30, 10, 0, 0],
   });
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const testErrorMessage = () => {
+    setErrorMessage("This is a test error message!");
+    setShowError(true);
+    // Reset after 3 seconds
+    setTimeout(() => {
+      setShowError(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     // Fetch data from an API or database
@@ -30,11 +42,16 @@ const ReviewsSection = () => {
   ];
 
   return (
-    <Loading />
-  );
-
-  return (
     <div className="p-4">
+      {showError && <ErrorMessage message={errorMessage} />}
+      
+      <button 
+        onClick={testErrorMessage}
+        className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      >
+        Test Error Message
+      </button>
+
       <div className="bg-gray-100 rounded-md p-4 mb-4">
         <h2 className="text-lg font-medium">Average Rating</h2>
         <div className="text-4xl font-bold">{data.averageRating}</div>

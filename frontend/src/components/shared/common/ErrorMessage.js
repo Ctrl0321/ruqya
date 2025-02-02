@@ -1,8 +1,23 @@
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ErrorMessage = ({ message = 'Something went wrong' }) => {
-  return (
-    <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-      <p className="text-red-600">{message}</p>
-    </div>
-  )
-}
+  const notify = () => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  React.useEffect(() => {
+    notify();
+  }, [message]);
+
+  return <ToastContainer />;
+};
