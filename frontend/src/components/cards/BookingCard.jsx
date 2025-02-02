@@ -6,7 +6,7 @@ import { languages } from "@/lib/constance";
 
 const BookingCard = ({ Booking }) => {
   if (!Booking) {
-    return <p>No booking data available.</p>;
+    return <p className="flex items-center justify-center">No booking data available.</p>;
   }
 
   const getLanguageLabel = (value) => {

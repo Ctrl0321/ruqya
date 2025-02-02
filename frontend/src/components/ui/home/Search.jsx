@@ -15,7 +15,7 @@ function Search() {
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchQuery) params.append("searchQuery", searchQuery);
-    if (language) params.append("language", language.target.value);
+    if (language) params.append("language", language.value);
     router.push(`/BookRaqis?${params.toString()}`);
   };
 
@@ -65,7 +65,7 @@ function Search() {
       <div className="flex items-center justify-center -mt-13">
         <button
           onClick={handleSearch}
-          className="w-32 md:w-40 md:h-10 bg-RuqyaGreen text-white rounded-lg md:mt-0 hover:bg-teal-600 transition duration-300"
+          className="w-32 md:w-40 md:h-10 bg-RuqyaGreen text-white rounded-lg md:mt-0 hover:bg-teal-600 transition duration-300 p-3"
         >
           Search
         </button>

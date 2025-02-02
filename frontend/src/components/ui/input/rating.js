@@ -28,7 +28,7 @@ const RatingInput = ({ rating, setRating }) => {
               </button>
           );
         })}
-        <span className="ml-2 text-gray-600 text-lg font-medium">{rating || "0"}</span>
+        {/* <span className="ml-2 text-gray-600 text-lg font-medium">{rating || "0"}</span> */}
       </div>
   );
 };

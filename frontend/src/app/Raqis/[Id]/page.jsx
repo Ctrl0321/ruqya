@@ -34,14 +34,18 @@ function Raqis() {
     return <Loading/>;
   }
 
-  const overallAverage = data.rating.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
+  if (!data) {
+    return <div className="flex items-center justify-center min-h-screen text-black"><p>Data not available.</p></div>;
+  }
+
+  const overallAverage = data.rating?.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
 
   const chartData = [
-    { name: "5", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
-    { name: "4", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
-    { name: "3", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
-    { name: "2", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
-    { name: "1", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "5", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
+    { name: "4", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
+    { name: "3", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "2", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
+    { name: "1", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
   ];
 
   const renderStars = (rating) => {
