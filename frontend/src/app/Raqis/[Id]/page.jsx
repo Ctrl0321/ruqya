@@ -11,6 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid 
 import review from "@/data/review.json";
 import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
+import Loading from "@/components/shared/common/LoadingSpinner";
 
 function Raqis() {
   const [data, setData] = useState(null);
@@ -29,7 +30,7 @@ function Raqis() {
   }
 
   if (data === null) {
-    return <p className="min-h-screen text-black">Loading...</p>;
+    return <Loading/>;
   }
 
   const overallAverage = data.rating.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
@@ -231,7 +232,7 @@ function Raqis() {
           <ReviewCard key={index} review={review} colorIndex={index} />
         ))}
       </div>
-      <Forth data={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
+      <Forth raqiData={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
     </div>
   );
 }

@@ -12,7 +12,7 @@ const BookSessionPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingData, setBookingData] = useState(null);
-  const [sessionType, setSessionType] = useState("Standard");
+  // const [sessionType, setSessionType] = useState("Standard");
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -32,9 +32,9 @@ const BookSessionPage = () => {
     setSelectedTime(event.target.value);
   };
 
-  const handleSessionTypeChange = (event) => {
-    setSessionType(event.target.value);
-  };
+  // const handleSessionTypeChange = (event) => {
+  //   setSessionType(event.target.value);
+  // };
 
   const validateForm = () => {
     const newErrors = {};
@@ -83,17 +83,17 @@ const BookSessionPage = () => {
       <div className="w-full border border-gray-300 rounded-lg shadow-lg p-4">
         <div className="mb-4 border-b pb-4">
           <h1 className="text-2xl font-bold ">Book Your Ruqyah Session</h1>
-          <p>Choose your session type and preferred date & time.</p>
+          <p>Choose your preferred date & time.</p>
         </div>
         <form className="space-y-4">
-          <div>
+          {/* <div>
             <label className="block text-gray-700">Session Type</label>
             <select value={sessionType} onChange={handleSessionTypeChange} className="mt-3 p-3 block w-full bg-LightGray border border-gray-300 rounded-md shadow-sm focus:ring-RuqyaGreen focus:border-RuqyaGreen text-sm md:text-md appearance-none">
               <option value="Standard">Standard</option>
               <option value="Premium">Premium</option>
               <option value="VIP">VIP</option>
             </select>
-          </div>
+          </div> */}
           <div>
             <label className="block text-gray-700">Select Date:</label>
             <div className="mt-1 flex gap-2 overflow-x-auto w-full">

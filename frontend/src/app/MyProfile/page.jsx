@@ -6,7 +6,7 @@ import UserData from "@/data/user";
 import { countries, languages } from "@/lib/constance";
 
 import CustomSelect  from "@/components/ui/input/select";
-  
+
 
 const MyProfile = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -25,9 +25,9 @@ const MyProfile = () => {
   const [popupData, setPopupData] = useState(null);
 
   const genderOptions = [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
-    { value: "Other", label: "Other" }
+    { value: "  Male", label: "  Male" },
+    { value: "  Female", label: "  Female" },
+    { value: "  Other", label: "  Other" }
   ];
 
   const calculateAge = (birthDate) => {
@@ -80,9 +80,29 @@ const MyProfile = () => {
   useEffect(() => {
     if (isEditPopupOpen) {
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     } else {
       document.body.style.overflow = "auto";
+      document.body.style.position = "static";
+      document.body.style.width = "auto";
     }
+  }, [isEditPopupOpen]);
+
+  useEffect(() => {
+    const handleScroll = (event) => {
+      event.preventDefault();
+    };
+
+    if (isEditPopupOpen) {
+      window.addEventListener('scroll', handleScroll, { passive: false });
+    } else {
+      window.removeEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [isEditPopupOpen]);
 
   return (
@@ -120,7 +140,7 @@ const MyProfile = () => {
             <div className="bg-gray-200 p-4 flex justify-between rounded-t-lg items-center">
               <span className="text-gray-600 text-lg">Edit Profile Details</span>
               <div className="w-7 h-7 bg-red-600 rounded-sm flex items-center justify-center">
-              <button onClick={handleClosePopup} className="text-white -mt-1 text-lg font-bold">
+              <button onClick={handleClosePopup} className="text-white text-lg font-bold">
                 &times;
               </button>
               </div>
@@ -129,43 +149,43 @@ const MyProfile = () => {
               <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">First Name</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                     <Input type="text" name="firstName" defaultValue={popupData.firstName} onChange={handleChange} placeholder="First Name" className="text-sm w-full" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Email</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                     <Input type="email" name="email" defaultValue={popupData.email} onChange={handleChange} placeholder="Email" className="text-sm w-full" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Gender</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
-                    <CustomSelect options={genderOptions} value={popupData.gender} onChange={handleChange} name="gender" />
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
+                    <CustomSelect options={genderOptions} value={popupData.gender} onChange={handleChange} name="gender" placeholder="Select Gender" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Date of Birth</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                     <Input type="date" name="dob" defaultValue={popupData.dob} onChange={handleChange} className="text-sm w-full" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-2 mb-2 w-auto">Country</label>
                   <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                    <CustomSelect options={countries} value={popupData.country} onChange={handleChange} name="country" />
+                    <CustomSelect options={countries} value={popupData.country} onChange={handleChange} name="country" placeholder="Select Country" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Language</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
-                    <CustomSelect options={languages} value={popupData.language} onChange={handleChange} name="language" />
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
+                    <CustomSelect options={languages} value={popupData.language} onChange={handleChange} name="language" placeholder="Select Language" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="te`x`t-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Mobile Number</label>
-                  <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                  <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                     <Input type="number" name="mobile" defaultValue={popupData.mobile} onChange={handleChange} placeholder="Mobile Number" className="text-sm w-full" />
                   </div>
                 </div>
@@ -173,13 +193,13 @@ const MyProfile = () => {
                   <h3 className="col-span-2 text-lg font-semibold mb-6">Change Password</h3>
                   <div className="relative mb-6 ">
                     <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Password</label>
-                    <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                    <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                       <Input type="password" name="password" defaultValue={popupData.password} onChange={handleChange} placeholder="Create a Password" className="text-sm w-full" />
                     </div>
                   </div>
                   <div className="relative mb-6">
                     <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Confirm Password</label>
-                    <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
+                    <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                       <Input type="password" name="confirmPassword" defaultValue={popupData.confirmPassword} onChange={handleChange} placeholder="Confirm Password" className="text-sm w-full" />
                     </div>
                   </div>

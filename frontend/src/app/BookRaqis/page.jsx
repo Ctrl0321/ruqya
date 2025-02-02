@@ -9,6 +9,7 @@ import "rc-slider/assets/index.css";
 import Slider from "rc-slider";
 import Grid from "@/components/ui/layout/GridForBooking";
 import RatingInput from "@/components/ui/input/rating";
+import { useSearchParams } from "next/navigation";
 
 // Main Page Component
 export default function BookRaqis() {
@@ -31,7 +32,7 @@ export default function BookRaqis() {
     },
     countries: [],
   });
-  const [rating, setRating] = useState(3.5);
+  const [rating, setRating] = useState(0);
 
   // State for mobile filter visibility
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -80,9 +81,29 @@ export default function BookRaqis() {
     }));
   };
 
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("searchQuery");
+  const language = searchParams.get("language");
+
+  useEffect(() => {
+    if (searchQuery || language) {
+      setUserSelections((prev) => ({
+        ...prev,
+        languages: language ? [language] : prev.languages,
+      }));
+    }
+  }, [searchQuery, language]);
+
   // Updated filter logic with null check
   useEffect(() => {
     let result = sampledata;
+
+    // Filter by search query
+    if (searchQuery) {
+      result = result.filter((raqi) =>
+        raqi.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
     // Filter by languages if any are selected
     if (userSelections.languages.length > 0) {
@@ -114,7 +135,7 @@ export default function BookRaqis() {
     }
 
     setFilteredData(result);
-  }, [userSelections, rating]);
+  }, [userSelections, rating, searchQuery]);
 
   // Add this before the return statement
   const experienceLevels = sampledata
