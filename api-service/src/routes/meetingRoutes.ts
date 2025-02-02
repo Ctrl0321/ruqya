@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/get-meetings', protect, authorizeRoles('super-admin'), getAllMeetings);
 router.get('/get-today-meetings', protect, authorizeRoles('super-admin'), getTodayAndFutureMeetings);
-router.post('/add-meetings', protect, authorizeRoles('admin'), addMeeting);
+router.post('/add-meetings', protect, authorizeRoles('admin', 'user'), addMeeting);
 router.get('/get-meetings/user/', protect, authorizeRoles('user'), getMeetingsByUserId);
 router.get('/get-meetings/raki/', protect, authorizeRoles('admin', 'super-admin'), getMeetingsByRakiId);
 router.post('/reschedule/', protect, authorizeRoles('admin','super-admin'), rescheduleMeeting);
