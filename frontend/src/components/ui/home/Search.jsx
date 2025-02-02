@@ -9,15 +9,20 @@ import { languages } from "@/lib/constance";
 
 function Search() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState(null);
   const router = useRouter();
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchQuery) params.append("searchQuery", searchQuery);
-    if (language) params.append("language", language);
+    if (language) params.append("language", language.target.value);
     router.push(`/BookRaqis?${params.toString()}`);
   };
+
+  // const handleLanguageChange = (selectedOption) => {
+  //   setLanguage(selectedOption);
+  //   console.log("Selected language:", selectedOption);
+  // };
 
   return (
     <div id="search" className="relative z-20 flex justify-center items-center flex-row md:flex-row px-3 py-2 -mt-7 md:-mt-8 w-auto mx-5 md:mx-auto md:w-2/3 m-auto  bg-white rounded-xl shadow-xl  md:space-y-0 md:space-x-3">
@@ -52,7 +57,7 @@ function Search() {
         <CustomSelect
           options={languages}
           value={language}
-          onChange={(selectedOption) => setLanguage(selectedOption.value)}
+          onChange={handleLanguageChange}
           name="language"
           placeholder="Language"
         />
