@@ -90,9 +90,9 @@ function Raqis() {
       <div className="flex flex-col md:flex-row items-center mx-4">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
-          <div className="justify-center mt-4 hidden md:flex m-auto">
-            <Link href={`/raqis/${data.id}/chat`} className="flex text-xl items-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-2">
-              <MdOutlineMessage className="mr-3 text-2xl" />
+          <div className="justify-center mt-4 hidden md:flex m-auto w-full">
+            <Link href={`/raqis/${data.id}/chat`} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-3">
+              <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </Link>
           </div>
@@ -150,11 +150,11 @@ function Raqis() {
           </div>
         )}
         {data.Experience && <p>{data.Experience} Years of Experience</p>}
-        <div className="flex flex-col items-center justify-center w-full gap-5 pt-8">
-          <Button href={`/raqis/${data.id}/chat`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-4">
+        <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
+          <Button href={`/raqis/${data.id}/chat`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
-          <Button text="Book Now" href={`/raqis/${data.id}/book`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-4"></Button>
+          <Button text="Book Now"  link={"/Raqis/" + data.id + '/book'} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"></Button>
         </div>
       </div>
       {data.about && (
