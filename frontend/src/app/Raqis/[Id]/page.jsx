@@ -13,6 +13,8 @@ import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
 import Loading from "@/components/shared/common/LoadingSpinner";
 import { languages } from "@/lib/constance";
+import {ChatWidgetWrapper} from "@/components/getStream/chat/ChatWidgetWrapper";
+import {useChat} from "@/components/getStream/chat/ChatContextProvider";
 
 function Raqis() {
   const [data, setData] = useState(null);
@@ -25,6 +27,12 @@ function Raqis() {
     const foundData = sampledata.find((item) => item.id.toString() === Id);
     setData(foundData);
   }, [Id]);
+
+  const { setUserId } = useChat();
+
+  const handleStartChat = (otherUser) => {
+      setUserId(otherUser);
+  };
 
   if (!Id) {
     return <p className="min-h-screen text-black">No ID found.</p>;
@@ -91,10 +99,10 @@ function Raqis() {
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full">
-            <Link href={`/raqis/${data.id}/chat`} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-3">
+            <button onClick={() => handleStartChat('679bba803d6f1d2003462721')} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -151,10 +159,11 @@ function Raqis() {
         )}
         {data.Experience && <p>{data.Experience} Years of Experience</p>}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
-          <Button href={`/raqis/${data.id}/chat`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
+          <Button onClick={() => handleStartChat('6790bfce3ad260fbee7fdb0c')} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
-          <Button text="Book Now"  link={"/Raqis/" + data.id + '/book'} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"></Button>
+
+          {/* <Button text="Book Now"  link={"/Raqis/" + data.id + '/book'} onClick className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"></Button> */}
         </div>
       </div>
       {data.about && (
@@ -243,6 +252,7 @@ function Raqis() {
         ))}
       </div>
       <Forth raqiData={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
+      <ChatWidgetWrapper/>
     </div>
   );
 }

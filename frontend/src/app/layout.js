@@ -5,6 +5,8 @@ import Footer from "@/components/shared/layout/Footer";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/shared/common/LoadingSpinner";
+import { ChatProvider } from "@/components/getStream/chat/ChatContextProvider";
+import { AuthProvider } from "@/contexts/AuthContexts";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -53,7 +55,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-background text-foreground text-RuqyaGray text-[16px]">
         <Header />
-        {menuLoading ? <Loading /> : children}
+        <AuthProvider>
+          <ChatProvider>{children}</ChatProvider>
+        </AuthProvider>
         {showFooter && <Footer />}
       </body>
     </html>

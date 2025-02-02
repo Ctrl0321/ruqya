@@ -271,6 +271,10 @@ export const getStreamToken = async (userId, role) => {
     return response.data.token;
 };
 
+export const getStreamChatToken = async (userId) => {
+    const response = await api.post(`ruqya-api/get-stream/getuserToken`, { userId });
+    return response.data.token;
+};
 
 
 export default api;
