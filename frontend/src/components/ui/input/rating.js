@@ -9,7 +9,7 @@ const RatingInput = ({ rating, setRating }) => {
   };
 
   return (
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center justify-center space-x-1">
         {[...Array(5)].map((_, index) => {
           const ratingValue = index + 1;
           return (
@@ -28,7 +28,7 @@ const RatingInput = ({ rating, setRating }) => {
               </button>
           );
         })}
-        <span className="ml-2 text-gray-600 text-lg font-medium">{rating || "0"}</span>
+        {/* <span className="ml-2 text-gray-600 text-lg font-medium">{rating || "0"}</span> */}
       </div>
   );
 };

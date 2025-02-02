@@ -36,7 +36,6 @@
 }
 
 
-
 body {
   font-family: 'Full Sans LC', sans-serif;
 }
@@ -45,29 +44,37 @@ html {
   scroll-behavior: smooth;
 }
 
+input {
+  background-color: white !important; /* Ensure the background is white */
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem; /* Adjust as needed */
+}
+
+input:focus {
+  background-color: white !important; /* Ensure the background remains white on focus */
+}
+
+input:-webkit-autofill {
+  background-color: white !important;
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: black !important;
+}
+
 .sidebar-navigation {
   overflow: hidden;
   height: 100vh;
 }
 
 /* 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+select {
+  background-color: white !important; 
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem; 
 }
-
-@media (prefers-color-scheme: dark) {
-  :root { 
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-  
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Full Sans LC', sans-serif;
-} */
 
 select {
   background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
@@ -75,4 +82,111 @@ select {
   background-position: right 0.75rem center;
   background-size: 2.5em 1.5em;
   padding-right: 3.5rem;
+} */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+.loading-dot {
+  animation: pulse 1s infinite;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@media only screen and (min-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (max-device-width: 1440px) {
+  .mac-button-adjustment {
+    padding-top: 0.5rem; /* pt-2 */
+    padding-bottom: 0.25rem; /* pb-1 */
+  }
+}
+
+.button-default {
+  padding: 0.75rem 0; /* py-3 */
+}
+
+/* for raqicard */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes scrollX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50%));
+  }
+}
+
+.languages-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  display: inline-flex;
+}
+
+.languages-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.languages-scroll.animate {
+  animation: scrollX 15s linear infinite;
+}
+
+.languages-scroll.animate:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollX {
+0% {
+  transform: translateX(0);
+}
+100% {
+  transform: translateX(-50%);
+}
+}
+
+.animate-scrollX {
+animation: scrollX 15s linear infinite;
+-webkit-user-select: none;
+user-select: none;
+cursor: grab;
+}
+
+.animate-scrollX:active {
+cursor: grabbing;
+animation-play-state: paused;
+}
+
+.pause-animation {
+animation-play-state: paused;
 }

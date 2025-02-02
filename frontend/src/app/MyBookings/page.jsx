@@ -9,7 +9,7 @@ import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
-  const [showUpcoming, setShowUpcoming] = useState(false);
+  const [showUpcoming, setShowUpcoming] = useState(true);
 
   useEffect(() => {
     // Fetch bookings data (you can replace this with an API call)

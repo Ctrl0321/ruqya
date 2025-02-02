@@ -11,6 +11,8 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid 
 import review from "@/data/review.json";
 import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
+import Loading from "@/components/shared/common/LoadingSpinner";
+import { languages } from "@/lib/constance";
 
 function Raqis() {
   const [data, setData] = useState(null);
@@ -29,17 +31,21 @@ function Raqis() {
   }
 
   if (data === null) {
-    return <p className="min-h-screen text-black">Loading...</p>;
+    return <Loading/>;
   }
 
-  const overallAverage = data.rating.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
+  if (!data) {
+    return <div className="flex items-center justify-center min-h-screen text-black"><p>Data not available.</p></div>;
+  }
+
+  const overallAverage = data.rating?.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
 
   const chartData = [
-    { name: "5", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
-    { name: "4", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
-    { name: "3", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
-    { name: "2", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
-    { name: "1", real: data.rating.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "5", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
+    { name: "4", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
+    { name: "3", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "2", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
+    { name: "1", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
   ];
 
   const renderStars = (rating) => {
@@ -61,6 +67,11 @@ function Raqis() {
     return count.toString();
   }
 
+  const getLanguageLabel = (value) => {
+    const language = languages.find(lang => lang.value === value);
+    return language ? language.label : value;
+  };
+
   return (
     <div className="min-h-screen  text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
@@ -79,9 +90,9 @@ function Raqis() {
       <div className="flex flex-col md:flex-row items-center mx-4">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
-          <div className="justify-center mt-4 hidden md:flex m-auto">
-            <Link href={`/raqis/${data.id}/chat`} className="flex text-xl items-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-2">
-              <MdOutlineMessage className="mr-3 text-2xl" />
+          <div className="justify-center mt-4 hidden md:flex m-auto w-full">
+            <Link href={`/raqis/${data.id}/chat`} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-3">
+              <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </Link>
           </div>
@@ -99,7 +110,7 @@ function Raqis() {
             <div className="flex items-center space-x-2">
               {data.Languages.map((lang, index) => (
                 <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
-                  {lang.toUpperCase()}
+                  {getLanguageLabel(lang)}
                 </span>
               ))}
             </div>
@@ -133,17 +144,17 @@ function Raqis() {
           <div className="flex items-center space-x-2">
             {data.Languages.map((lang, index) => (
               <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
-                {lang.toUpperCase()}
+                {getLanguageLabel(lang)}
               </span>
             ))}
           </div>
         )}
         {data.Experience && <p>{data.Experience} Years of Experience</p>}
-        <div className="flex flex-col items-center justify-center w-full gap-5 pt-8">
-          <Button href={`/raqis/${data.id}/chat`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-4">
+        <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
+          <Button href={`/raqis/${data.id}/chat`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
-          <Button text="Book Now" href={`/raqis/${data.id}/book`} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-4"></Button>
+          <Button text="Book Now"  link={"/Raqis/" + data.id + '/book'} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"></Button>
         </div>
       </div>
       {data.about && (
@@ -231,7 +242,7 @@ function Raqis() {
           <ReviewCard key={index} review={review} colorIndex={index} />
         ))}
       </div>
-      <Forth data={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
+      <Forth raqiData={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
     </div>
   );
 }

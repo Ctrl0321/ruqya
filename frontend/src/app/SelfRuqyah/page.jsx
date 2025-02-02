@@ -1,9 +1,13 @@
+'use client'
+import { useState } from 'react'
 import Link from "next/link"
 import Button from "@/components/ui/buttons/DefaultButton"
-import { FileIcon, Music2Icon } from 'lucide-react'
+import { FileIcon, Music2Icon, ChevronDownIcon } from 'lucide-react'
 import content from '@/data/ruqyah'
 
 export default function RuqyahPage() {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   return (
     <div className="container mx-auto px-4 py-8 mb-72">
       <nav aria-label="Breadcrumb" className="mb-6">
@@ -15,18 +19,38 @@ export default function RuqyahPage() {
       </nav>
       <div className="flex flex-col gap-4 md:flex-row">
         {/* Sidebar Navigation */}
-        <nav className="overflow-hidden w-full md:w-64 md:h-96 bg-RuqyaLightPurple font-sans rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-4">Content</h2>
-          <ul className="space-y-2">
-            {content.sections.map(section => (
-              <li key={section.id} className="border-t border-gray-300 pt-4">
-                <Link href={`#${section.id}`} className="text-gray-700 hover:text-gray-900">
-                  {section.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="w-full md:w-64">
+          <button
+            onClick={() => setIsNavOpen(!isNavOpen)}
+            className="w-full flex items-center justify-between p-4 bg-RuqyaLightPurple rounded-lg md:hidden"
+          >
+            <span className="font-semibold">Content</span>
+            <ChevronDownIcon className={`w-5 h-5 transition-transform ${isNavOpen ? 'rotate-180' : ''}`} />
+          </button>
+          <nav className={`
+            overflow-hidden bg-RuqyaLightPurple font-sans rounded-lg
+            ${isNavOpen ? 'max-h-96' : 'max-h-0 md:max-h-96'}
+            transition-all duration-300 ease-in-out
+            md:h-96 md:block
+          `}>
+            <div className="p-4">
+              <h2 className="text-lg font-semibold mb-4 hidden md:block">Content</h2>
+              <ul className="space-y-2">
+                {content.sections.map(section => (
+                  <li key={section.id} className="border-t border-gray-300 pt-4">
+                    <Link 
+                      href={`#${section.id}`} 
+                      className="text-gray-700 hover:text-gray-900"
+                      onClick={() => setIsNavOpen(false)}
+                    >
+                      {section.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </nav>
+        </div>
         {/* Main Content */}
         <article className="flex-1 space-y-8">
           {content.sections.map(section => (

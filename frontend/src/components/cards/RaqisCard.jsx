@@ -4,6 +4,7 @@ import Link from "next/link";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaGlobe } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
+import { languages } from "@/lib/constance";
 
 export default function RaqisCard({ raqi }) {
 
@@ -15,11 +16,16 @@ export default function RaqisCard({ raqi }) {
     return rating.toFixed(1);
   }
 
+  function getLanguageLabel(code) {
+    const language = languages.find(lang => lang.value === code.toLowerCase());
+    return language ? language.label : code;
+  }
+
   const { image, name, Country, CountryCode, Languages, Experience, id, rating} = raqi;
   const displayImage = image ? image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
   return (
-    <div className="relative flex flex-col items-center space-y-4 p-4 group">
+    <div className="relative flex flex-col items-center space-y-4 p-4 group text-[16px]">
       <div className="relative">
         <svg
           id="flower"
@@ -76,12 +82,41 @@ export default function RaqisCard({ raqi }) {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Languages</span>
-                  <div className="flex gap-2">
-                    {Languages ? Languages.map((lang, index) => (
-                      <span key={index} className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm">
-                        {lang.slice(0, 2).toUpperCase()}
-                      </span>
-                    )) : <span className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm">EN</span>}
+                  <div className="flex-1 max-w-[155px] overflow-hidden">
+                    {Languages && Languages.length > 0 ? (
+                      Languages.length > 2 ? (
+                        <div className="languages-scroll animate">
+                          <div className="flex">
+                            {Languages.map((lang, index) => (
+                              <span key={index} className="px-4 py-1 mx-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">
+                                {getLanguageLabel(lang)}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="flex">
+                            {Languages.map((lang, index) => (
+                              <span key={`clone-${index}`} className="px-4 py-1 mx-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">
+                                {getLanguageLabel(lang)}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex justify-end gap-2">
+                          {Languages.map((lang, index) => (
+                            <span key={index} className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">
+                              {getLanguageLabel(lang)}
+                            </span>
+                          ))}
+                        </div>
+                      )
+                    ) : (
+                      <div className="flex justify-end">
+                        <span className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">
+                          English
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
