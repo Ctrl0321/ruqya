@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
           <title>Ruqya</title>
           <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
         </head>
-        <body className="bg-background text-foreground text-RuqyaGray sm:text-[16px] min-h-screen">
+        <body className="bg-background text-foreground text-RuqyaGray min-h-screen">
           <Loading className="min-h-screen"/>
         </body>
       </html>
@@ -50,7 +50,7 @@ export default function RootLayout({ children }) {
         <title>Ruqya</title>
         <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
       </head>
-      <body className="bg-background text-foreground text-RuqyaGray sm:text-[16px]">
+      <body className="bg-background text-foreground text-RuqyaGray text-[16px]">
         <Header />
         {children}
         {showFooter && <Footer />}

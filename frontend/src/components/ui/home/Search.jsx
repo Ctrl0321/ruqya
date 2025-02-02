@@ -6,15 +6,15 @@ import {SearchNormal1, Translate} from "iconsax-react";
 function Search() {
   return (
     <div id="search" className="relative z-20 flex justify-center items-center flex-row md:flex-row px-3 py-2 -mt-7 md:-mt-8 w-auto mx-5 md:mx-auto md:w-2/3 m-auto  bg-white rounded-xl shadow-xl  md:space-y-0 md:space-x-3">
-      <div className="flex items-center w-full md:w-3/5 h-full p-1 rounded-lg bg-white">
+      <div className="flex items-center justify-center w-full md:w-3/5 h-full p-1 rounded-lg bg-white">
         {/*<FaSearch size={20} className="fa-thin mr-2 text-gray-500" />*/}
           <SearchNormal1
               className="fa-thin mr-2 text-gray-500"
               size="27"
               color="#36454F"
           />
-          <Input type="text" placeholder="Find Raqi" className="sm:block lg:hidden" />
-          <Input type="text" placeholder="Search for Raqis, Ruqyah, or Symptoms" className="hidden lg:block" />
+          <Input type="text" placeholder="Find Raqi" className="block w-full lg:hidden" />
+          <Input type="text" placeholder="Search for Raqis, Ruqyah, or Symptoms" className="hidden w-full lg:block" />
    </div>
       <hr className="rounded-lg bg-gray-400 opacity-50 h-8 w-px rotate-95 hidden md:block" />
       <div className="md:flex items-center justify-center w-full hidden md:w-1/3 h-full p-1 rounded-lg bg-white">

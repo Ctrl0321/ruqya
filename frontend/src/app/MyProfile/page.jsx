@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import EditProfilePopup from "@/components/ui/popup/editPofile";
 import Input from "@/components/ui/input/input";
 import UserData from "@/data/user";
-import countryList from "react-select-country-list";
-import Select from "react-select";
+import { countries, languages } from "@/lib/constance";
+
+import CustomSelect  from "@/components/ui/input/select";
+  
 
 const MyProfile = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -22,7 +24,11 @@ const MyProfile = () => {
   });
   const [popupData, setPopupData] = useState(null);
 
-  const options = countryList().getData();
+  const genderOptions = [
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+    { value: "Other", label: "Other" }
+  ];
 
   const calculateAge = (birthDate) => {
     const today = new Date();
@@ -71,10 +77,6 @@ const MyProfile = () => {
     setPopupData(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleCountryChange = (selectedOption) => {
-    setPopupData(prevState => ({ ...prevState, country: selectedOption.label }));
-  };
-
   useEffect(() => {
     if (isEditPopupOpen) {
       document.body.style.overflow = "hidden";
@@ -83,15 +85,8 @@ const MyProfile = () => {
     }
   }, [isEditPopupOpen]);
 
-  // useEffect(() => {
-  //   if (isDataSaved) {
-  //     alert("Data saved");
-  //     setIsDataSaved(false);
-  //   }
-  // }, [isDataSaved]);
-
   return (
-    <div className="p-6 mb-32 min-h-screen bg-gray-100">
+    <div className="p-6 mb-10 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
       <div className="profile-details grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 bg-white p-6 rounded-lg shadow-lg">
         <p>
@@ -147,11 +142,7 @@ const MyProfile = () => {
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Gender</label>
                   <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
-                    <select name="gender" defaultValue={popupData.gender} onChange={handleChange} className="text-sm w-full bg-transparent appearance-none">
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    <CustomSelect options={genderOptions} value={popupData.gender} onChange={handleChange} name="gender" />
                   </div>
                 </div>
                 <div className="relative mb-6">
@@ -163,40 +154,13 @@ const MyProfile = () => {
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-2 mb-2 w-auto">Country</label>
                   <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                    <Select
-                      options={options}
-                      defaultValue={options.find(option => option.label === popupData.country)}
-                      onChange={handleCountryChange}
-                      className="text-sm w-full bg-transparent"
-                      styles={{
-                        control: (base) => ({
-                          ...base,
-                          border: 'none',
-                          boxShadow: 'none',
-                          '&:hover': { border: 'none' }
-                        }),
-                        dropdownIndicator: (base) => ({
-                          ...base,
-                          display: 'none'
-                        }),
-                        indicatorSeparator: (base) => ({
-                          ...base,
-                          display: 'none'
-                        })
-                      }}
-                    />
+                    <CustomSelect options={countries} value={popupData.country} onChange={handleChange} name="country" />
                   </div>
                 </div>
                 <div className="relative mb-6">
                   <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Language</label>
                   <div className="flex justify-center items-center rounded-full border px-4 py-3 border-teal-500 focus:ring-teal-500">
-                    <select name="language" defaultValue={popupData.language} onChange={handleChange} className="text-sm w-full bg-transparent appearance-none">
-                      <option value="English">English</option>
-                      <option value="Spanish">Spanish</option>
-                      <option value="French">French</option>
-                      <option value="German">German</option>
-                      <option value="Chinese">Chinese</option>
-                    </select>
+                    <CustomSelect options={languages} value={popupData.language} onChange={handleChange} name="language" />
                   </div>
                 </div>
                 <div className="relative mb-6">

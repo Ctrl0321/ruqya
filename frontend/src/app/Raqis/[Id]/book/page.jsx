@@ -88,7 +88,7 @@ const BookSessionPage = () => {
         <form className="space-y-4">
           <div>
             <label className="block text-gray-700">Session Type</label>
-            <select value={sessionType} onChange={handleSessionTypeChange} className="mt-3 p-3 block w-full bg-LightGray border border-gray-300 rounded-md shadow-sm focus:ring-RuqyaGreen focus:border-RuqyaGreen sm:text-sm appearance-none">
+            <select value={sessionType} onChange={handleSessionTypeChange} className="mt-3 p-3 block w-full bg-LightGray border border-gray-300 rounded-md shadow-sm focus:ring-RuqyaGreen focus:border-RuqyaGreen text-sm md:text-md appearance-none">
               <option value="Standard">Standard</option>
               <option value="Premium">Premium</option>
               <option value="VIP">VIP</option>
