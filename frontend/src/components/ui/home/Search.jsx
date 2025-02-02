@@ -19,10 +19,10 @@ function Search() {
     router.push(`/BookRaqis?${params.toString()}`);
   };
 
-  // const handleLanguageChange = (selectedOption) => {
-  //   setLanguage(selectedOption);
-  //   console.log("Selected language:", selectedOption);
-  // };
+  const handleLanguageChange = (selectedOption) => {
+    setLanguage(selectedOption);
+    // console.log("Selected language:", selectedOption);
+  };
 
   return (
     <div id="search" className="relative z-20 flex justify-center items-center flex-row md:flex-row px-3 py-2 -mt-7 md:-mt-8 w-auto mx-5 md:mx-auto md:w-2/3 m-auto  bg-white rounded-xl shadow-xl  md:space-y-0 md:space-x-3">

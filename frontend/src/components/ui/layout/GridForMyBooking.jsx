@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 const Grid = ({ 
   children, 
   className,
-  gap = 4 
+  gap = 6
 }) => {
   const childCount = React.Children.count(children);
   const cols = Math.min(childCount, 6); // Limit to a maximum of 6 columns
