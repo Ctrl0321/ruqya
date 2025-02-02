@@ -267,7 +267,10 @@ export default function BookRaqis() {
         {/* Practitioners Grid */}
         <main className="flex-1">
           {/* Filter button for mobile view */}
-          <button className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg z-20" onClick={() => setIsFilterVisible(true)}>
+          <button
+            className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg shadow-gray-500/50 border-2 border-[#0C8281] z-20"
+            onClick={() => setIsFilterVisible(true)}
+          >
             {isFilterVisible ? <FaTimes size={24} /> : <FaFilter size={24} />}
           </button>
           {/* <div className="mb-6">

@@ -100,3 +100,15 @@ select {
   background-size: 2.5em 1.5em;
   padding-right: 3.5rem;
 }
+
+
+@media only screen and (min-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (max-device-width: 1440px) {
+  .mac-button-adjustment {
+    padding-top: 0.5rem; /* pt-2 */
+    padding-bottom: 0.25rem; /* pb-1 */
+  }
+}
+
+.button-default {
+  padding: 0.75rem 0; /* py-3 */
+}

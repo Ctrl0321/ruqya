@@ -9,10 +9,11 @@ function Footer() {
   return (
     <footer className="relative w-full z-100 pt-16 mt-56"> {/* I dont tink z index working */}
       <Triangle />
-      <div className="bg-RuqyaLightPurple text-white text-sm">
-        <div className="container px-4 mx-auto text-center md:text-left ">
+      <div className="bg-RuqyaLightPurple text-white">
+        <div className="px-4 mx-auto text-center md:text-left ">
           <div className="flex justify-center mb-12"></div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between w-full  gap-8 max-w-6xl mx-auto">
+            
             <div className="space-y-4 order-3 md:order-1">
               <div className="border-b border-[#424867] opacity-50 pb-4 md:hidden"></div>
               <h3 className="text-[#424867] text-xl font-medium mb-6 flex items-center justify-center md:justify-start gap-2">
@@ -66,8 +67,8 @@ function Footer() {
             <div className="space-y-4 order-1 md:order-3">
               <h3 className="text-[#424867] text-2xl font-bold mb-2">Be Our Subscribers</h3>
               <p className="text-[#424867] mb-6">to get the latest news about health from our experts</p>
-              <div className="flex justify-center items-center gap-2 p-2 bg-white rounded-lg">
-                <Input type="email" placeholder="example@gmail.com" className="border-none bg-transparent" />
+              <div className="flex justify-between items-center gap-2 p-2 bg-white rounded-lg">
+                <Input type="email" placeholder="example@gmail.com" className="border-none bg-transparent w-full" />
                 <Button color="RuqyaGreen" bg={true} text="Subscribe" className="rounded-lg" />
               </div>
             </div>

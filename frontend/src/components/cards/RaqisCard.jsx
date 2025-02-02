@@ -19,7 +19,7 @@ export default function RaqisCard({ raqi }) {
   const displayImage = image ? image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
   return (
-    <div className="relative flex flex-col items-center space-y-4 p-4 group">
+    <div className="relative flex flex-col items-center space-y-4 p-4 group text-[16px]">
       <div className="relative">
         <svg
           id="flower"
