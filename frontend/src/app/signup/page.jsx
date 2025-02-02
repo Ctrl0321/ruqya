@@ -28,7 +28,7 @@ function SignUp() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto mt-20">
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -71,6 +71,7 @@ function SignUp() {
                   <Input type="password" placeholder="Re-enter your created password" className="text-sm" />
                 </div>
               </div>
+
               <div className="mt-10">
                 <Button type="submit" bg={true} text="Sign Up" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
               </div>

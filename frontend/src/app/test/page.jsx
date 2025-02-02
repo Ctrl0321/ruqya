@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
 import { FaStar } from "react-icons/fa";
+
+import { motion } from "framer-motion";
+import Loading from "@/components/shared/common/LoadingSpinner";
+
 const ReviewsSection = () => {
   const [data, setData] = useState({
     averageRating: 4.0,
@@ -15,6 +19,8 @@ const ReviewsSection = () => {
     // and update the state accordingly
   }, []);
 
+
+
   const chartData = [
     { name: "5 ★", value: data.reviewBreakdown[0], fill: "#4caf50" },
     { name: "4 ★", value: data.reviewBreakdown[1], fill: "#9c27b0" },
@@ -22,6 +28,10 @@ const ReviewsSection = () => {
     { name: "2 ★", value: data.reviewBreakdown[3], fill: "#03a9f4" },
     { name: "1 ★", value: data.reviewBreakdown[4], fill: "#ffeb3b" },
   ];
+
+  return (
+    <Loading />
+  );
 
   return (
     <div className="p-4">
