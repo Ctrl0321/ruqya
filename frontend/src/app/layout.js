@@ -6,15 +6,11 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/shared/common/LoadingSpinner";
 
-// Remove metadata export
-// export const metadata = {
-//   title: "Ruqya",
-//   description: "Ruqya is a web application that helps you to perform Ruqya on yourself or others.",
-// };
-
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [showFooter, setShowFooter] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [menuLoading, setMenuLoading] = useState(true);
 
   useEffect(() => {
     if (pathname === "/login" || pathname === "/signup") {
@@ -24,7 +20,12 @@ export default function RootLayout({ children }) {
     }
   }, [pathname]);
 
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setMenuLoading(false);
+    }, 2000);
+    setMenuLoading(true);
+  }, [pathname]);
 
   useEffect(() => {
     setLoading(false);
@@ -38,7 +39,7 @@ export default function RootLayout({ children }) {
           <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
         </head>
         <body className="bg-background text-foreground text-RuqyaGray min-h-screen">
-          <Loading className="min-h-screen"/>
+          <Loading className="min-h-screen" />
         </body>
       </html>
     );
@@ -52,7 +53,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-background text-foreground text-RuqyaGray text-[16px]">
         <Header />
-        {children}
+        {menuLoading ? <Loading /> : children}
         {showFooter && <Footer />}
       </body>
     </html>
