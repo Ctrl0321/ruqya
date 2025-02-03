@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
-import { X } from "lucide-react";
+import {Eye, EyeOff, X} from "lucide-react";
 import { countries, languages } from "@/lib/constance";
 import { UserDto } from "@/contexts/AuthContexts";
 import { changePassword, getOwnProfile, updateUserProfile } from "@/lib/api";
@@ -18,6 +18,12 @@ export default function SettingsPage() {
     const [newPassword, setNewPassword] = useState("");
     const [reenterPassword, setReenterPassword] = useState("");
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [passwordVisibility, setPasswordVisibility] = useState({
+        currentPassword: false,
+        newPassword: false,
+        reenterPassword: false
+    });
+    const [passwordStrength, setPasswordStrength] = useState(0);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -53,6 +59,29 @@ export default function SettingsPage() {
             handleUserChange("languages", user.languages?.filter((l) => l !== lang) || []);
         }
     };
+
+    const calculatePasswordStrength = (password: string) => {
+        let strength = 0;
+        if (password.length > 7) strength += 1;
+        if (/[A-Z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        return strength;
+    };
+
+    const togglePasswordVisibility = (field: keyof typeof passwordVisibility) => {
+        setPasswordVisibility(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
+
+    const handlePasswordChange = (password: string) => {
+        setNewPassword(password);
+        const strength = calculatePasswordStrength(password);
+        setPasswordStrength(strength);
+    };
+
 
     const validateProfile = () => {
         const newErrors: Record<string, string> = {};
@@ -122,9 +151,32 @@ export default function SettingsPage() {
         }
     };
 
-    return (
+    const renderPasswordStrengthIndicator = () => {
+        const strengthColors = [
+            'bg-red-500',
+            'bg-orange-500',
+            'bg-yellow-500',
+            'bg-green-500'
+        ];
+
+        return (
+            <div className="flex space-x-1 h-1.5 mt-1">
+                {[0, 1, 2, 3].map((index) => (
+                    <div
+                        key={index}
+                        className={`flex-1 rounded-full ${
+                            index < passwordStrength
+                                ? strengthColors[passwordStrength - 1]
+                                : 'bg-gray-200'
+                        }`}
+                    />
+                ))}
+            </div>
+        );
+    };
+
+        return (
         <div className="p-4 grid gap-8 md:grid-cols-2">
-            {/* Profile Section */}
             <Card>
                 <CardContent>
                     <h2 className="text-xl font-semibold my-4">Profile</h2>
@@ -235,53 +287,88 @@ export default function SettingsPage() {
                             {errors.languages && <p className="text-red-500 text-sm mt-1">{errors.languages}</p>}
                         </div>
 
-                        <Button className="mt-4" onClick={handleProfileSubmit}>
+                        <Button className="mt-4 w-full" onClick={handleProfileSubmit}>
                             Save Profile
                         </Button>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Security Section */}
-            <Card>
+            <Card className="h-96">
                 <CardContent>
                     <h2 className="text-xl font-semibold my-4">Security</h2>
                     <div className="space-y-4">
-                        <div>
+                        <div className="relative">
                             <label className="block mb-1 font-medium">Current Password</label>
-                            <Input
-                                type="password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                placeholder="Enter current password"
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={passwordVisibility.currentPassword ? "text" : "password"}
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    placeholder="Enter current password"
+                                    className="pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => togglePasswordVisibility('currentPassword')}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                >
+                                    {passwordVisibility.currentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
                             {errors.currentPassword &&
                                 <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>}
                         </div>
 
                         <div>
                             <label className="block mb-1 font-medium">New Password</label>
-                            <Input
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                placeholder="Enter new password"
-                            />
-                            {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
+                            <div className="relative">
+                                <Input
+                                    type={passwordVisibility.newPassword ? "text" : "password"}
+                                    value={newPassword}
+                                    onChange={(e) => handlePasswordChange(e.target.value)}
+                                    placeholder="Enter new password"
+                                    className="pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => togglePasswordVisibility('newPassword')}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                >
+                                    {passwordVisibility.newPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                            {renderPasswordStrengthIndicator()}
+                            {errors.newPassword &&
+                                <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block mb-1 font-medium">Re-enter Password</label>
-                            <Input
-                                type="password"
-                                value={reenterPassword}
-                                onChange={(e) => setReenterPassword(e.target.value)}
-                                placeholder="Re-enter new password"
-                            />
-                            {errors.reenterPassword && <p className="text-red-500 text-sm mt-1">{errors.reenterPassword}</p>}
+                            <div className="relative">
+                                <Input
+                                    type={passwordVisibility.reenterPassword ? "text" : "password"}
+                                    value={reenterPassword}
+                                    onChange={(e) => setReenterPassword(e.target.value)}
+                                    placeholder="Re-enter new password"
+                                    className="pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => togglePasswordVisibility('reenterPassword')}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                >
+                                    {passwordVisibility.reenterPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                            {errors.reenterPassword &&
+                                <p className="text-red-500 text-sm mt-1">{errors.reenterPassword}</p>}
                         </div>
 
-                        <Button className="mt-4" onClick={handleSecuritySubmit}>
+                        <Button
+                            className="mt-4 w-full"
+                            onClick={handleSecuritySubmit}
+                        >
                             Change Password
                         </Button>
                     </div>
