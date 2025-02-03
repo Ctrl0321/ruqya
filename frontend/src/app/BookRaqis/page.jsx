@@ -11,29 +11,15 @@ import RatingInput from "@/components/ui/input/rating";
 import { useSearchParams } from "next/navigation";
 import { languages, countries } from "@/lib/constance";
 import { getRakis } from "@/lib/api";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 // Main Page Component
 export default function BookRaqis() {
   const [raqiData, setRaqiData] = useState([]);
-
-  useEffect(() => {
-    async function fetchRakis() {
-      const rakis = await getRakis();
-      setRaqiData(rakis);
-    }
-
-    fetchRakis();
-  }, []);
-
-  const experienceRange = {
-    min: raqiData.length > 0 ? Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) : 0,
-    max: raqiData.length > 0 ? Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) : 0,
-    current: 0,
-  };
-
-  const [filteredData, setFilteredData] = useState(raqiData);
+  const [isLoading, setIsLoading] = useState(true); // State to manage loading
+  const [filteredData, setFilteredData] = useState([]);
   const [userSelections, setUserSelections] = useState({
-    experience: [experienceRange.min, experienceRange.max],
+    experience: [0, 0],
     languages: [],
     availability: {
       date: null,
@@ -44,6 +30,27 @@ export default function BookRaqis() {
   });
   const [rating, setRating] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  useEffect(() => {
+    async function fetchRakis() {
+      const rakis = await getRakis();
+      setRaqiData(rakis);
+      setFilteredData(rakis); // Update filteredData after fetching
+      setIsLoading(false); // Set loading to false after data is fetched
+
+      const experienceRange = {
+        min: rakis.length > 0 ? Math.min(...rakis.map((raqi) => raqi.yearOfExperience || 0)) : 0,
+        max: rakis.length > 0 ? Math.max(...rakis.map((raqi) => raqi.yearOfExperience || 0)) : 0,
+      };
+
+      setUserSelections((prev) => ({
+        ...prev,
+        experience: [experienceRange.min, experienceRange.max],
+      }));
+    }
+
+    fetchRakis();
+  }, []);
 
   const handleExperienceChange = (values) => {
     setUserSelections((prev) => ({
@@ -133,7 +140,7 @@ export default function BookRaqis() {
       result = result.filter((raqi) => userSelections.countries.includes(raqi.country));
     }
 
-    if (userSelections.experience[0] > 0 || userSelections.experience[1] < experienceRange.max) {
+    if (userSelections.experience[0] > 0 || userSelections.experience[1] < Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))) {
       result = result.filter((raqi) => raqi.yearOfExperience >= userSelections.experience[0] && raqi.yearOfExperience <= userSelections.experience[1]);
     }
 
@@ -156,6 +163,10 @@ export default function BookRaqis() {
     .map((raqi) => raqi.yearOfExperience)
     .filter((exp) => exp !== undefined)
     .sort((a, b) => a - b);
+
+  if (isLoading) {
+    return <LoadingSpinner />; // Show loading spinner while data is being fetched
+  }
 
   return (
     <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
@@ -202,8 +213,8 @@ export default function BookRaqis() {
                 <div className="space-y-4 ml-5">
                   <Slider
                     range
-                    min={experienceRange.min}
-                    max={experienceRange.max}
+                    min={Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0))}
+                    max={Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))}
                     value={userSelections.experience}
                     onChange={handleExperienceChange}
                     trackStyle={[{ backgroundColor: "green", height: 2 }]}
@@ -216,7 +227,7 @@ export default function BookRaqis() {
 
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>
-                      {experienceRange.min} Year{experienceRange.min !== 1 ? "s" : ""}
+                      {Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0))} Year{Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) !== 1 ? "s" : ""}
                     </span>
                     <div className="flex ">
                       {experienceLevels.map((level) => (
@@ -224,7 +235,7 @@ export default function BookRaqis() {
                       ))}
                     </div>
                     <span>
-                      {experienceRange.max} Year{experienceRange.max !== 1 ? "s" : ""}
+                      {Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))} Year{Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) !== 1 ? "s" : ""}
                     </span>
                   </div>
                 </div>
