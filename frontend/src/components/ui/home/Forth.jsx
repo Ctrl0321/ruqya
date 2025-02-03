@@ -8,6 +8,7 @@ import {isArray} from "node:util";
 
 function Forth(props) {
     const { raqiData = [], title } = props;
+    // const slice = raqiData?.slice(0, 4) || [];
 
   if (!raqiData) {
     return null;
@@ -25,6 +26,12 @@ function Forth(props) {
           </div>
         )}
       </div>
+
+      {/* <Grid>
+        {raqiData && slice.map((data) => (
+          <RaqisCard key={data.id} raqi={data} />
+        ))}
+        </Grid> */}
 
       <ResponsiveGrid data={raqiData} breakpoints={{mobile:4, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 4, '3xl': 5, '4xl': 6, '5xl': 6 }}>
           {(data) => <RaqisCard key={`Raqi` + data.id} raqi={data} />}

@@ -93,25 +93,27 @@ const FloatingChatWidget = ({ userId, otherUserId }: { userId: string; otherUser
                                 </div>
                             )}
 
-                            {/* Chat UI */}
                             <AnimatePresence>
                                 {!isMinimized && (
                                     <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="flex-1 flex flex-col"
+                                        initial={{opacity: 0}}
+                                        animate={{opacity: 1}}
+                                        exit={{opacity: 0}}
+                                        className="flex-1 flex flex-col "
                                     >
-                                        <Chat client={client}>
-                                            <Channel channel={channel}>
-                                                <Window>
-                                                    <ChannelHeader />
-                                                    <MessageList />
-                                                    <MessageInput />
-                                                </Window>
-                                                <Thread />
-                                            </Channel>
-                                        </Chat>
+                                        <div className="flex-1 overflow-y-auto max-h-[550px]">
+
+                                            <Chat client={client}>
+                                                <Channel channel={channel}>
+                                                    <Window>
+                                                        <ChannelHeader/>
+                                                        <MessageList disableDateSeparator={true}/>
+                                                        <MessageInput/>
+                                                    </Window>
+                                                    <Thread/>
+                                                </Channel>
+                                            </Chat>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
