@@ -31,6 +31,7 @@ import {
 import { getUsers, updateUserRole } from "@/lib/api";
 import { toast } from "@/components/ui/toast";
 import { useAuth } from "@/contexts/AuthContexts";
+import {getCountryLabel} from "@/lib/utils";
 
 interface User {
   _id: string;
@@ -135,7 +136,7 @@ export default function UsersPage() {
             <SelectItem value="all">All Countries</SelectItem>
             {countries.map((country) => (
               <SelectItem key={country} value={country}>
-                {country}
+                {getCountryLabel(country)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -171,7 +172,7 @@ export default function UsersPage() {
               >
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.country ?? "SriLanka"}</TableCell>
+                <TableCell> {getCountryLabel(user.country ?? "ae")}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${

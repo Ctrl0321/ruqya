@@ -32,6 +32,8 @@ import {
   getReviews, getRakis,
 } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContexts";
+import {languages} from "@/lib/constance";
+import {getCountryLabel} from "@/lib/utils";
 
 interface Raki {
   _id: string;
@@ -187,7 +189,7 @@ export default function TutorsPage() {
             <SelectItem value="all">All Countries</SelectItem>
             {countries.map((country) => (
               <SelectItem key={country} value={country}>
-                {country}
+                {getCountryLabel(country)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -234,7 +236,8 @@ export default function TutorsPage() {
               >
                 <TableCell>{tutor.name}</TableCell>
                 <TableCell>{tutor.email}</TableCell>
-                <TableCell>{tutor.country ?? "SriLanka"}</TableCell>
+                <TableCell>{ getCountryLabel(tutor.country)
+                    ?? "SriLanka"}</TableCell>
                 <TableCell>
                   {currentUser?.role === "super-admin" ? (
                     <Select

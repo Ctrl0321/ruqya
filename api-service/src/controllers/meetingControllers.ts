@@ -95,7 +95,6 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
         const validatedTimeZone = validateAndConvertTimezone(timeZone);
         const utcDate = moment.tz(date, validatedTimeZone).utc().toDate();
 
-        // Check for scheduling conflicts
         const existingMeetings = await Meeting.find({
             $or: [{ rakiId }, { userId }],
             date: utcDate,
