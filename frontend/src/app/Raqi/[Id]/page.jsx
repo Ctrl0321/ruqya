@@ -14,8 +14,8 @@ import Loading from "@/components/shared/common/LoadingSpinner";
 import { languages } from "@/lib/constance";
 import { ChatWidgetWrapper } from "@/components/getStream/chat/ChatWidgetWrapper";
 import { useChat } from "@/components/getStream/chat/ChatContextProvider";
-import { getUserProfile,getRakis } from "@/lib/api";
-import {getCountryLabel, getLanguageLabel} from "@/lib/utils"
+import { getUserProfile, getRakis, getRakiAvailability } from "@/lib/api";
+import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -26,6 +26,7 @@ function Raqis() {
   const [showFullAbout, setShowFullAbout] = useState(false);
   const maxAboutLength = 300; // Set the maximum length for the about section
   const [raqiData, setRaqiData] = useState();
+  const [availability, setAvailability] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,6 +34,8 @@ function Raqis() {
       setData(foundData);
       const rakis = await getRakis();
       setRaqiData(rakis);
+      const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split('T')[0]);
+      setAvailability(raqiAvailability);
     }
 
     fetchData();
@@ -140,6 +143,16 @@ function Raqis() {
             </div>
           )}
           {data.yearOfExperience && <p>{data.yearOfExperience} Years of Experience</p>}
+          {availability && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Availability</h3>
+              <ul>
+                {availability.map((slot, index) => (
+                  <li key={index}>{slot}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="flex-col items-center justify-center hidden md:flex ml-auto">
@@ -174,6 +187,16 @@ function Raqis() {
           </div>
         )}
         {data.yearOfExperience && <p>{data.yearOfExperience} Years of Experience</p>}
+        {availability && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold">Availability</h3>
+            <ul>
+              {availability.map((slot, index) => (
+                <li key={index}>{slot}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
           <Button onClick={() => handleStartChat(raqiData._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
