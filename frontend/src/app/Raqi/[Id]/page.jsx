@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import sampledata from "@/data/sampledata.json";
 import ReactCountryFlag from "react-country-flag";
 import Link from "next/link";
 import { MdOutlineMessage, MdTrendingDown, MdOutlineTrendingUp } from "react-icons/md";
@@ -13,8 +12,12 @@ import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
 import Loading from "@/components/shared/common/LoadingSpinner";
 import { languages } from "@/lib/constance";
-import {ChatWidgetWrapper} from "@/components/getStream/chat/ChatWidgetWrapper";
-import {useChat} from "@/components/getStream/chat/ChatContextProvider";
+import { ChatWidgetWrapper } from "@/components/getStream/chat/ChatWidgetWrapper";
+import { useChat } from "@/components/getStream/chat/ChatContextProvider";
+import { getUserProfile,getRakis } from "@/lib/api";
+import {getCountryLabel, getLanguageLabel} from "@/lib/utils"
+
+const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
 function Raqis() {
   const [data, setData] = useState(null);
@@ -22,16 +25,23 @@ function Raqis() {
   const Id = params.Id;
   const [showFullAbout, setShowFullAbout] = useState(false);
   const maxAboutLength = 300; // Set the maximum length for the about section
+  const [raqiData, setRaqiData] = useState();
 
   useEffect(() => {
-    const foundData = sampledata.find((item) => item.id.toString() === Id);
-    setData(foundData);
+    async function fetchData() {
+      const foundData = await getUserProfile(Id);
+      setData(foundData);
+      const rakis = await getRakis();
+      setRaqiData(rakis);
+    }
+
+    fetchData();
   }, [Id]);
 
   const { setUserId } = useChat();
 
   const handleStartChat = (otherUser) => {
-      setUserId(otherUser);
+    setUserId(otherUser);
   };
 
   if (!Id) {
@@ -39,11 +49,15 @@ function Raqis() {
   }
 
   if (data === null) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   if (!data) {
-    return <div className="flex items-center justify-center min-h-screen text-black"><p>Data not available.</p></div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen text-black">
+        <p>Data not available.</p>
+      </div>
+    );
   }
 
   const overallAverage = data.rating?.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
@@ -76,7 +90,7 @@ function Raqis() {
   }
 
   const getLanguageLabel = (value) => {
-    const language = languages.find(lang => lang.value === value);
+    const language = languages.find((lang) => lang.value === value);
     return language ? language.label : value;
   };
 
@@ -90,6 +104,8 @@ function Raqis() {
             </Link>
           </li>
           <li>/</li>
+          <li>Raqi</li>
+          <li>/</li>
           <li>{data.name}</li>
         </ol>
       </nav>
@@ -97,9 +113,9 @@ function Raqis() {
 
       <div className="flex flex-col md:flex-row items-center mx-4">
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
-          <img id="raqi-profile" src={data.image} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
+          <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full">
-            <button onClick={() => handleStartChat('679bba803d6f1d2003462721')} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-2 px-3">
+            <button onClick={() => handleStartChat(raqiData._id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </button>
@@ -108,28 +124,28 @@ function Raqis() {
 
         <div className="md:flex hidden flex-col items-start gap-2 p-4 group">
           {data.name && <h1 className="text-2xl font-semibold">{data.name}</h1>}
-          {data.Country && (
+          {data.country && (
             <div className="flex items-center space-x-1">
-              <p>{data.Country}</p>
-              <ReactCountryFlag countryCode={data.CountryCode} svg className="w-6 h-6" title={data.Country} />
+              <p>{getCountryLabel(data.country)}</p>
+              <ReactCountryFlag countryCode={data.country} svg className="w-6 h-6 mb-0.5" title={getCountryLabel(data.country)} />
             </div>
           )}
-          {data.Languages && (
+          {data.languages && (
             <div className="flex items-center space-x-2">
-              {data.Languages.map((lang, index) => (
+              {data.languages.map((lang, index) => (
                 <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
                   {getLanguageLabel(lang)}
                 </span>
               ))}
             </div>
           )}
-          {data.Experience && <p>{data.Experience} Years of Experience</p>}
+          {data.yearOfExperience && <p>{data.yearOfExperience} Years of Experience</p>}
         </div>
 
         <div className="flex-col items-center justify-center hidden md:flex ml-auto">
-          <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-blue-400 p-4">
+          <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-RuqyaGreen p-4">
             <h3 className="mb-3">Want to have a Session ?</h3>
-            <Button link={"/Raqis/" + data.id + '/book'} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
+            <Button link={"/Raqis/" + data.id + "/book"} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
           </div>
         </div>
       </div>
@@ -138,28 +154,28 @@ function Raqis() {
       <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-3 text-xl group mt-2">
         {data.name && (
           <div className="text-4xl flex flex-row gap-3">
-            <h1 >{data.name}</h1>
+            <h1>{data.name}</h1>
             <p className={`ml-auto w-auto m-auto px-3 p-1 rounded-2xl text-sm ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `${data.status}` : ""}</p>
           </div>
         )}
-        {data.Country && (
+        {data.country && (
           <div className="flex items-center space-x-1">
-            <p>{data.Country}</p>
-            <ReactCountryFlag countryCode={data.CountryCode} svg className="w-6 h-6" title={data.Country} />
+            <p>{getCountryLabel(data.country)}</p>
+            <ReactCountryFlag countryCode={data.country} svg className="w-6 h-6" title={getCountryLabel(data.country)} />
           </div>
         )}
-        {data.Languages && (
+        {data.languages && (
           <div className="flex items-center space-x-2">
-            {data.Languages.map((lang, index) => (
+            {data.languages.map((lang, index) => (
               <span key={index} className="px-2 py-1 bg-yellow-300 rounded-lg text-sm">
                 {getLanguageLabel(lang)}
               </span>
             ))}
           </div>
         )}
-        {data.Experience && <p>{data.Experience} Years of Experience</p>}
+        {data.yearOfExperience && <p>{data.yearOfExperience} Years of Experience</p>}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
-          <Button onClick={() => handleStartChat('6790bfce3ad260fbee7fdb0c')} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
+          <Button onClick={() => handleStartChat(raqiData._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
 
@@ -251,8 +267,8 @@ function Raqis() {
           <ReviewCard key={index} review={review} colorIndex={index} />
         ))}
       </div>
-      <Forth raqiData={sampledata} title="Similar Raqis" className="mx-5 md:mx-9"/>
-      <ChatWidgetWrapper/>
+      <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
+      <ChatWidgetWrapper />
     </div>
   );
 }

@@ -146,7 +146,7 @@ export default function RaqisCard({ raqi }) {
                   <span>{Experience ? Experience + " Year" + (Experience > 1 ? "s" : "") : "Not Available"}</span>
                 </div>
               </div>
-              <Link href={id ? "/Raqis/" + id : "#"} className="w-full bg-RuqyaGreen py-3 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
+              <Link href={id ? "/Raqi/" + id : "#"} className="w-full bg-RuqyaGreen py-3 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>
             </div>
