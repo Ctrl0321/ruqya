@@ -4,18 +4,9 @@ import Link from "next/link";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
-import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 function Third(props) {
   const { raqiData } = props;
-
-  if (!raqiData) {
-    return null;
-  }
-
-  if (raqiData.length == 0){
-    return null;
-  }
 
   return (
     <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">

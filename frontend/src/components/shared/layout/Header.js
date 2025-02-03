@@ -94,7 +94,7 @@ const Header = () => {
                     <FaBookBookmark  className="w-5 -ml-1 h-4 mr-2" />
                     My Bookings
                   </Link>
-                  <Link href="/login" className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                  <Link href="/Logout" className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
                     <LuLogOut className="w-4 h-4 mr-2" />
                     Logout
                   </Link>
@@ -218,7 +218,7 @@ const Header = () => {
                       My Bookings
                     </Link>
                     <Link 
-                      href="/login" 
+                      href="/Logout" 
                       className="px-6 py-3 text-gray-700 hover:bg-gray-100 flex items-center rounded-b-lg" 
                       onClick={handleLinkClick}
                     >

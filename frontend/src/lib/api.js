@@ -143,20 +143,4 @@ export const getStreamToken = async (userId, role) =>
 export const getStreamChatToken = async (userId) =>
     (await api.post("ruqya-api/get-stream/getuserToken", { userId })).data.token;
 
-export const getAllAdmins = async () => {
-    const token = localStorage.getItem('fe-token');
-    if (!token) {
-        throw new Error("No token found. Please log in.");
-    }
-
-    const response = await api.get('ruqya-api/user/admins', {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-
-    return response.data;
-};
-
-
 export default api;
