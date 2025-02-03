@@ -13,7 +13,7 @@ export default function RaqisCard({ raqi }) {
   }
 
   function formatRating(rating) {
-    return rating.toFixed(1);
+    return rating ? rating.toFixed(1) : "0.0";
   }
 
   function getLanguageLabel(code) {

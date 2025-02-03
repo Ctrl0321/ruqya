@@ -47,28 +47,28 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Full Name</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="text" placeholder="Enter your full name here" className="text-sm" />
+                  <Input type="text" name="name" placeholder="Enter your full name here" className="text-sm" />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" placeholder="Enter your Email Address here" className="text-sm " />
+                  <Input type="email" name="email" placeholder="Enter your Email Address here" className="text-sm " />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" placeholder="Create a Password" className="text-sm" />
+                  <Input type="password" name="password" placeholder="Create a Password" className="text-sm" />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Confirm Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" placeholder="Re-enter your created password" className="text-sm" />
+                  <Input type="password" name="confirm password" placeholder="Re-enter your created password" className="text-sm" />
                 </div>
               </div>
 

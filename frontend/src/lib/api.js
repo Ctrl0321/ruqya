@@ -277,5 +277,21 @@ export const getStreamChatToken = async (userId) => {
 };
 
 
+export const getAllAdmins = async () => {
+    const token = localStorage.getItem('fe-token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+
+    const response = await api.get('ruqya-api/user/admins', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data;
+};
+
+
 export default api;
 

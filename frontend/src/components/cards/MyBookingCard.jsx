@@ -4,7 +4,12 @@ import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 
 const MyBookingCard = ({ booking }) => {
+
+  if(!booking){
+    return null;
+  }
   const calculateEndTime = (startTime, duration) => {
+    if (!startTime) return "N/A"; // Add this check
     const [hours, minutes] = startTime.split(":").map(Number);
     const endTime = new Date();
     endTime.setHours(hours);
