@@ -162,10 +162,10 @@ export const setAvailability = async (req: AuthenticatedRequest, res: Response):
 export const removeAvailability = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const rakiId = req.user?.id;
-        const { startTime, timeZone = 'UTC' } = req.body;
+        const { startTime, timeZone = 'UTC', date } = req.body;
 
-        if (!rakiId || !startTime) {
-            return res.status(400).json({ message: 'Invalid input. Required: startTime and timeZone' });
+        if (!rakiId || !startTime || !date) {
+            return res.status(400).json({ message: 'Invalid input. Required: date, startTime, and timeZone' });
         }
 
         let validatedTimeZone: string;
@@ -177,10 +177,10 @@ export const removeAvailability = async (req: AuthenticatedRequest, res: Respons
             });
         }
 
-        // Convert startTime to UTC for comparison
-        const startDateTimeUTC = moment.tz(startTime, 'HH:mm', validatedTimeZone).utc().toISOString();
+        const localDateTime = `${date} ${startTime}`;
+        const startDateTimeUTC = moment.tz(localDateTime, 'YYYY-MM-DD HH:mm', validatedTimeZone).utc().toISOString();
 
-        // Find and delete the specific availability record
+
         const deletedAvailability = await RakiAvailability.findOneAndDelete({
             rakiId,
             startTime: startDateTimeUTC,
