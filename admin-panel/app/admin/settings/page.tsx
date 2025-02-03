@@ -200,7 +200,7 @@ export default function SettingsPage() {
                                 <SelectTrigger className="w-full">{user?.country || "Select a country"}</SelectTrigger>
                                 <SelectContent>
                                     {countries.map((country) => (
-                                        <SelectItem key={country.label} value={country.label}>
+                                        <SelectItem key={country.value} value={country.value}>
                                             {country.label}
                                         </SelectItem>
                                     ))}
@@ -215,7 +215,7 @@ export default function SettingsPage() {
                                 <SelectTrigger className="w-full">Select languages</SelectTrigger>
                                 <SelectContent>
                                     {languages.map((lang) => (
-                                        <SelectItem key={lang.label} value={lang.label}>
+                                        <SelectItem key={lang.value} value={lang.value}>
                                             {lang.label}
                                         </SelectItem>
                                     ))}
