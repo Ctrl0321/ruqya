@@ -34,7 +34,7 @@ function Raqis() {
       setData(foundData);
       const rakis = await getRakis();
       setRaqiData(rakis);
-      const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split('T')[0]);
+      const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
       setAvailability(raqiAvailability);
     }
 
@@ -46,6 +46,10 @@ function Raqis() {
   const handleStartChat = (otherUser) => {
     setUserId(otherUser);
   };
+
+  useEffect(() => {
+    setUserId(Id);
+  }, [Id]);
 
   if (!Id) {
     return <p className="min-h-screen text-black">No ID found.</p>;
@@ -118,7 +122,7 @@ function Raqis() {
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full">
-            <button onClick={() => handleStartChat(raqiData._id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
+            <button onClick={() => handleStartChat(Id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </button>
@@ -198,7 +202,7 @@ function Raqis() {
           </div>
         )}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
-          <Button onClick={() => handleStartChat(raqiData._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
+          <Button onClick={() => handleStartChat(Id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
 
