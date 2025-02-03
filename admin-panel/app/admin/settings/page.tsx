@@ -9,7 +9,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { X } from "lucide-react";
 import { countries, languages } from "@/lib/constance";
 import { UserDto } from "@/contexts/AuthContexts";
-import { getOwnProfile } from "@/lib/api";
+import {changePassword, getOwnProfile, getRakis, updateUserProfile} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 
 export default function SettingsPage() {
@@ -75,14 +75,45 @@ export default function SettingsPage() {
     };
 
     const handleProfileSubmit = () => {
+
+        const updateUserProfileFn = async () => {
+            try {
+                const userData = await updateUserProfile(user);
+            } catch (error) {
+                console.error("Failed to update profile:", error);
+                toast({
+                    title: "Error",
+                    description: "Failed to update profile. Please try again.",
+                    variant: "destructive",
+                });
+            }
+        }
+
         if (validateProfile()) {
-            console.log("Profile submitted", user);
+            updateUserProfileFn()
         }
     };
 
     const handleSecuritySubmit = () => {
+        console.log("Reched")
+        const changePasswordFn = async () => {
+            try {
+                const userData = await changePassword(currentPassword,reenterPassword);
+            } catch (error) {
+                console.error("Failed to change password:", error);
+                toast({
+                    title: "Error",
+                    description: "Failed to change password. Please try again.",
+                    variant: "destructive",
+                });
+            }
+        }
         if (validateSecurity()) {
             console.log("Security submitted", { currentPassword, newPassword });
+            changePasswordFn()
+        }
+        else {
+            console.log("Validation error",errors)
         }
     };
 

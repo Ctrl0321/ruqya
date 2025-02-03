@@ -33,7 +33,7 @@ import {
 } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContexts";
 
-interface Tutor {
+interface Raki {
   _id: string;
   name: string;
   email: string;
@@ -58,10 +58,10 @@ interface Review {
 }
 
 export default function TutorsPage() {
-  const [tutors, setTutors] = useState<Tutor[]>([]);
-  const [filteredTutors, setFilteredTutors] = useState<Tutor[]>([]);
+  const [tutors, setTutors] = useState<Raki[]>([]);
+  const [filteredTutors, setFilteredTutors] = useState<Raki[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
+  const [selectedTutor, setSelectedTutor] = useState<Raki | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [countryFilter, setCountryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
