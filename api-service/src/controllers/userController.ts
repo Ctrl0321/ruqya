@@ -11,7 +11,7 @@ import {getStreamAdminRole} from "../utils/getStreamAdminRole";
 
 export const updateUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-        const { name, email, country, timezone, languages, mobileNumber, age, yearOfExperience, description } = req.body;
+        const { name, email, country, languages, mobileNumber, age, yearOfExperience, description } = req.body;
 
         const userId = req.user?.id;
         if (!userId) {
@@ -39,22 +39,6 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
         if (user.role === 'admin') {
             if (yearOfExperience) user.yearOfExperience = yearOfExperience;
             if (description) user.description = description;
-        }
-
-        if (timezone) {
-            if (!moment.tz.zone(timezone)) {
-                res.status(400).json({ message: 'Invalid timezone format' });
-                return;
-            }
-            user.timezone = timezone;
-        } else if (country) {
-            const timeZoneInfo = getTimezone(country);
-            if (timeZoneInfo && timeZoneInfo.name) {
-                user.timezone = timeZoneInfo.name;
-            } else {
-                res.status(400).json({ message: 'Could not find timezone for the provided country' });
-                return;
-            }
         }
 
         await user.save();

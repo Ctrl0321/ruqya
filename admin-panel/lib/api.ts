@@ -47,11 +47,31 @@ export const getOwnProfile = async () => {
 };
 
 
+export const updateUserProfile = async (profileData: any) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
 
-// export const updateUserProfile = async (profileData: any) => {
-//     const response = await api.post('ruqya-api/user/update', profileData);
-//     return response.data;
-// };
+    const response = await api.post('ruqya-api/user/update', profileData,
+        { headers: {
+                Authorization: `Bearer ${token}`,
+            }});
+    return response.data;
+};
+
+export const changePassword = async (currentPassword:string,newPassword:string) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error("No token found. Please log in.");
+    }
+
+    const response = await api.post('ruqya-api/user/change-password', {currentPassword,newPassword},
+        { headers: {
+                Authorization: `Bearer ${token}`,
+            }});
+    return response.data;
+};
 
 export const getUsers = async () => {
     const response = await api.get('ruqya-api/user/users');
@@ -70,9 +90,11 @@ export const updateUserRole=async (userId:string, newRole:string)=>{
     const response = await api.post('ruqya-api/user/update-role', {userId,role:newRole},{ headers: {
             Authorization: `Bearer ${token}`,
         },});
-    return response.data;}
+    return response.data;
+}
 
 export const getRakis = async () => {
+
     const response = await api.get('ruqya-api/raki/rakis');
     return response.data;
 };
@@ -83,7 +105,6 @@ export const updateUserStatus=async (userId:string, newRole:string)=>{
     if (!token) {
         throw new Error("No token found. Please log in.");
     }
-
 
     const response = await api.post('ruqya-api/user/update-role', {userId,role:newRole},{ headers: {
             Authorization: `Bearer ${token}`,
@@ -103,9 +124,10 @@ export const getTodaySessions = async (): Promise<Session[]> => {
         }
     });
 
-
     return response.data
 };
+
+
 export const cancelSession=async (meetingId:string,note:string)=>{
     const token = localStorage.getItem('token');
     if (!token) {
@@ -119,6 +141,8 @@ export const cancelSession=async (meetingId:string,note:string)=>{
 
     return response.data
 }
+
+
 export const rescheduleSession=async (meetingId:string,newDate:string)=>{
     const token = localStorage.getItem('token');
     if (!token) {
