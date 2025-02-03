@@ -29,7 +29,7 @@ export default function SignIn() {
             const response = await login(email, password)
 
 
-            if (response && response.role === "super-admin") {
+            if (response && (response.role === "super-admin" || response.role === "admin")) {
                 setLoading(false)
                 toast({
                     title: "Login Successful",
