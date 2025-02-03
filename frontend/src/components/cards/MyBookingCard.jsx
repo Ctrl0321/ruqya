@@ -83,7 +83,7 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:max-w-[450px] text-left drop-shadow-lg p-2 mb-5 ">
+    <div className="bg-white rounded-xl md:min-w-[400px] text-left drop-shadow-lg p-2 mb-5 ">
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div className="col-span-2 rounded-lg">
