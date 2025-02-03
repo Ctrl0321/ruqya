@@ -89,14 +89,15 @@ export default function TutorsPage() {
     fetchTutors();
   }, []);
 
+
   useEffect(() => {
     const filtered = tutors.filter(
       (tutor) =>
         (tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           tutor.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        (countryFilter === "" || tutor.country === countryFilter) &&
-        (statusFilter === "" || tutor.status === statusFilter) &&
-        (roleFilter === "" || tutor.role === roleFilter)
+        (countryFilter === "all" ||countryFilter === "" || tutor.country === countryFilter) &&
+        (statusFilter === "all" ||statusFilter === "" || tutor.status === statusFilter) &&
+        (roleFilter === "all" ||roleFilter === "" || tutor.role === roleFilter)
     );
     setFilteredTutors(filtered);
   }, [tutors, searchTerm, countryFilter, statusFilter, roleFilter]);
