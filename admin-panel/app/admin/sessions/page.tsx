@@ -2,54 +2,63 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SessionList } from "@/components/SessionList"
+import { SessionList} from "@/components/SessionList"
 
-// Mock data for sessions (you would typically fetch this from an API)
 const sessions = [
     {
         id: 1,
-        title: "Introduction to Mindfulness",
+        meetingId:1002,
+        topic: "Introduction to Mindfulness",
         date: "2024-02-01T10:00:00",
         duration: 60,
-        status: "completed",
-        image: `/placeholder.svg?height=200&width=400`,
-        rakiName: "Dr. Jane Doe",
+        rakiId:"34242534535",
+        userId:"ee6r327782347",
+        note:"",
+        notificationSend:false
     },
     {
-        id: 2,
-        title: "Stress Management Techniques",
-        date: "2024-02-15T14:00:00",
-        duration: 90,
-        status: "upcoming",
-        image: `/placeholder.svg?height=200&width=400`,
-        rakiName: "Dr. John Smith",
-    },
-    {
-        id: 3,
-        title: "Cognitive Behavioral Therapy Basics",
-        date: "2024-01-20T11:00:00",
-        duration: 75,
-        status: "completed",
-        image: `/placeholder.svg?height=200&width=400`,
-        rakiName: "Dr. Emily Brown",
-    },
-    {
-        id: 4,
-        title: "Dealing with Anxiety",
-        date: "2024-03-01T09:00:00",
+        id: 1,
+        meetingId:1002,
+        topic: "Introduction to Mindfulness",
+        date: "2024-02-01T10:00:00",
         duration: 60,
-        status: "upcoming",
-        image: `/placeholder.svg?height=200&width=400`,
-        rakiName: "Dr. Michael Johnson",
+        rakiId:"34242534535",
+        userId:"ee6r327782347",
+        note:"",
+        notificationSend:false
     },
     {
-        id: 5,
-        title: "Positive Psychology Workshop",
-        date: "2024-02-28T13:00:00",
-        duration: 120,
-        status: "upcoming",
-        image: `/placeholder.svg?height=200&width=400`,
-        rakiName: "Dr. Sarah Williams",
+        id: 1,
+        meetingId:1002,
+        topic: "Introduction to Mindfulness",
+        date: "2024-02-01T10:00:00",
+        duration: 60,
+        rakiId:"34242534535",
+        userId:"ee6r327782347",
+        note:"",
+        notificationSend:false
+    },
+    {
+        id: 1,
+        meetingId:1002,
+        topic: "Introduction to Mindfulness",
+        date: "2024-02-01T10:00:00",
+        duration: 60,
+        rakiId:"34242534535",
+        userId:"ee6r327782347",
+        note:"",
+        notificationSend:false
+    },
+    {
+        id: 1,
+        meetingId:1002,
+        topic: "Introduction to Mindfulness",
+        date: "2024-02-01T10:00:00",
+        duration: 60,
+        rakiId:"34242534535",
+        userId:"ee6r327782347",
+        note:"",
+        notificationSend:false
     },
 ]
 
@@ -57,8 +66,8 @@ export default function SessionsPage() {
     const [activeTab, setActiveTab] = useState("all")
 
     const filteredSessions = sessions.filter((session) => {
-        if (activeTab === "completed") return session.status === "completed"
-        if (activeTab === "upcoming") return session.status === "upcoming"
+        if (activeTab === "completed") return session.notificationSend
+        if (activeTab === "upcoming") return !session.notificationSend
         return true
     })
 
@@ -66,11 +75,18 @@ export default function SessionsPage() {
         <div className="container mx-auto py-10">
             <h1 className="text-3xl font-bold mb-6">Sessions</h1>
             <Tabs defaultValue="all" onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-3 mb-6">
-                    <TabsTrigger value="all">All Sessions</TabsTrigger>
-                    <TabsTrigger value="completed">Completed Sessions</TabsTrigger>
-                    <TabsTrigger value="upcoming">Upcoming Sessions</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100 p-1 rounded-lg">
+                    <TabsTrigger value="all" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold ">
+                        All Sessions
+                    </TabsTrigger>
+                    <TabsTrigger value="completed" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold">
+                        Completed Sessions
+                    </TabsTrigger>
+                    <TabsTrigger value="upcoming" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold">
+                        Upcoming Sessions
+                    </TabsTrigger>
                 </TabsList>
+
                 <TabsContent value="all">
                     <SessionList sessions={filteredSessions} />
                 </TabsContent>

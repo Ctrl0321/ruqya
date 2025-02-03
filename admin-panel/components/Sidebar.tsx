@@ -30,9 +30,9 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
   return (
       <>
         <motion.div
-            className="bg-primary-200 text-white h-full "
-            initial={{width: collapsed ? 64 : 200}}
-            animate={{width: collapsed ? 64 : 200}}
+            className={`bg-primary-50 border-r border-dark-50 pt-4 pb-2 ${!collapsed ? "text-black h-full px-3" : "text-white"}`}
+            initial={{width: collapsed ? 64 : 250}}
+            animate={{width: collapsed ? 64 : 250}}
             transition={{duration: 0.3}}
         >
           <div className="mt-4 p0  w-150 h-12 flex items-center justify-center">
@@ -46,16 +46,6 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
             </div>
 
           </div>
-          {/*<div className="mt-4 w-150 h-12 flex items-center justify-center">*/}
-          {/*  <div className="bg-primary-50 rounded-full w-12 h-12 flex items-center justify-center overflow-hidden">*/}
-          {/*    <motion.img*/}
-          {/*        src="/images/logo.png"*/}
-          {/*        alt="Logo"*/}
-          {/*        className="custom-logo w-full h-full"*/}
-          {/*        animate={{rotate: collapsed ? 360 : 0}}*/}
-          {/*        transition={{duration: 0.5}}*/}
-          {/*    />*/}
-          {/*  </div>*/}
 
           <nav className="mt-8">
             <ul>
@@ -63,14 +53,16 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
                   <li key={item.label} className="mb-2">
                     <Link href={item.href}>
                       <motion.div
-                          // className="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-primary-100 transition-colors duration-200"
-                          className={`flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                              pathname === item.href ? "bg-primary-100" : "hover:bg-primary-100"
-                          }`}
+                          className={[
+                            "flex items-center px-4 py-2 text-m font-bold transition-colors duration-200",
+                            !collapsed ? "rounded-xl" : "rounded-md text-black justify-center",
+                            pathname === item.href ? "bg-primary-100 text-white" : "hover:bg-primary-100 hover:text-white"
+                          ].filter(Boolean).join(" ")}
+
                           onHoverStart={() => setHoveredIndex(index)}
                           onHoverEnd={() => setHoveredIndex(null)}
                       >
-                        <item.icon className="w-5 h-5 mr-3"/>
+                        <item.icon className={`w-5 h-5 ${!collapsed ?"mr-3":""}`}/>
                         {!collapsed && <span>{item.label}</span>}
                         {collapsed && hoveredIndex === index && (
                             <motion.div
@@ -89,10 +81,10 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
             </ul>
           </nav>
 
-          <div className="absolute bottom-10 left-1">
+          <div className={`absolute bottom-10 left-1 ${!collapsed ? "mx-3":""} `}>
             <button
                 onClick={handleLogoutClick}
-                className="flex items-center w-full px-4 py-2 text-sm font-medium rounded-md hover:bg-primary-600 transition-colors duration-200"
+                className={`flex items-center w-full px-4 py-2 ${!collapsed ? "":"text-black"} text-l font-bold rounded-xl hover:bg-primary-600 transition-colors duration-200`}
                 onMouseEnter={() => setHoveredIndex(menuItems.length)}
                 onMouseLeave={() => setHoveredIndex(null)}
             >

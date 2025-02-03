@@ -1,7 +1,8 @@
 'use client'
 
-import { Menu,User } from "lucide-react";
 import {useEffect} from "react";
+import {useAuth} from "@/contexts/AuthContexts";
+import {HambergerMenu, User} from 'iconsax-react';
 
 
 export default function Header({
@@ -9,7 +10,7 @@ export default function Header({
 }: {
   onToggleSidebar: () => void;
 }) {
-  // const [user, setUser] = useState<{ name: string; profileImage: string } | null>(null)
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     // const fetchUserProfile = async () => {
@@ -25,23 +26,25 @@ export default function Header({
   }, [])
 
   return (
-    <header className="bg-white shadow-md">
+    <header className=" bg-white shadow-md px-6 border-b border-dark-50">
       <div className="container  mx-auto px-4 sm:px-6 lg:px-6 ">
         <div className="flex justify-between items-center py-4">
           <button
             onClick={onToggleSidebar}
             className="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
           >
-            <Menu className="h-6 w-6" />
+            <HambergerMenu size="32" color="#000000" variant="Broken"/>
           </button>
-          <div className="flex items-center">
-            <span className="text-gray-700 text-sm font-medium">Aathiq Ahamed</span>
-            <User className="5 w-5 ml-4"/>
-            {/*<img*/}
-            {/*  className="h-8 w-8 rounded-full ml-4"*/}
-            {/*  src="https://via.placeholder.com/150"*/}
-            {/*  alt="User avatar"*/}
-            {/*/>*/}
+          <div className="flex items-center border border-dark-50 rounded-3xl px-3 py-2">
+            <span className="text-gray-700 text-sm font-bold mr-3">{currentUser?.name}</span>
+            <div className="w-10 h-10 rounded-full bg-primary-200 flex justify-center items-center">
+              <User
+                  size="26"
+                  color="#FFFFFF"
+                  variant="Bold"
+              />
+            </div>
+
           </div>
         </div>
       </div>
