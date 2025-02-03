@@ -24,19 +24,15 @@ export default function Home() {
     async function fetchRakis() {
       const rakis = await getRakis();
       setRaqiData(rakis);
-    }
 
-    async function fetchMyBookings() {
       const bookings = await getMyBookings();
       setMyBookings(bookings);
-      console.log(bookings);
     }
 
-    fetchMyBookings();
     fetchRakis();
   }, []);
 
-  if (!raqiData && myBookings == undefined) {
+  if (!raqiData && !myBookings) {
     return <LoadingSpinner />;
   }
 
