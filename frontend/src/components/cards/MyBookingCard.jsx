@@ -8,6 +8,9 @@ const MyBookingCard = ({ booking }) => {
   if(!booking){
     return null;
   }
+
+  const { rakiData } = booking;
+
   const calculateEndTime = (startTime, duration) => {
     if (!startTime) return "N/A"; // Add this check
     const [hours, minutes] = startTime.split(":").map(Number);
@@ -64,18 +67,18 @@ const MyBookingCard = ({ booking }) => {
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div className="col-span-2 rounded-lg">
-            <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
+            <img src={rakiData.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData.name} className="rounded-xl w-28 h-28 object-cover object-top" />
           </div>
 
           <div className="flex flex-col">
             <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{fontWeight:"900",color:"000000"}}>
-              <span className="font-extrabold text-xl">{booking.name}</span>
+              <span className="font-extrabold text-xl">{rakiData.name}</span>
             </h1>
             <div className="grid grid-rows-3 mt-1">
-              {booking.Country && (
+              {rakiData.country && (
                 <p className="text-gray-600 flex items-center my-1">
-                  {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
-                  {booking.Country}
+                  {rakiData.countryCode ? <ReactCountryFlag countryCode={rakiData.countryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
+                  {rakiData.country}
                 </p>
               )}
               <p className="text-gray-600 flex items-center my-1">

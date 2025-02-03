@@ -4,10 +4,9 @@ import Link from "next/link";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaGlobe } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
-import { languages } from "@/lib/constance";
+import { languages, countries } from "@/lib/constance";
 
 export default function RaqisCard({ raqi }) {
-
   if (!raqi) {
     return null;
   }
@@ -17,12 +16,18 @@ export default function RaqisCard({ raqi }) {
   }
 
   function getLanguageLabel(code) {
-    const language = languages.find(lang => lang.value === code.toLowerCase());
+    const language = languages.find((lang) => lang.value === code.toLowerCase());
     return language ? language.label : code;
   }
 
-  const { image, name, Country, CountryCode, Languages, Experience, id, rating} = raqi;
-  const displayImage = image ? image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
+  function getCountryLabel(code) {
+    const country = countries.find((c) => c.value === code.toLowerCase());
+    return country ? country.label : code;
+  }
+
+  const { name, country: CountryCode, languages: Languages, yearOfExperience: Experience, _id: id, rating } = raqi;
+  const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
+  const countryLabel = getCountryLabel(CountryCode);
 
   return (
     <div className="relative flex flex-col items-center space-y-4 p-4 group text-[16px]">
@@ -75,9 +80,28 @@ export default function RaqisCard({ raqi }) {
               <div className="w-full space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Country</span>
-                  <div className="flex items-center gap-2">
-                    <span>{Country}</span>
-                    {CountryCode ? <ReactCountryFlag countryCode={CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
+                  <div className="flex items-center gap-1">
+                    <div className="flex-1 max-w-[120px] overflow-hidden">
+                      {countryLabel.length > 10 ? (
+                        <div className="languages-scroll animate">
+                          <div className="flex">
+                            <span className="mx-1 rounded-full text-sm whitespace-nowrap">
+                              {countryLabel}
+                            </span>
+                          </div>
+                          <div className="flex">
+                            <span className="mx-1 rounded-full text-sm whitespace-nowrap">
+                              {countryLabel}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="mx-1  rounded-full text-sm whitespace-nowrap">
+                          {countryLabel}
+                        </span>
+                      )}
+                    </div>
+                    {CountryCode ? <ReactCountryFlag countryCode={CountryCode} svg className="mr-2 mb-0.5" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -112,9 +136,7 @@ export default function RaqisCard({ raqi }) {
                       )
                     ) : (
                       <div className="flex justify-end">
-                        <span className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">
-                          English
-                        </span>
+                        <span className="px-4 py-1 bg-[#F4D6AA99] rounded-full text-sm whitespace-nowrap">English</span>
                       </div>
                     )}
                   </div>
@@ -124,7 +146,7 @@ export default function RaqisCard({ raqi }) {
                   <span>{Experience ? Experience + " Year" + (Experience > 1 ? "s" : "") : "Not Available"}</span>
                 </div>
               </div>
-              <Link href={id ?'/Raqis/' + id : '#'} className="w-full bg-RuqyaGreen py-3 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
+              <Link href={id ? "/Raqis/" + id : "#"} className="w-full bg-RuqyaGreen py-3 text-white text-center rounded-xl hover:bg-teal-700 transition-colors">
                 Book Now
               </Link>
             </div>

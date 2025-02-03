@@ -9,13 +9,14 @@ import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 function Third(props) {
   const { raqiData } = props;
 
+  console.log(raqiData)
   if (!raqiData) {
     return null;
   }
 
-  if (raqiData.length == 0){
-    return null;
-  }
+  // if (raqiData.length == 0){
+  //   return null;
+  // }
 
   return (
     <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">
