@@ -9,7 +9,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { X } from "lucide-react";
 import { countries, languages } from "@/lib/constance";
 import { UserDto } from "@/contexts/AuthContexts";
-import {changePassword, getOwnProfile, getRakis, updateUserProfile} from "@/lib/api";
+import { changePassword, getOwnProfile, updateUserProfile } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 
 export default function SettingsPage() {
@@ -28,7 +28,7 @@ export default function SettingsPage() {
                 console.error("Failed to fetch profile:", error);
                 toast({
                     title: "Error",
-                    description: "Failed to fetch own data. Please try again.",
+                    description: "Failed to fetch profile. Please try again.",
                     variant: "destructive",
                 });
             }
@@ -39,6 +39,7 @@ export default function SettingsPage() {
 
     const handleUserChange = (field: keyof UserDto, value: string | string[]) => {
         setUser((prev) => (prev ? { ...prev, [field]: value } : prev));
+        setErrors((prevErrors) => ({ ...prevErrors, [field]: "" })); // Clear error on input change
     };
 
     const addLanguage = (lang: string) => {
@@ -61,6 +62,13 @@ export default function SettingsPage() {
         if (!user?.country) newErrors.country = "Country is required";
         if (!user?.languages || user.languages.length === 0)
             newErrors.languages = "At least one language is required";
+        if (!user?.age || isNaN(Number(user.age)) || Number(user.age) < 1)
+            newErrors.age = "Valid age is required";
+        if (!user?.yearOfExperience || isNaN(user.yearOfExperience) || Number(user.yearOfExperience) < 0)
+            newErrors.yearOfExperience = "Valid number of experience years is required";
+        if (!user?.mobileNumber || !/^\+\d{1,4} \d{7,15}$/.test(user.mobileNumber))
+            newErrors.mobile = "Enter a valid mobile number with country code (e.g., +1 123456789)";
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -70,50 +78,47 @@ export default function SettingsPage() {
         if (!currentPassword) newErrors.currentPassword = "Current password is required";
         if (!newPassword) newErrors.newPassword = "New password is required";
         if (newPassword !== reenterPassword) newErrors.reenterPassword = "Passwords do not match";
+
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleProfileSubmit = () => {
+    const handleProfileSubmit = async () => {
+        console.log(errors)
+        if (!validateProfile()) return;
 
-        const updateUserProfileFn = async () => {
-            try {
-                const userData = await updateUserProfile(user);
-            } catch (error) {
-                console.error("Failed to update profile:", error);
-                toast({
-                    title: "Error",
-                    description: "Failed to update profile. Please try again.",
-                    variant: "destructive",
-                });
-            }
-        }
-
-        if (validateProfile()) {
-            updateUserProfileFn()
+        try {
+            await updateUserProfile(user);
+            toast({ title: "Success", description: "Profile updated successfully." });
+            setErrors({});
+        } catch (error) {
+            console.error("Failed to update profile:", error);
+            toast({
+                title: "Error",
+                description: "Failed to update profile. Please try again.",
+                variant: "destructive",
+            });
         }
     };
 
-    const handleSecuritySubmit = () => {
-        console.log("Reched")
-        const changePasswordFn = async () => {
-            try {
-                const userData = await changePassword(currentPassword,reenterPassword);
-            } catch (error) {
-                console.error("Failed to change password:", error);
-                toast({
-                    title: "Error",
-                    description: "Failed to change password. Please try again.",
-                    variant: "destructive",
-                });
-            }
-        }
-        if (validateSecurity()) {
-            console.log("Security submitted", { currentPassword, newPassword });
-            changePasswordFn()
-        }
-        else {
-            console.log("Validation error",errors)
+    const handleSecuritySubmit = async () => {
+        if (!validateSecurity()) return;
+
+        try {
+            await changePassword(currentPassword, reenterPassword);
+            toast({ title: "Success", description: "Password changed successfully."});
+            setCurrentPassword("");
+            setNewPassword("");
+            setReenterPassword("");
+            setErrors({});
+        } catch (error) {
+            console.error("Failed to change password:", error);
+            toast({
+                title: "Error",
+                description: "Failed to change password. Please try again.",
+                variant: "destructive",
+            });
         }
     };
 
@@ -123,7 +128,6 @@ export default function SettingsPage() {
             <Card>
                 <CardContent>
                     <h2 className="text-xl font-semibold my-4">Profile</h2>
-
                     <div className="space-y-4">
                         <div>
                             <label className="block mb-1 font-medium">Name</label>
@@ -146,6 +150,27 @@ export default function SettingsPage() {
                             />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
+                        <div>
+                            <label className="block mb-1 font-medium">Age</label>
+                            <Input
+                                type="number"
+                                value={user?.age || ""}
+                                onChange={(e) => handleUserChange("age", e.target.value)}
+                                placeholder="Enter your age"
+                                min={1}
+                            />
+                            {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
+                        </div>
+                        <div>
+                            <label className="block mb-1 font-medium">Mobile Number</label>
+                            <Input
+                                type="text"
+                                value={user?.mobileNumber || ""}
+                                onChange={(e) => handleUserChange("mobileNumber", e.target.value)}
+                                placeholder="+1 123456789"
+                            />
+                            {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+                        </div>
 
                         <div>
                             <label className="block mb-1 font-medium">Bio</label>
@@ -157,12 +182,25 @@ export default function SettingsPage() {
                         </div>
 
                         <div>
+                            <label className="block mb-1 font-medium">Years of Experience</label>
+                            <Input
+                                type="number"
+                                value={user?.yearOfExperience || ""}
+                                onChange={(e) => handleUserChange("yearOfExperience", e.target.value)}
+                                placeholder="Enter number of years"
+                                min={1}
+                            />
+                            {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
+                        </div>
+
+                        <div>
                             <label className="block mb-1 font-medium">Country</label>
-                            <Select onValueChange={(value) => handleUserChange("country", value)} value={user?.country || ""}>
+                            <Select onValueChange={(value) => handleUserChange("country", value)}
+                                    value={user?.country || ""}>
                                 <SelectTrigger className="w-full">{user?.country || "Select a country"}</SelectTrigger>
                                 <SelectContent>
                                     {countries.map((country) => (
-                                        <SelectItem key={country.value} value={country.value}>
+                                        <SelectItem key={country.label} value={country.label}>
                                             {country.label}
                                         </SelectItem>
                                     ))}
@@ -171,7 +209,6 @@ export default function SettingsPage() {
                             {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
                         </div>
 
-                        {/* Multi-Select Language Dropdown */}
                         <div>
                             <label className="block mb-1 font-medium">Languages</label>
                             <Select onValueChange={addLanguage}>
@@ -188,9 +225,10 @@ export default function SettingsPage() {
                             {/* Selected languages as tags */}
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {user?.languages?.map((lang) => (
-                                    <div key={lang} className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded-lg">
+                                    <div key={lang}
+                                         className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded-lg">
                                         {lang}
-                                        <X className="w-4 h-4 cursor-pointer" onClick={() => removeLanguage(lang)} />
+                                        <X className="w-4 h-4 cursor-pointer" onClick={() => removeLanguage(lang)}/>
                                     </div>
                                 ))}
                             </div>
@@ -208,7 +246,6 @@ export default function SettingsPage() {
             <Card>
                 <CardContent>
                     <h2 className="text-xl font-semibold my-4">Security</h2>
-
                     <div className="space-y-4">
                         <div>
                             <label className="block mb-1 font-medium">Current Password</label>
@@ -218,6 +255,8 @@ export default function SettingsPage() {
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 placeholder="Enter current password"
                             />
+                            {errors.currentPassword &&
+                                <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>}
                         </div>
 
                         <div>
@@ -228,20 +267,22 @@ export default function SettingsPage() {
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 placeholder="Enter new password"
                             />
+                            {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
                         </div>
 
                         <div>
-                            <label className="block mb-1 font-medium">Re-enter New Password</label>
+                            <label className="block mb-1 font-medium">Re-enter Password</label>
                             <Input
                                 type="password"
                                 value={reenterPassword}
                                 onChange={(e) => setReenterPassword(e.target.value)}
                                 placeholder="Re-enter new password"
                             />
+                            {errors.reenterPassword && <p className="text-red-500 text-sm mt-1">{errors.reenterPassword}</p>}
                         </div>
 
                         <Button className="mt-4" onClick={handleSecuritySubmit}>
-                            Update Password
+                            Change Password
                         </Button>
                     </div>
                 </CardContent>
