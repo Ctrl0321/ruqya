@@ -91,6 +91,10 @@ export const getReviews = async (rakiId: string) =>
     (await api.get(`ruqya-api/review/get-review/${rakiId}`)).data;
 
 // Revenue & Statistics
+
+export const getMeetings = async () =>
+    (await api.get(`ruqya-api/meeting/get-meetings/?timeZone=${userTimeZone}`)).data;
+
 export const getRevenueData = async (filter: {
     filterType?: string;
     startDate?: string;
