@@ -25,7 +25,7 @@ export const addReview = async (req: AuthenticatedRequest, res: Response): Promi
         }
 
         const meeting = await Meeting.findOne({
-            _id: meetingId,
+            meetingId: meetingId,
             userId: userId,
             rakiId: rakiId
         });

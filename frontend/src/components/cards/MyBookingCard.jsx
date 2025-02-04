@@ -4,7 +4,7 @@ import { FaGlobe, FaCalendarAlt, FaClock } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { getUserProfile } from "@/lib/api";
-import { getLanguageLabel, getCountryLabel } from "@/lib/utils";
+import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
 
 const MyBookingCard = ({ booking }) => {
   const [rakiData, setRakiData] = useState(null);
@@ -37,7 +37,7 @@ const MyBookingCard = ({ booking }) => {
 
   const isSessionWithinOneHour = (bookedDateTime) => {
     const currentDate = new Date();
-    const sessionDate = new Date(bookedDateTime);
+    const sessionDate = parseBookingDate(bookedDateTime);
     const timeDifference = sessionDate - currentDate;
 
     return timeDifference <= 3600000 && timeDifference > 0;
@@ -45,13 +45,13 @@ const MyBookingCard = ({ booking }) => {
 
   const isSessionActive = (bookedDateTime, duration) => {
     const currentDate = new Date();
-    const sessionDate = new Date(bookedDateTime);
+    const sessionDate = parseBookingDate(bookedDateTime);
     return currentDate >= sessionDate && currentDate <= new Date(sessionDate.getTime() + duration * 60000);
   };
 
   const calculateTimeUntilSession = (bookedDateTime, duration) => {
     const currentDate = new Date();
-    const sessionDate = new Date(bookedDateTime);
+    const sessionDate = parseBookingDate(bookedDateTime);
     const timeDifference = sessionDate - currentDate;
 
     if (isSessionActive(bookedDateTime, duration)) {
@@ -83,7 +83,7 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:min-w-[400px] text-left drop-shadow-lg p-2 mb-5 ">
+    <div className="bg-white rounded-xl md:min-w-[400px] text-left drop-shadow-xl shadow-lg p-2 mb-5 ">
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4">
           <div className="col-span-2 rounded-lg">

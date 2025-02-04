@@ -4,63 +4,62 @@ import { FaGlobe, FaCalendarAlt } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
-import { languages } from "@/lib/constance";
 import { getUserProfile } from "@/lib/api";
+import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
 
-const MyBookingCard = ({ booking = {}, show = false }) => {
-  // const { name, languages, bookedDate, bookedTime, image, country, _id: id } = booking;
-  // const []
-  // useEffect(() => {
-  //   async function fetch() {
-  //     const getUserProfile = await getUserProfile(id);
-
-  //   }
-  //   fetch();
-  // }, [id]);
-
+const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValueChange }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const Languages = booking?.languages || [];
+  const [rakiData, setRakiData] = useState(null);
 
-  const getLanguageLabel = (value) => {
-    const language = languages.find((lang) => lang.value === value);
-    return language ? language.label : value;
+  useEffect(() => {
+    async function fetchRakiData() {
+      if (booking && booking.rakiId) {
+        const rakiProfile = await getUserProfile(booking.rakiId);
+        setRakiData(rakiProfile);
+      }
+    }
+
+    fetchRakiData();
+  }, [booking]);
+
+  const handleButtonClick = () => {
+    if (onValueChange) {
+      onValueChange(booking._id, booking.meetingId);
+    }
+    setShowPopup(true);
   };
 
-  const calculateEndTime = (startTime, duration) => {
-    const [hours, minutes] = startTime?.split(":").map(Number);
-    const endTime = new Date();
-    endTime.setHours(hours);
-    endTime.setMinutes(minutes + parseInt(duration, 10));
-    const endHours = endTime.getHours().toString().padStart(2, "0");
-    const endMinutes = endTime.getMinutes().toString().padStart(2, "0");
-    return `${endHours}:${endMinutes}`;
-  };
-
-  const isSessionWithinOneHour = (bookedDate, bookedTime) => {
+  const isSessionWithinOneHour = (bookedDateTime) => {
     const currentDate = new Date();
-    const sessionDate = new Date(`${bookedDate}T${bookedTime}`);
+    const sessionDate = parseBookingDate(bookedDateTime);
     const timeDifference = sessionDate - currentDate;
 
-    return timeDifference <= 3600000 && timeDifference > 0; // Time unlock the button 1 hour before the session
+    return timeDifference <= 3600000 && timeDifference > 0;
   };
 
-  const isSessionActive = (bookedDate, bookedTime) => {
+  const isSessionActive = (bookedDateTime) => {
     const currentDate = new Date();
-    const sessionDate = new Date(`${bookedDate}T${bookedTime}`);
-    return currentDate >= sessionDate && currentDate <= new Date(sessionDate.getTime() + (booking?.bookedDuration || 0) * 60000);
+    const sessionDate = parseBookingDate(bookedDateTime);
+    return currentDate >= sessionDate && currentDate <= new Date(sessionDate.getTime() + 60 * 60000); // Assuming a default duration of 60 minutes
   };
 
-  const calculateTimeUntilSession = (bookedDate, bookedTime) => {
+  const canSetReview = (bookedDateTime) => {
     const currentDate = new Date();
-    const sessionDate = new Date(`${bookedDate}T${bookedTime}`);
+    const sessionDate = parseBookingDate(bookedDateTime);
+    return currentDate >= new Date(sessionDate.getTime() + 60 * 60000); // Allow review one hour after the session
+  };
+
+  const calculateTimeUntilSession = (bookedDateTime) => {
+    const currentDate = new Date();
+    const sessionDate = parseBookingDate(bookedDateTime);
     const timeDifference = sessionDate - currentDate;
 
-    if (isSessionActive(bookedDate, bookedTime)) {
+    if (isSessionActive(bookedDateTime)) {
       return "Ongoing";
     }
 
     if (timeDifference <= 0) {
-      const completedDate = new Date(sessionDate.getTime() + (booking?.bookedDuration || 0) * 60000);
+      const completedDate = new Date(sessionDate.getTime() + 60 * 60000); // Assuming a default duration of 60 minutes
       const daysSinceCompletion = Math.floor((currentDate - completedDate) / (1000 * 60 * 60 * 24));
 
       if (daysSinceCompletion < 7) {
@@ -85,27 +84,27 @@ const MyBookingCard = ({ booking = {}, show = false }) => {
   };
 
   return (
-    <div className={`bg-white rounded-xl h-auto md:max-w-[450px] text-left p-2 mb-5 flex flex-col justify-between border border-black ${booking.className}`}>
+    <div className={`bg-white rounded-xl h-full md:max-w-[450px] text-left p-2 mb-5 flex flex-col justify-between ${className}`}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4 mb-0">
           <div className="col-span-3 rounded-lg">
-            <img src={booking?.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
+            <img src={rakiData?.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData?.name} className="rounded-xl w-28 h-28 object-cover object-top" />
           </div>
 
           <div className="flex flex-col">
             <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{ fontWeight: "900", color: "000000" }}>
-              <span className="font-extrabold text-xl">{booking?.name || " "}</span>
+              <span className="font-extrabold text-xl">{rakiData?.name || " "}</span>
             </h1>
             <div className="flex flex-col mt-1">
-              {booking?.Country && (
+              {rakiData?.country && (
                 <p className="text-gray-600 flex items-center my-0.5">
-                  {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
-                  {booking.Country}
+                  {rakiData.country ? <ReactCountryFlag countryCode={rakiData.country} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
+                  {getCountryLabel(rakiData.country)}
                 </p>
               )}
               <p className="text-gray-600 flex items-center my-1 text-xs rounded-md">
-                {Languages ? (
-                  Languages.map((lang, index) => (
+                {rakiData?.languages ? (
+                  rakiData.languages.map((lang, index) => (
                     <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] rounded-md">
                       {getLanguageLabel(lang)}
                     </span>
@@ -115,18 +114,17 @@ const MyBookingCard = ({ booking = {}, show = false }) => {
                 )}
               </p>
               <p className="text-gray-600 flex items-center my-1">
-                <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {calculateTimeUntilSession(booking.bookedDate, booking.bookedTime)}
+                <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {calculateTimeUntilSession(booking.date)}
               </p>
             </div>
           </div>
         </div>
       </div>
       { show && (
-      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-auto" disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)} onClick={() => setShowPopup(true)} />
+      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-3" disabled={!canSetReview(booking.date)} onClick={handleButtonClick} />
       )}
-      {showPopup && <ReviewRaqiPopup raqiData={booking} onClose={() => setShowPopup(false)} />}
     </div>
   );
 };
 
-export default MyBookingCard;
+export default CompletedMyBookingCard;

@@ -18,6 +18,7 @@ function ReviewRaqiPopup(props) {
 
   const handleSubmit = async () => {
     try {
+      console.log(raqiData);
       await addReviews(raqiData._id, raqiData.meetingId, rating, comment);
       handleClosePopup();
     } catch (error) {
