@@ -96,6 +96,12 @@ export default function UsersPage() {
         user.status === statusFilter)
   );
 
+  const meetingUsers = session.map((meeting) => meeting.userId);
+
+  const meetingFilteredUsers = filteredUsers.filter((user) =>
+      meetingUsers.includes(user._id)
+  );
+
   const countries = Array.from(new Set(users.map((user) => user.country)));
 
   const handleRoleChange = async (userId: string, newRole: string) => {
@@ -131,6 +137,11 @@ export default function UsersPage() {
       setIsRoleChangeDialogOpen(false);
     }
   };
+
+
+  const usersToDisplay = isSuperAdmin ? filteredUsers : meetingFilteredUsers;
+
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 text-primary-700">Users</h1>
@@ -182,7 +193,7 @@ export default function UsersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => (
+            {usersToDisplay.map((user) => (
               <TableRow
                 key={user._id}
                 className="hover:bg-gray-50 transition-colors"
