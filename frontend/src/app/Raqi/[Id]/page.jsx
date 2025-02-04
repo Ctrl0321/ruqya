@@ -40,8 +40,8 @@ function Raqis() {
       // const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
       // setAvailability(raqiAvailability);
       const rakiReviews = await getReviews(Id);
-      setReview(rakiReviews);
-      console.log(rakiReviews)
+      setReview(rakiReviews.reviews); // Update to match the provided structure
+      console.log(rakiReviews);
     }
 
     fetchData();

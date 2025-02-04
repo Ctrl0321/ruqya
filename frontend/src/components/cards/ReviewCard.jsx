@@ -54,7 +54,7 @@ const ReviewCard = ({ review, colorIndex }) => {
   const circleColor = darkColors[colorIndex % darkColors.length];
 
   return (
-    <div className="p-4 rounded-lg shadow-md mb-4" style={{ backgroundColor }}>
+    <div className={`p-4 rounded-lg shadow-md bg-white mb-4 border-l-4 ${colorIndex % 2 === 0 ? "border-blue-500" : "border-green-500"}`} style={{ backgroundColor }}>
       <div className="flex items-center mb-2">
         <div className="flex items-center justify-center w-10 h-10 rounded-full text-white font-bold mr-3" style={{ backgroundColor: circleColor }}>
           {getInitials(review.name)}
