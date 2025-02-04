@@ -34,9 +34,7 @@ function Login() {
         setLoading(false);
         setError("Login Successful.");
         const redirectPath = localStorage.getItem("redirectPath") || "/";
-        console.log('====================================');
-        console.log(redirectPath);
-        console.log('====================================');
+        // console.log(redirectPath);
         localStorage.removeItem("redirectPath");
         router.push(redirectPath);
       } else {

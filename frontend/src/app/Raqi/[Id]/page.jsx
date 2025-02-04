@@ -28,8 +28,8 @@ function Raqis() {
   const maxAboutLength = 300; // Set the maximum length for the about section
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
-  const { setUserId } = useChat();
-const router = useRouter();
+
+  const router = useRouter();
   useEffect(() => {
     async function fetchData() {
       const foundData = await getUserProfile(Id);
@@ -43,13 +43,17 @@ const router = useRouter();
     fetchData();
   }, [Id]);
 
+  const { setUserId: setChatUserId, setIsOpen: setOpenChatWidget  } = useChat();
+
   const handleStartChat = (otherUser) => {
-    setUserId(otherUser);
+    // setUserId(otherUser);
+    setOpenChatWidget(true);
   };
 
   useEffect(() => {
-    console.log(data)
-    data && setUserId(data._id);
+    if (data) {
+      setChatUserId(data._id);
+    }
   }, [data]);
 
   if (!Id) {
@@ -112,7 +116,7 @@ const router = useRouter();
     if (!token) {
       alert("Please login to continue.");
       saveRedirectPath(`/Raqi/${data._id}`);
-      router.push('/login')
+      router.push("/login");
       return;
     }
     router.push(`/Raqi/${data._id}/book`);
@@ -139,7 +143,7 @@ const router = useRouter();
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full">
-            <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
+            <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen hover:bg-teal-700 text-white w-full rounded-lg py-3 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </button>
@@ -189,7 +193,7 @@ const router = useRouter();
         {data.name && (
           <div className="text-4xl flex flex-row gap-3">
             <h1>{data.name}</h1>
-            <p className={`ml-auto w-auto m-auto px-3 p-1 rounded-2xl text-sm ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status ? `${data.status}` : ""}</p>
+            {data.status && <p className={`ml-auto w-auto m-auto px-3 p-1 rounded-2xl text-sm ${data.status === "Available" ? "bg-[#C1FFD1]" : "bg-red-400"}`}>{data.status}</p>}
           </div>
         )}
         {data.country && (
@@ -249,7 +253,7 @@ const router = useRouter();
               <div className="w-full text-left">
                 <h2 className="text-lg font-bold mb-3">Average Rating</h2>
                 <div className="flex flex-row justify-start items-center gap-3">
-                  <div className="text-4xl font-bold">{data.rating ? data.rating.averageRating : 0}</div>
+                  <div className="text-4xl font-bold">{data.rating.averageRating}</div>
                   <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(data.rating.averageRating)}</div>
                 </div>
                 <div className="text-gray-600">Average rating on this year</div>
@@ -261,9 +265,9 @@ const router = useRouter();
                 <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
 
                 <div className="flex flex-row text-3xl font-bold">
-                  {formatReviewsCount(data.rating ? data.rating.totalReviews : 0)}
-                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating && data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
-                    {data.rating ? data.rating.reviewsGrowth : 0}%{data.rating && data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+                  {formatReviewsCount(data.rating.totalReviews)}
+                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
+                    {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
                   </span>
                 </div>
 
