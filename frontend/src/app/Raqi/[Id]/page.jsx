@@ -318,7 +318,7 @@ function Raqis() {
       </div>
       <div className="mx-8 mt-5">
         <div className="border-b w-full mb-5"></div>
-        {review && review.length > 0 ? review.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
+        {review && review.reviews.length > 0 ? review.reviews.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
       <ChatWidgetWrapper />

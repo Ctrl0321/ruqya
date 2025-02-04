@@ -56,7 +56,7 @@ const ReviewCard = ({ review, colorIndex }) => {
     if (isExpanded) {
       return (
         <>
-          {comment}{" "}
+          {comment}
           <span className="text-blue-500 cursor-pointer" onClick={toggleExpand}>
             Show less
           </span>
