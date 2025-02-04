@@ -42,3 +42,12 @@ export const parseBookingDate = (dateString) => {
   if (!dateString) return null;
   return new Date(dateString.replace(" ", "T"));
 };
+
+export const sortBookingsByDate = (bookings) => {
+  if (!bookings) return [];
+  return [...bookings].sort((a, b) => {
+    const dateA = parseBookingDate(a.date);
+    const dateB = parseBookingDate(b.date);
+    return dateB - dateA;
+  });
+};

@@ -1,13 +1,16 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import { FaGlobe, FaCalendarAlt, FaClock } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
-import { getUserProfile } from "@/lib/api";
+import { getUserProfile, getOwnProfile } from "@/lib/api";
 import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const MyBookingCard = ({ booking }) => {
+  const router = useRouter();
   const [rakiData, setRakiData] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     async function fetchRakiData() {
@@ -15,6 +18,8 @@ const MyBookingCard = ({ booking }) => {
         const rakiProfile = await getUserProfile(booking.rakiId);
         setRakiData(rakiProfile);
       }
+      const data = await getOwnProfile();
+      setUserData(data);
     }
 
     fetchRakiData();
@@ -70,7 +75,7 @@ const MyBookingCard = ({ booking }) => {
     if (days > 0) timeString += `${days} Days `;
     if (hours > 0) timeString += `${hours} Hours `;
     if (minutes > 0) timeString += `${minutes} Mins `;
-    timeString += "More...";
+    timeString += " More...";
 
     return timeString;
   };
@@ -79,7 +84,11 @@ const MyBookingCard = ({ booking }) => {
   const bookedDuration = booking.bookedDuration || 60; // Assuming a default duration if not provided
 
   const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    return new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+  };
+
+  const handleJoinMeeting = () => {
+    router.push(`/Meeting/${booking.meetingId}/${userData._id}`);
   };
 
   return (
@@ -91,7 +100,7 @@ const MyBookingCard = ({ booking }) => {
           </div>
 
           <div className="flex flex-col">
-            <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{fontWeight:"900",color:"000000"}}>
+            <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{ fontWeight: "900", color: "000000" }}>
               <span className="font-extrabold text-xl">{rakiData.name}</span>
             </h1>
             <div className="grid grid-rows-3 mt-1">
@@ -105,7 +114,8 @@ const MyBookingCard = ({ booking }) => {
                 <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {new Date(bookedDateTime).toLocaleDateString()}
               </p>
               <p className="text-gray-600 flex items-center my-1">
-                <FaClock className="mr-2 text-RuqyaGreen" /> {formatTime(bookedDateTime)} - <br className="flex md:hidden"/>{formatTime(new Date(new Date(bookedDateTime).getTime() + bookedDuration * 60000))}
+                <FaClock className="mr-2 text-RuqyaGreen" /> {formatTime(bookedDateTime)} - <br className="flex md:hidden" />
+                {formatTime(new Date(new Date(bookedDateTime).getTime() + bookedDuration * 60000))}
               </p>
             </div>
           </div>
@@ -114,7 +124,7 @@ const MyBookingCard = ({ booking }) => {
           <p>{calculateTimeUntilSession(bookedDateTime, bookedDuration)}</p>
         </div>
       </div>
-      <Button text="Join Now" color="RuqyaGreen" bg={true} className="rounded-xl w-full" disabled={!isSessionWithinOneHour(bookedDateTime) && !isSessionActive(bookedDateTime, bookedDuration)} />
+      {booking.meetingId &&  <Button text="Join Now" color="RuqyaGreen" bg={true} className="rounded-xl w-full" disabled={!isSessionWithinOneHour(bookedDateTime) &&   !isSessionActive(bookedDateTime, bookedDuration)} onClick={handleJoinMeeting} /> }
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import '@/styles/globals.css';
 import {getRakis,getMyBookings} from "@/lib/api"
+import { sortBookingsByDate } from "@/lib/utils";
 
 import Flower from "@/assets/svg/flower-right";
 import FlowerLeft from "@/assets/svg/flower-left";
@@ -26,7 +27,7 @@ export default function Home() {
       setRaqiData(rakis);
 
       const bookings = await getMyBookings();
-      setMyBookings(bookings);
+      setMyBookings(sortBookingsByDate(bookings));
     }
 
     fetchRakis();
