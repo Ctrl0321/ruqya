@@ -36,7 +36,7 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
             transition={{duration: 0.3}}
         >
           <div className="mt-4 p0  w-150 h-12 flex items-center justify-center">
-            <div className="bg-primary-200 w-12 h-12 flex items-center justify-center custom-box ">
+            <div className="bg-primary-700 w-12 h-12 flex items-center justify-center custom-box ">
               <motion.img
                   src="/images/logo2.png"
                   alt="Logo"
@@ -54,9 +54,9 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
                     <Link href={item.href}>
                       <motion.div
                           className={[
-                            "flex items-center px-4 py-2 text-m font-bold transition-colors duration-200",
+                            "flex items-center px-4 py-2 text-m font-semibold transition-colors duration-200",
                             !collapsed ? "rounded-xl" : "rounded-md text-black justify-center",
-                            pathname === item.href ? "bg-primary-100 text-white" : "hover:bg-primary-100 hover:text-white"
+                            pathname === item.href ? "bg-primary-700 text-white" : "hover:bg-primary-150 hover:text-primary-400"
                           ].filter(Boolean).join(" ")}
 
                           onHoverStart={() => setHoveredIndex(index)}
@@ -66,7 +66,7 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
                         {!collapsed && <span>{item.label}</span>}
                         {collapsed && hoveredIndex === index && (
                             <motion.div
-                                className="absolute left-16 bg-primary-200 text-white px-2 py-1 rounded z-50"
+                                className="absolute left-16 bg-primary-700 text-white px-2 py-1 rounded z-50"
                                 initial={{opacity: 0, x: -10}}
                                 animate={{opacity: 1, x: 0}}
                                 transition={{duration: 0.2}}
@@ -84,7 +84,7 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
           <div className={`absolute bottom-10 left-1 ${!collapsed ? "mx-3":""} `}>
             <button
                 onClick={handleLogoutClick}
-                className={`flex items-center w-full px-4 py-2 ${!collapsed ? "":"text-black"} text-l font-bold rounded-xl hover:bg-primary-600 transition-colors duration-200`}
+                className={`flex items-center w-full px-4 py-2 ${!collapsed ? "":"text-black"} text-l font-bold rounded-xl hover:bg-primary-1000 transition-colors duration-200`}
                 onMouseEnter={() => setHoveredIndex(menuItems.length)}
                 onMouseLeave={() => setHoveredIndex(null)}
             >

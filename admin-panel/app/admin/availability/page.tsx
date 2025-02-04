@@ -206,7 +206,7 @@ export default function AvailabilityPage() {
                     className={cn(
                       "w-full h-12",
                       isAvailable &&
-                        "bg-primary-200 text-primary-foreground hover:bg-primary-100"
+                        "bg-primary-700 text-primary-foreground hover:bg-primary-500"
                     )}
                     onClick={() =>
                       isAvailable

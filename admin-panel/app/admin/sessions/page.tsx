@@ -76,13 +76,13 @@ export default function SessionsPage() {
             <h1 className="text-3xl font-bold mb-6">Sessions</h1>
             <Tabs defaultValue="all" onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100 p-1 rounded-lg">
-                    <TabsTrigger value="all" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold">
+                    <TabsTrigger value="all" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
                         All Sessions
                     </TabsTrigger>
-                    <TabsTrigger value="completed" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold">
+                    <TabsTrigger value="completed" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
                         Completed Sessions
                     </TabsTrigger>
-                    <TabsTrigger value="upcoming" className="data-[state=active]:bg-primary-200 data-[state=active]:text-white data-[state=active]:font-bold">
+                    <TabsTrigger value="upcoming" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
                         Upcoming Sessions
                     </TabsTrigger>
                 </TabsList>

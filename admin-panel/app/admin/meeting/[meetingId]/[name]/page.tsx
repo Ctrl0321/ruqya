@@ -42,7 +42,7 @@ export default function MeetingPage() {
                     />
                 </div>
                 <div className="text-center">
-                    <h3 className="text-xl text-primary-200 font-semibold animate-pulse  mt-4">
+                    <h3 className="text-xl text-primary-700 font-semibold animate-pulse  mt-4">
                         Connecting to meeting...
                     </h3>
                 </div>

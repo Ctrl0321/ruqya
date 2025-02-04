@@ -37,7 +37,7 @@ export default function Header({
           </button>
           <div className="flex items-center border border-dark-50 rounded-3xl px-3 py-2">
             <span className="text-gray-700 text-sm font-bold mr-3">{currentUser?.name}</span>
-            <div className="w-10 h-10 rounded-full bg-primary-200 flex justify-center items-center">
+            <div className="w-10 h-10 rounded-full bg-primary-700 flex justify-center items-center">
               <User
                   size="26"
                   color="#FFFFFF"

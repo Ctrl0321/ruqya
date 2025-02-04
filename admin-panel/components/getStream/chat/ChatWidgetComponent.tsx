@@ -30,7 +30,7 @@ const FloatingChatWidget = ({ userId, otherUserId }: { userId: string; otherUser
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                         onClick={() => setIsOpen(true)}
-                        className="bg-primary-200 hover:bg-primary-100 text-white rounded-full p-4 shadow-lg flex items-center justify-center"
+                        className="bg-primary-700 hover:bg-primary-500 text-white rounded-full p-4 shadow-lg flex items-center justify-center"
                     >
                         <MessageCircle size={24} />
                     </motion.button>
@@ -49,20 +49,20 @@ const FloatingChatWidget = ({ userId, otherUserId }: { userId: string; otherUser
                         }}
                     >
                         {/* Chat Header */}
-                        <div className="bg-primary-100 text-white p-3 flex items-center justify-between">
+                        <div className="bg-primary-600 text-white p-3 flex items-center justify-between">
                             <h3 className="font-semibold">
                                 {channel.data?.name || "Chat Support"}
                             </h3>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setIsMinimized(!isMinimized)}
-                                    className="hover:bg-primary-200 p-1 rounded"
+                                    className="hover:bg-primary-400 p-1 rounded"
                                 >
                                     <Minimize2 size={18} />
                                 </button>
                                 <button
                                     onClick={() => setIsOpen(false)}
-                                    className="hover:bg-primary-200 p-1 rounded"
+                                    className="hover:bg-primary-400 p-1 rounded"
                                 >
                                     <X size={18} />
                                 </button>

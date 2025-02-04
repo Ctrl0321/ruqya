@@ -214,7 +214,7 @@ export default function UsersPage() {
                       {/*    variant="outline"*/}
                       {/*    size="sm"*/}
                       {/*    onClick={() => setSelectedUser(user)}*/}
-                      {/*    className="transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md"*/}
+                      {/*    className="transition-all duration-700 ease-in-out transform hover:scale-105 hover:shadow-md"*/}
                       {/*>*/}
                       <Eye
                         onClick={() => setSelectedUser(user)}

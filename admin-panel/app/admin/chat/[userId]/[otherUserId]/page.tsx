@@ -44,7 +44,7 @@ export default function ChatApp() {
                     transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                     className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
                 />
-                <h3 className="text-xl text-primary-200 font-semibold animate-pulse mt-4">
+                <h3 className="text-xl text-primary-700 font-semibold animate-pulse mt-4">
                     Connecting to chat...
                 </h3>
             </div>

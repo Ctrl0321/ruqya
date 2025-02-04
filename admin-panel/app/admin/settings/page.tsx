@@ -287,7 +287,7 @@ export default function SettingsPage() {
                             {errors.languages && <p className="text-red-500 text-sm mt-1">{errors.languages}</p>}
                         </div>
 
-                        <Button className="mt-4 w-full bg-primary-200 rounded-2xl hover:bg-primary-100 font-bold" onClick={handleProfileSubmit} >
+                        <Button className="mt-4 w-full bg-primary-700 rounded-2xl hover:bg-primary-100 font-bold" onClick={handleProfileSubmit} >
                             Save Profile
                         </Button>
                     </div>
@@ -366,7 +366,7 @@ export default function SettingsPage() {
                         </div>
 
                         <Button
-                            className="mt-4 w-full bg-primary-200 rounded-2xl hover:bg-primary-100 font-bold"
+                            className="mt-4 w-full bg-primary-700 rounded-2xl hover:bg-primary-100 font-bold"
                             onClick={handleSecuritySubmit}
                         >
                             Change Password
