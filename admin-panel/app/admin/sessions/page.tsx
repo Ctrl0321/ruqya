@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IMeeting, SessionList } from "@/components/SessionList";
-import { getMeetings, getRakis, getUsers } from "@/lib/api";
+import {getMeetings, getMeetingsByRakiId, getRakis, getUsers} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
-import { UserDto } from "@/contexts/AuthContexts";
+import {useAuth, UserDto} from "@/contexts/AuthContexts";
 
 export default function SessionsPage() {
     const [activeTab, setActiveTab] = useState("all");
@@ -13,12 +13,14 @@ export default function SessionsPage() {
     const [rakis, setRakis] = useState<UserDto[]>([]);
     const [users, setUsers] = useState<UserDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const { user :currentUser} = useAuth()
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [meetingData, rakiData, userData] = await Promise.all([
-                    getMeetings(),
+                    currentUser?.role ==="super-admin"?getMeetings():getMeetingsByRakiId(),
                     getRakis(),
                     getUsers(),
                 ]);

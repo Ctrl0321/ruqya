@@ -6,21 +6,24 @@ import { motion } from "framer-motion";
 import {Home, Users, Settings, DollarSign, Calendar, BookOpen,LogOut } from "lucide-react";
 import { LogoutConfirmDialog } from './LogOutConfirmDialog'
 import {usePathname} from "next/navigation";
+import {useAuth} from "@/contexts/AuthContexts";
 
 
 const menuItems = [
-  { icon: Home, label: 'Dashboard', href: '/admin' },
-  { icon: BookOpen, label: 'Rakis', href: '/admin/rakis' },
-  { icon: Users, label: 'Users', href: '/admin/users' },
-  { icon: Calendar, label: 'Availability', href: '/admin/availability' },
-  { icon: Calendar, label: 'Sessions', href: '/admin/sessions' },
-  { icon: DollarSign, label: 'Revenue', href: '/admin/revenue' },
-  { icon: Settings, label: 'Settings', href: '/admin/settings' },
+  { icon: Home, label: 'Dashboard', href: '/admin', roles: ["admin", "super-admin"] },
+  { icon: BookOpen, label: 'Rakis', href: '/admin/rakis', roles: ["super-admin"] },
+  { icon: Users, label: 'Users', href: '/admin/users', roles: ["admin", "super-admin"] },
+  { icon: Calendar, label: 'Availability', href: '/admin/availability', roles: ["admin", "super-admin"] },
+  { icon: Calendar, label: 'Sessions', href: '/admin/sessions', roles: ["admin", "super-admin"] },
+  { icon: Settings, label: 'Settings', href: '/admin/settings', roles: ["admin", "super-admin"] },
 ];
+
+
 
 export default function Sidebar({ collapsed }: { collapsed: boolean }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const { user :currentUser} = useAuth()
   const pathname = usePathname();
 
   const handleLogoutClick = () => {
@@ -30,7 +33,7 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
   return (
       <>
         <motion.div
-            className={`bg-primary-50 border-r border-dark-50 pt-4 pb-2 ${!collapsed ? "text-black h-full px-3" : "text-white"}`}
+            className={`bg-primary-25 border-r border-dark-50 pt-4 pb-2 ${!collapsed ? "text-black h-full px-3" : "text-white"}`}
             initial={{width: collapsed ? 64 : 250}}
             animate={{width: collapsed ? 64 : 250}}
             transition={{duration: 0.3}}
@@ -49,14 +52,16 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
 
           <nav className="mt-8">
             <ul>
-              {menuItems.map((item, index) => (
+              {menuItems
+                  .filter(item => item.roles.includes(currentUser?.role!!)) // Show only allowed items
+                  .map((item, index) => (
                   <li key={item.label} className="mb-2">
                     <Link href={item.href}>
                       <motion.div
                           className={[
                             "flex items-center px-4 py-2 text-m font-semibold transition-colors duration-200",
                             !collapsed ? "rounded-xl" : "rounded-md text-black justify-center",
-                            pathname === item.href ? "bg-primary-700 text-white" : "hover:bg-primary-150 hover:text-primary-400"
+                            pathname === item.href ? "bg-primary-700 text-white" : "hover:bg-primary-100 hover:text-primary-500"
                           ].filter(Boolean).join(" ")}
 
                           onHoverStart={() => setHoveredIndex(index)}

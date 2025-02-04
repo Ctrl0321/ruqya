@@ -55,11 +55,11 @@ export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
       )} >
       {sessions.map((session) => (
         <Card
-          onClick={()=>goToMeeting(session.meetingId)}
-          key={session.id}
-          className={cn(
-              "flex m-3 flex-col h-full w-full min-w-[18rem] max-w-[22rem] cursor-pointer select-none space-y-2 overflow-hidden rounded-3xl p-4 transition-colors duration-300 ease-in-out hover:border-primary-200 hover:bg-primary-50/60 active:border-primary-300 "
-          )}
+            key={session.id}
+            onClick={()=>goToMeeting(session.meetingId)}
+            className={cn(
+                "flex m-3 flex-col h-full w-full min-w-[18rem] max-w-[22rem] cursor-pointer select-none space-y-2 overflow-hidden rounded-3xl p-4 transition-colors duration-300 ease-in-out hover:border-primary-200 hover:bg-primary-50/60 active:border-primary-300 "
+            )}
         >
           <img
             alt="cover"

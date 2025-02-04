@@ -12,6 +12,8 @@ export const addReview = async (req: AuthenticatedRequest, res: Response): Promi
 
         const { rakiId, meetingId, points, comment } = req.body;
 
+        console.log(req.body)
+
         if (!rakiId || !meetingId || !points) {
             return res.status(400).json({
                 message: 'Required fields missing: rakiId, meetingId, and points are required'
@@ -25,7 +27,7 @@ export const addReview = async (req: AuthenticatedRequest, res: Response): Promi
         }
 
         const meeting = await Meeting.findOne({
-            _id: meetingId,
+            meetingId: meetingId,
             userId: userId,
             rakiId: rakiId
         });

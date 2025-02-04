@@ -28,10 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getUsers, updateUserRole } from "@/lib/api";
+import {getMeetingsByRakiId, getUsers, updateUserRole} from "@/lib/api";
 import { toast } from "@/components/ui/toast";
 import { useAuth } from "@/contexts/AuthContexts";
 import {getCountryLabel} from "@/lib/utils";
+import {IMeeting} from "@/components/SessionList";
 
 interface User {
   _id: string;
@@ -47,12 +48,16 @@ const roleOptions = ["super-admin", "admin", "user"];
 export default function UsersPage() {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [session, setSession] = useState<IMeeting[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState(false);
   const [newRole, setNewRole] = useState<string>("");
+
+  const isSuperAdmin= currentUser?.role==="super-admin"
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -64,6 +69,18 @@ export default function UsersPage() {
       }
     };
 
+    const fetchSession = async () => {
+      try {
+        const sessionData = await getMeetingsByRakiId();
+        setSession(sessionData);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+
+    if (!isSuperAdmin) {
+      fetchSession();
+    }
     fetchUsers();
   }, []);
 
@@ -176,12 +193,12 @@ export default function UsersPage() {
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      user.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
+                      user.status === "inactive"
+                        ? "bg-red-100 text-red-800"
+                        :  "bg-green-100 text-green-800"
                     }`}
                   >
-                    {user.status}
+                    {user.status ?? "Active"}
                   </span>
                 </TableCell>
                 <TableCell>

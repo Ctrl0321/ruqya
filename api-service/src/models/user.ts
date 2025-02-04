@@ -16,6 +16,7 @@ export interface IUser extends Document {
     role: string;
     googleId:string
     password: string;
+    status:string;
     matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -27,6 +28,7 @@ const userSchema: Schema<IUser> = new Schema({
     country: { type: String },
     timezone: { type: String },
     languages: { type: [String] },
+    status:{type:String},
     mobileNumber: { type: String },
     googleId:{type:String},
     age: { type: Number },

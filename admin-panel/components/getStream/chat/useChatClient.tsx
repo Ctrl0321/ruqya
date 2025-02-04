@@ -16,11 +16,12 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
     const { user: currentUser } = useAuth();
     const chatClientRef = useRef<StreamChat | null>(null);
 
-    // Function to get all channels for admin
     const fetchAdminChannels = async (currentClient: StreamChat) => {
         try {
             const channels = await currentClient.queryChannels(
-                { type: 'messaging' },
+                { type: 'messaging' ,
+                 members: { $in: [userId] }
+                },
                 { last_message_at: -1 },
                 { watch: true, state: true }
             );
@@ -66,6 +67,7 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
 
         if (!chatClientRef.current) {
             chatClientRef.current = StreamChat.getInstance(apiKey);
+            console.log("funnn",chatClientRef.current)
         }
 
         let isMounted = true;
@@ -84,7 +86,7 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
                 }
 
 
-                if (currentUser?.role === "super-admin") {
+                if (currentUser?.role === "admin") {
                     const adminChannels = await fetchAdminChannels(currentClient);
 
                     // if (otherUserId) {
@@ -161,6 +163,6 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
         channel,
         allChannels,
         selectChannel,
-        isAdmin: currentUser?.role === "super-admin"
+        isAdmin: currentUser?.role === "admin"
     };
 };

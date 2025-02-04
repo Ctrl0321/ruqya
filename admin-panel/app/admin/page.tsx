@@ -4,15 +4,22 @@ import {useEffect, useState} from 'react'
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Button} from "@/components/ui/button"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import {cancelSession, getRevenueData, getTodaySessions, rescheduleSession} from '@/lib/api'
+import {
+    cancelSession,
+    getRakis,
+    getRevenueData,
+    getTodaySessions, getUsers,
+    rescheduleSession
+} from '@/lib/api'
 import {useAuth} from '@/contexts/AuthContexts'
 import {format} from 'date-fns'
 import {CancelSessionDialog} from '@/components/CancelSessionDialog'
 import {RescheduleSessionDialog} from '@/components/ResheduledSessionDialog'
 import {DateRangeFilter} from '@/components/DateRangeFilter'
-import {formatDateTimeWithOffset} from "@/lib/utils";
+import {formatDateTimeWithOffset, getNameById} from "@/lib/utils";
 import {useChat} from "@/components/getStream/chat/ChatContextProvider";
 import {ChatWidgetWrapper} from "@/components/getStream/chat/ChatWidgetWrapper";
+import {toast} from "@/components/ui/use-toast";
 
 interface Session {
     meetingId: string;
@@ -25,13 +32,8 @@ interface Session {
 
 
 export default function AdminDashboard() {
-    // const { setUserId } = useChat();
-
-    // const handleStartChat = (otherUser:string) => {
-    //     setUserId(otherUser);
-    //     // setOtherUserData(otherUser);
-    // };
-    const { user } = useAuth()
+    const { setUserId } = useChat();
+    const { user :currentUser} = useAuth()
     const [revenueData, setRevenueData] = useState({
         totalMeetings: 0,
         completedMeetings: 0,
@@ -45,11 +47,45 @@ export default function AdminDashboard() {
     const [todaySessions, setTodaySessions] = useState<Session[]>([])
     const [cancelSessionId, setCancelSessionId] = useState<string | null>(null)
     const [rescheduleSessionId, setRescheduleSessionId] = useState<string | null>(null)
+    const [userData, setUserData] = useState([]);
+    const [rakiData, setRakiData] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(()=>setUserId(currentUser?._id!!),[currentUser])
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (user?.role === 'super-admin') {
+                const [fetchedRakiData, fetchedUserData] = await Promise.all([
+                    getRakis(),
+                    getUsers(),
+                ]);
+
+                setRakiData(fetchedRakiData);
+                setUserData(fetchedUserData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                toast({
+                    title: "Error",
+                    description: "Failed to fetch data. Please try again.",
+                    variant: "destructive",
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (currentUser?.role === 'super-admin') {
                     const revenue = await getRevenueData({
                         filterType: dateFilter.type,
                         startDate: formatDateTimeWithOffset(dateFilter.start) ,
@@ -72,7 +108,7 @@ export default function AdminDashboard() {
         }
 
         fetchData()
-    }, [user, dateFilter])
+    }, [currentUser, dateFilter])
 
     const handleDateFilterChange = (filter: { type: string; start?: Date; end?: Date }) => {
         console.log("Filter",filter)
@@ -97,7 +133,6 @@ export default function AdminDashboard() {
     const handleRescheduleSession = async (meetingId: string, newDate: Date) => {
         try {
             await rescheduleSession(meetingId, newDate.toISOString())
-            // Refresh today's sessions
             const sessions = await getTodaySessions()
             if (Array.isArray(sessions)) {
                 setTodaySessions(sessions)
@@ -110,111 +145,51 @@ export default function AdminDashboard() {
         }
     }
 
+    const isSuperAdmin= currentUser?.role==="super-admin"
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-primary-700">Admin Dashboard</h1>
-                <DateRangeFilter onFilterChange={handleDateFilterChange} />
+                <h1 className="text-3xl font-bold text-primary-700">{isSuperAdmin && "Super" }  Admin Dashboard</h1>
+                { isSuperAdmin && <DateRangeFilter onFilterChange={handleDateFilterChange} />}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Total Sessions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{revenueData.totalMeetings}</p>
-                    </CardContent>
-                </Card>
-                <Card style={{background:"#C1E1C1"}}>
-                    <CardHeader>
-                        <CardTitle>Completed Sessions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{revenueData.completedMeetings}</p>
-                    </CardContent>
-                </Card>
-                <Card style={{background:"#FF6961"}}>
-                    <CardHeader>
-                        <CardTitle>Cancelled Sessions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">{revenueData.cancelledMeetings}</p>
-                    </CardContent>
-                </Card>
-                <Card style={{background:"#A1D6B2"}}>
-                    <CardHeader>
-                        <CardTitle>Total Revenue</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">${revenueData.revenue.toFixed(2)}</p>
-                    </CardContent>
-                </Card>
-                {/*<Card>*/}
-                {/*    <CardHeader>*/}
-                {/*        <CardTitle>Average Meetings Per Day</CardTitle>*/}
-                {/*    </CardHeader>*/}
-                {/*    <CardContent>*/}
-                {/*        <p className="text-3xl font-bold">{revenueData.averageMeetingsPerDay}</p>*/}
-                {/*    </CardContent>*/}
-                {/*</Card>*/}
-            </div>
-
-            {/*{user?.role === 'super-admin' && (*/}
-            {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">*/}
-            {/*        <Card>*/}
-            {/*            <CardHeader>*/}
-            {/*                <CardTitle>Revenue</CardTitle>*/}
-            {/*                <CardDescription>Revenue for the selected period</CardDescription>*/}
-            {/*            </CardHeader>*/}
-            {/*            <CardContent>*/}
-            {/*                <ChartContainer*/}
-            {/*                    config={{*/}
-            {/*                        revenue: {*/}
-            {/*                            label: "Revenue",*/}
-            {/*                            color: "hsl(var(--primary-500))",*/}
-            {/*                        },*/}
-            {/*                    }}*/}
-            {/*                    className="h-[300px]"*/}
-            {/*                >*/}
-            {/*                    <ResponsiveContainer width="100%" height={300}>*/}
-            {/*                        <BarChart data={revenueData}>*/}
-            {/*                            <XAxis dataKey="date" />*/}
-            {/*                            <YAxis />*/}
-            {/*                            <ChartTooltip content={<ChartTooltipContent />} />*/}
-            {/*                            <Bar dataKey="revenue" fill="var(--color-revenue)" />*/}
-            {/*                        </BarChart>*/}
-            {/*                    </ResponsiveContainer>*/}
-            {/*                </ChartContainer>*/}
-            {/*            </CardContent>*/}
-            {/*        </Card>*/}
-            {/*        <Card>*/}
-            {/*            <CardHeader>*/}
-            {/*                <CardTitle>Classes</CardTitle>*/}
-            {/*                <CardDescription>Number of classes for the selected period</CardDescription>*/}
-            {/*            </CardHeader>*/}
-            {/*            <CardContent>*/}
-            {/*                <ChartContainer*/}
-            {/*                    config={{*/}
-            {/*                        classes: {*/}
-            {/*                            label: "Classes",*/}
-            {/*                            color: "hsl(var(--secondary-500))",*/}
-            {/*                        },*/}
-            {/*                    }}*/}
-            {/*                    className="h-[300px]"*/}
-            {/*                >*/}
-            {/*                    <ResponsiveContainer width="100%" height={300}>*/}
-            {/*                        <BarChart data={classData}>*/}
-            {/*                            <XAxis dataKey="date" />*/}
-            {/*                            <YAxis />*/}
-            {/*                            <ChartTooltip content={<ChartTooltipContent />} />*/}
-            {/*                            <Bar dataKey="classes" fill="var(--color-classes)" />*/}
-            {/*                        </BarChart>*/}
-            {/*                    </ResponsiveContainer>*/}
-            {/*                </ChartContainer>*/}
-            {/*            </CardContent>*/}
-            {/*        </Card>*/}
-            {/*    </div>*/}
-            {/*)}*/}
+            {
+                isSuperAdmin &&
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Total Sessions</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-3xl font-bold">{revenueData.totalMeetings}</p>
+                        </CardContent>
+                    </Card>
+                    <Card style={{background:"#C1E1C1"}}>
+                        <CardHeader>
+                            <CardTitle>Completed Sessions</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-3xl font-bold">{revenueData.completedMeetings}</p>
+                        </CardContent>
+                    </Card>
+                    <Card style={{background:"#FF6961"}}>
+                        <CardHeader>
+                            <CardTitle>Cancelled Sessions</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-3xl font-bold">{revenueData.cancelledMeetings}</p>
+                        </CardContent>
+                    </Card>
+                    <Card style={{background:"#A1D6B2"}}>
+                        <CardHeader>
+                            <CardTitle>Total Revenue</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-3xl font-bold">${revenueData.revenue.toFixed(2)}</p>
+                        </CardContent>
+                    </Card>
+                </div>
+            }
 
             <Card>
                 <CardHeader>
@@ -237,8 +212,8 @@ export default function AdminDashboard() {
                                 {todaySessions.map((session) => (
                                     <TableRow key={session.meetingId}>
                                         <TableCell className="font-medium">{session.topic}</TableCell>
-                                        <TableCell>{session.rakiId}</TableCell>
-                                        <TableCell>{session.userId}</TableCell>
+                                        <TableCell>{getNameById(session.rakiId,rakiData,"_id","name")}</TableCell>
+                                        <TableCell>{getNameById(session.userId,userData,"_id","name")}</TableCell>
                                         <TableCell>{format(new Date(session.date), 'hh:mm a')}</TableCell>
                                         <TableCell>
                                             <Button variant="destructive" size="sm" className="mr-2" onClick={() => setCancelSessionId(session.meetingId)}>

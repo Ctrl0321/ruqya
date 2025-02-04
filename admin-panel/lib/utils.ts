@@ -2,6 +2,9 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import {format} from "date-fns";
 import {countries, languages} from "@/lib/constance";
+import {useEffect} from "react";
+import {getRakis, getUsers} from "@/lib/api";
+import {toast} from "@/components/ui/use-toast";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,4 +36,10 @@ export const getCountryLabel = (code:string) => {
   const country = countries.find((c) => c.value === code.toLowerCase());
   console.log("Ronaldooo",country)
   return country ? country.label : code;
+};
+
+
+export const getNameById = (id: string, data: any[], idKey: string, nameKey: string) => {
+  const item = data.find((item) => item[idKey] === id);
+  return item ? item[nameKey] : null;
 };
