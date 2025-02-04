@@ -40,9 +40,17 @@ function MyBookings() {
   };
 
   const currentDate = new Date();
+  const fourHoursInMs = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
-  const upcomingBookings = bookings.filter((booking) => parseBookingDate(booking.date) >= currentDate);
-  const completedBookings = bookings.filter((booking) => parseBookingDate(booking.date) < currentDate);
+  const upcomingBookings = bookings.filter((booking) => {
+    const bookingDate = parseBookingDate(booking.date);
+    return bookingDate && (bookingDate.getTime() + fourHoursInMs >= currentDate.getTime());
+  });
+
+  const completedBookings = bookings.filter((booking) => {
+    const bookingDate = parseBookingDate(booking.date);
+    return bookingDate && (bookingDate.getTime() + fourHoursInMs < currentDate.getTime());
+  });
 
   if (error) {
     return <ErrorMessage message={error} />;
@@ -82,27 +90,7 @@ function MyBookings() {
           </button>
         </div>
       </div>
-      <Grid>
-        {showUpcoming ? (
-          upcomingBookings.length > 0 ? (
-            upcomingBookings.map((booking, index) => <MyBookingCard key={index} booking={booking} />)
-          ) : (
-            <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p>
-          )
-        ) : completedBookings.length > 0 ? (
-          completedBookings.map((booking, index) => (
-            <CompletedMyBookingCard
-              className="border drop-shadow-xl shadow-lg"
-              key={index}
-              booking={booking}
-              show={true}
-              onValueChange={handleValueChange}
-            />
-          ))
-        ) : (
-          <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>
-        )}
-      </Grid>
+      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} booking={booking} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
       {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
     </div>
   );
