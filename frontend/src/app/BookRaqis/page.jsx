@@ -8,10 +8,11 @@ import "rc-slider/assets/index.css";
 import Slider from "rc-slider";
 import Grid from "@/components/ui/layout/GridForBooking";
 import RatingInput from "@/components/ui/input/rating";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { languages, countries } from "@/lib/constance";
 import { getRakis } from "@/lib/api";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
+import {getLanguageLabel} from "@/lib/utils"
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -61,6 +62,35 @@ export default function BookRaqis() {
     }));
   };
 
+const handleLanguageChange = (event, languageLabel) => {
+  const languageCode = languages.find((l) => l.label === languageLabel)?.value || languageLabel;
+  setUserSelections((prev) => ({
+    ...prev,
+    languages: event.target.checked ? [...prev.languages, languageCode] : prev.languages.filter((l) => l !== languageCode),
+  }));
+};
+
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("searchQuery");
+  const language = searchParams.get("language");
+  const router = useRouter();
+
+  const handleRemoveSearchQuery = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("searchQuery");
+    router.push(`/BookRaqis?${params.toString()}`);
+  };
+
+  const handleRemoveLanguage = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("language");
+    setUserSelections((prev) => ({
+      ...prev,
+      languages: [],
+    }));
+    router.push(`/BookRaqis?${params.toString()}`);
+  };
+
   const availableLanguages = [
     ...new Set(
       raqiData
@@ -71,7 +101,9 @@ export default function BookRaqis() {
           return langObj ? langObj.label : langCode;
         })
     ),
-  ].sort();
+    ...userSelections.languages.filter((lang) => !languages.some((l) => l.value === lang)),
+    ...(language && !languages.some((l) => l.value === language) ? [language] : []),
+  ].filter((lang) => lang !== getLanguageLabel(language)).sort();
 
   const availableCountries = [
     ...new Set(
@@ -83,14 +115,6 @@ export default function BookRaqis() {
   ].sort();
 
   const availableDurations = [...new Set(raqiData.map((raqi) => raqi.bookedDuration))].sort((a, b) => a - b);
-
-  const handleLanguageChange = (event, languageLabel) => {
-    const languageCode = languages.find((l) => l.label === languageLabel)?.value;
-    setUserSelections((prev) => ({
-      ...prev,
-      languages: event.target.checked ? [...prev.languages, languageCode] : prev.languages.filter((l) => l !== languageCode),
-    }));
-  };
 
   const handleCountryChange = (event, countryLabel) => {
     const countryCode = countries.find((c) => c.label === countryLabel)?.value;
@@ -113,10 +137,6 @@ export default function BookRaqis() {
       availability: { ...prev.availability, duration: parseInt(duration) },
     }));
   };
-
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("searchQuery");
-  const language = searchParams.get("language");
 
   useEffect(() => {
     if (searchQuery || language) {
@@ -202,6 +222,26 @@ export default function BookRaqis() {
               <button className="md:hidden absolute top-4 right-4 text-primary z-50" onClick={() => setIsFilterVisible(false)}>
                 <FaTimes size={24} />
               </button>
+
+              {/* Search Query Display */}
+              {searchQuery && (
+                <div className="mb-4 p-2 bg-white rounded-md flex items-center justify-between">
+                  <span>User search: {searchQuery}</span>
+                  <button onClick={handleRemoveSearchQuery} className="text-red-500">
+                    <FaTimes />
+                  </button>
+                </div>
+              )}
+
+              {/* Language Display */}
+              {language && (
+                <div className="mb-4 p-2 bg-white rounded-md flex items-center justify-between">
+                  <span>Language: {getLanguageLabel(language)}</span>
+                  <button onClick={handleRemoveLanguage} className="text-red-500">
+                    <FaTimes />
+                  </button>
+                </div>
+              )}
 
               {/* Updated Experience Level Section */}
               <div className="filter-section border-b border-gray-200 pb-6">

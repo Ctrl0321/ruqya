@@ -48,6 +48,7 @@ const router = useRouter();
   };
 
   useEffect(() => {
+    console.log(data)
     data && setUserId(data._id);
   }, [data]);
 
