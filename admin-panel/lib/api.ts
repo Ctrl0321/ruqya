@@ -90,6 +90,9 @@ export const rescheduleSession = async (meetingId: string, newDate: string) =>
 export const getReviews = async (rakiId: string) =>
     (await api.get(`ruqya-api/review/get-review/${rakiId}`)).data;
 
+export const addReviews = async( rakiId:string, meetingId:string, points:number, comment:string) =>
+    (await api.post(`ruqya-api/review/add-review`,{rakiId,meetingId,points,comment})).data;
+
 // Revenue & Statistics
 
 export const getMeetings = async () =>
