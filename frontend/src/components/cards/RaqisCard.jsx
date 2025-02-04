@@ -17,11 +17,13 @@ export default function RaqisCard({ raqi }) {
   }
 
   function getLanguageLabel(code) {
+    if (!code) return "Unknown"
     const language = languages.find((lang) => lang.value === code.toLowerCase());
     return language ? language.label : code;
   }
 
   function getCountryLabel(code) {
+    if (!code) return "Unknown"
     const country = countries.find((c) => c.value === code.toLowerCase());
     return country ? country.label : code;
   }
