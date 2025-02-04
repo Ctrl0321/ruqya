@@ -7,6 +7,11 @@ const api = axios.create({
     withCredentials: true,
 });
 
+const apiSignup = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    withCredentials: true,
+});
+
 // Attach token to requests automatically
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
@@ -28,6 +33,12 @@ const userTimeZone = getUserTimeZone();
 // Authentication
 export const login = async (email: string, password: string) => {
     const response = await api.post("ruqya-api/auth/login", { email, password });
+    localStorage.setItem("token", response.data.token);
+    return response.data;
+};
+
+export const signup = async (email:string,name:string,password:string) => {
+    const response = await apiSignup.post("ruqya-api/auth/register", {email,name,password});
     localStorage.setItem("token", response.data.token);
     return response.data;
 };
