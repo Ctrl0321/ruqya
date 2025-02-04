@@ -40,7 +40,7 @@ function Raqis() {
       // const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
       // setAvailability(raqiAvailability);
       const rakiReviews = await getReviews(Id);
-      setReview(rakiReviews.reviews); // Update to match the provided structure
+      setReview(rakiReviews); // Update to match the provided structure
       console.log(rakiReviews);
     }
 
@@ -247,81 +247,76 @@ function Raqis() {
           </p>
         </div>
       )}
-
-      {data.rating && (
-        <div className="mx-3 md:mx-10 mt-10">
-          <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
-            <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
-              <div className="w-full text-left">
-                <h2 className="text-lg font-bold mb-3">Average Rating</h2>
-                <div className="flex flex-row justify-start items-center gap-3">
-                  <div className="text-4xl font-bold">{data.rating.averageRating}</div>
-                  <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(data.rating.averageRating)}</div>
+      <div className="mx-3 md:mx-10 mt-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
+          {review && review.averageRating && (
+            <>
+              <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
+              <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
+                <div className="w-full text-left">
+                  <h2 className="text-lg font-bold mb-3">Average Rating</h2>
+                  <div className="flex flex-row justify-start items-center gap-3">
+                    <div className="text-4xl font-bold">{review.averageRating}</div>
+                    <div className="flex text-yellow-500 text-2xl md:space-x-3">{renderStars(review.averageRating)}</div>
+                  </div>
+                  <div className="text-gray-600">Average rating on this year</div>
                 </div>
-                <div className="text-gray-600">Average rating on this year</div>
               </div>
-            </div>
+            </>
+          )}
 
-            <div className="flex justify-center items-center flex-col ml-4 border-l pl-5  md:border-r border-gray-300">
-              <div className="w-full text-left">
-                <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
+          {data.rating && review && (
+            <>
+              <div className="flex justify-center items-center flex-col ml-4 border-l pl-5  md:border-r border-gray-300">
+                <div className="w-full text-left">
+                  <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
+                  <div className="flex flex-row text-3xl font-bold">
+                    {formatReviewsCount(data.rating.totalReviews)}
+                    <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
+                      {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+                    </span>
+                  </div>
+                  <div className="text-gray-600">growth in reviews on this year</div>
+                </div>
+              </div>
 
-                <div className="flex flex-row text-3xl font-bold">
-                  {formatReviewsCount(data.rating.totalReviews)}
-                  <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
-                    {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+              <div className="hidden md:flex flex-row font-bold items-center">
+                <div className="flex flex-col gap-0">
+                  <span className="flex flex-row items-center">
+                    <FaStar className="text-gray-400 mr-2" />5
+                  </span>
+                  <span className="flex flex-row items-center">
+                    <FaStar className="text-gray-400 mr-2" />4
+                  </span>
+                  <span className="flex flex-row items-center">
+                    <FaStar className="text-gray-400 mr-2" />3
+                  </span>
+                  <span className="flex flex-row items-center">
+                    <FaStar className="text-gray-400 mr-2" />2
+                  </span>
+                  <span className="flex flex-row items-center">
+                    <FaStar className="text-gray-400 mr-2" />1
                   </span>
                 </div>
-
-                <div className="text-gray-600">growth in reviews on this year</div>
+                <BarChart width={300} height={105} data={chartData} layout="vertical" className="mt-[3px]">
+                  <XAxis type="number" hide />
+                  <YAxis type="category" dataKey="name" hide />
+                  <CartesianGrid horizontal={false} vertical={false} />
+                  <Bar dataKey="value" radius={[30, 30, 30, 30]} barSize={10}>
+                    <LabelList dataKey="real" position="right" />
+                    {chartData.map((entry, index) => (
+                      <Bar key={`bar-${index}`} dataKey="value" fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
               </div>
-            </div>
-
-            {/* <h2 className="text-lg font-medium">Review Breakdown</h2> */}
-            <div className="hidden md:flex flex-row font-bold items-center">
-              <div className="flex flex-col gap-0">
-                <span className="flex flex-row items-center">
-                  <FaStar className="text-gray-400 mr-2" />5
-                </span>
-                <span className="flex flex-row items-center">
-                  <FaStar className="text-gray-400 mr-2" />4
-                </span>
-                <span className="flex flex-row items-center">
-                  <FaStar className="text-gray-400 mr-2" />3
-                </span>
-                <span className="flex flex-row items-center">
-                  <FaStar className="text-gray-400 mr-2" />2
-                </span>
-                <span className="flex flex-row items-center">
-                  <FaStar className="text-gray-400 mr-2" />1
-                </span>
-              </div>
-              <BarChart width={300} height={105} data={chartData} layout="vertical" className="mt-[3px]">
-                <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" hide />
-                <CartesianGrid horizontal={false} vertical={false} />
-                <Bar dataKey="value" radius={[30, 30, 30, 30]} barSize={10}>
-                  <LabelList dataKey="real" position="right" />
-                  {chartData.map((entry, index) => (
-                    <Bar key={`bar-${index}`} dataKey="value" fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </div>
-          </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
       <div className="mx-8 mt-5">
         <div className="border-b w-full mb-5"></div>
-        {review && review.length > 0 ? (
-          review.map((review, index) => (
-            <ReviewCard key={index} review={review} colorIndex={index} />
-          ))
-        ) : (
-          <p>No reviews available.</p>
-        )}
+        {review && review.length > 0 ? review.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
       <ChatWidgetWrapper />
