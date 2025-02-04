@@ -7,14 +7,14 @@ import { MdOutlineMessage, MdTrendingDown, MdOutlineTrendingUp } from "react-ico
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
-import review from "@/data/review.json";
+// import review from "@/data/review.json";
 import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
 import Loading from "@/components/shared/common/LoadingSpinner";
 import { languages } from "@/lib/constance";
 import { ChatWidgetWrapper } from "@/components/getStream/chat/ChatWidgetWrapper";
 import { useChat } from "@/components/getStream/chat/ChatContextProvider";
-import { getUserProfile, getRakis, getRakiAvailability } from "@/lib/api";
+import { getUserProfile, getRakis, getRakiAvailability, getReviews } from "@/lib/api";
 import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -28,22 +28,26 @@ function Raqis() {
   const maxAboutLength = 300; // Set the maximum length for the about section
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
-
+  const [review, setReview] = useState(null);
   const router = useRouter();
+
   useEffect(() => {
     async function fetchData() {
       const foundData = await getUserProfile(Id);
       setData(foundData);
       const rakis = await getRakis();
       setRaqiData(rakis);
-      const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
-      setAvailability(raqiAvailability);
+      // const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
+      // setAvailability(raqiAvailability);
+      const rakiReviews = await getReviews(Id);
+      setReview(rakiReviews);
+      console.log(rakiReviews)
     }
 
     fetchData();
   }, [Id]);
 
-  const { setUserId: setChatUserId, setIsOpen: setOpenChatWidget  } = useChat();
+  const { setUserId: setChatUserId, setIsOpen: setOpenChatWidget } = useChat();
 
   const handleStartChat = (otherUser) => {
     // setUserId(otherUser);
@@ -311,9 +315,13 @@ function Raqis() {
       )}
       <div className="mx-8 mt-5">
         <div className="border-b w-full mb-5"></div>
-        {review.map((review, index) => (
-          <ReviewCard key={index} review={review} colorIndex={index} />
-        ))}
+        {review && review.length > 0 ? (
+          review.map((review, index) => (
+            <ReviewCard key={index} review={review} colorIndex={index} />
+          ))
+        ) : (
+          <p>No reviews available.</p>
+        )}
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
       <ChatWidgetWrapper />

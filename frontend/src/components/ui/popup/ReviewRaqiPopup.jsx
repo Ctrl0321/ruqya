@@ -4,9 +4,14 @@ import RaqiCard from "@/components/cards/CompletedMyBookingCard";
 import RatingInput from "@/components/ui/input/rating";
 
 function ReviewRaqiPopup(props) {
-  const { raqiData = [], title } = props;
+  const { raqiData = [], title, onClose } = props;
   const [rating, setRating] = useState(0);
 
+  const handleClosePopup = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
 
   if (!raqiData) {
     return null;

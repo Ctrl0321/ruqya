@@ -17,6 +17,7 @@ const ReviewsSection = () => {
   });
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   const testErrorMessage = () => {
     setErrorMessage("This is a test error message!");
@@ -56,6 +57,20 @@ const ReviewsSection = () => {
       >
         Test Error Message
       </button>
+
+      <button 
+        onClick={() => setShowPopup(true)}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Add Review
+      </button>
+
+      {showPopup && (
+        <ReviewRaqiPopup 
+          raqiData={data} 
+          onClose={() => setShowPopup(false)} 
+        />
+      )}
 
       <div className="bg-gray-100 rounded-md p-4 mb-4">
         <h2 className="text-lg font-medium">Average Rating</h2>

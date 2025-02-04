@@ -81,6 +81,11 @@ export const rescheduleSession = async (meetingId, newDate) =>
 export const getReviews = async (rakiId) =>
     (await api.get(`ruqya-api/review/get-review/${rakiId}`)).data;
 
+
+export const addReviews = async( rakiId, meetingId, points, comment) =>
+    (await api.post(`ruqya-api/review/add-review`,{rakiId,meetingId,points,comment})).data;
+
+
 // Revenue & Statistics
 export const getRevenueData = async (filter) =>
     (
@@ -143,5 +148,7 @@ export const getStreamToken = async (userId, role) =>
 
 export const getStreamChatToken = async (userId) =>
     (await api.post("ruqya-api/get-stream/getuserToken", { userId })).data.token;
+
+
 
 export default api;
