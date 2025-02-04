@@ -5,6 +5,7 @@ import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaGlobe } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import { languages, countries } from "@/lib/constance";
+import {getCountryLabel, getLanagueLable } from "@/lib/utils"
 
 export default function RaqisCard({ raqi }) {
   if (!raqi) {

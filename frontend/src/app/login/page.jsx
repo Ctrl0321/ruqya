@@ -47,7 +47,7 @@ function Login() {
       if (err.response && err.response.status === 404) {
         setError("Invalid login credentials.");
       } else {
-        setError("An error occurred during login. Please try again.");
+        setError(err.response.message);
       }
     }
   };

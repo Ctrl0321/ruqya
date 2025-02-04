@@ -58,6 +58,8 @@ const Header = () => {
         pathname !== "/" &&
         pathname !== "/BookRaqis" &&
         pathname !== "/SelfRuqyah" &&
+        pathname !== "/signup" &&
+        pathname !== "/login" &&
         !raqiRegex.test(pathname)
       ) {
         router.push("/login");
@@ -65,7 +67,7 @@ const Header = () => {
     } else {
       // Optionally, add logic to check if the token is expired
       // If expired, show error message and redirect to login page
-      const isTokenExpired = false; // Replace with actual token expiration check
+      const isTokenExpired = false; 
       if (isTokenExpired) {
         alert("Session expired. Please log in again.");
         localStorage.removeItem("fe-token");
