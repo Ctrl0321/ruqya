@@ -264,22 +264,24 @@ function Raqis() {
               </div>
             </>
           )}
-
-          {data.rating && review && (
+          {review && review.totalReviews && (
             <>
               <div className="flex justify-center items-center flex-col ml-4 border-l pl-5  md:border-r border-gray-300">
                 <div className="w-full text-left">
                   <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
                   <div className="flex flex-row text-3xl font-bold">
-                    {formatReviewsCount(data.rating.totalReviews)}
-                    <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${data.rating.reviewsGrowth > 0 ? "bg-green-100" : "bg-red-100"}`}>
-                      {data.rating.reviewsGrowth}%{data.rating.reviewsGrowth > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
+                    {formatReviewsCount(review.totalReviews)}
+                    <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${review.totalReviews > 0 ? "bg-green-100" : "bg-red-100"}`}>
+                      {review.totalReviews}%{review.totalReviews > 0 ? <MdOutlineTrendingUp className="text-green-500 ml-1" /> : <MdTrendingDown className="text-red-500 ml-1" />}
                     </span>
                   </div>
                   <div className="text-gray-600">growth in reviews on this year</div>
                 </div>
               </div>
-
+            </>
+          )}
+          {data.rating && review && (
+            <>
               <div className="hidden md:flex flex-row font-bold items-center">
                 <div className="flex flex-col gap-0">
                   <span className="flex flex-row items-center">
