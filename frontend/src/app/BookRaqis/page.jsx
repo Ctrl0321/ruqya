@@ -13,6 +13,8 @@ import { languages, countries } from "@/lib/constance";
 import { getRakis } from "@/lib/api";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
+const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
+
 // Main Page Component
 export default function BookRaqis() {
   const [raqiData, setRaqiData] = useState([]);

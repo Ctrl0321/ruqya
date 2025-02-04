@@ -16,6 +16,7 @@ import { ChatWidgetWrapper } from "@/components/getStream/chat/ChatWidgetWrapper
 import { useChat } from "@/components/getStream/chat/ChatContextProvider";
 import { getUserProfile, getRakis, getRakiAvailability } from "@/lib/api";
 import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -28,7 +29,7 @@ function Raqis() {
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
   const { setUserId } = useChat();
-
+const router = useRouter();
   useEffect(() => {
     async function fetchData() {
       const foundData = await getUserProfile(Id);
@@ -47,8 +48,8 @@ function Raqis() {
   };
 
   useEffect(() => {
-    Id && setUserId(Id);
-  }, [Id]);
+    data && setUserId(data._id);
+  }, [data]);
 
   if (!Id) {
     return <p className="min-h-screen text-black">No ID found.</p>;
@@ -100,6 +101,22 @@ function Raqis() {
     return language ? language.label : value;
   };
 
+  function saveRedirectPath(path) {
+    localStorage.setItem("redirectPath", path);
+    console.log("Redirect path saved:", path);
+  }
+
+  const handleBookNow = () => {
+    const token = localStorage.getItem("fe-token");
+    if (!token) {
+      alert("Please login to continue.");
+      saveRedirectPath(`/Raqi/${data._id}`);
+      router.push('/login')
+      return;
+    }
+    router.push(`/Raqi/${data._id}/book`);
+  };
+
   return (
     <div className="min-h-screen  text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
@@ -121,7 +138,7 @@ function Raqis() {
         <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
           <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full">
-            <button onClick={() => handleStartChat(Id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
+            <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen text-white w-full rounded-lg py-3 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
             </button>
@@ -161,7 +178,7 @@ function Raqis() {
         <div className="flex-col items-center justify-center hidden md:flex ml-auto">
           <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-RuqyaGreen p-4">
             <h3 className="mb-3">Want to have a Session ?</h3>
-            <Button link={"/Raqis/" + data.id + "/book"} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
+            <Button onClick={handleBookNow} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
           </div>
         </div>
       </div>
@@ -201,7 +218,7 @@ function Raqis() {
           </div>
         )}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
-          <Button onClick={() => handleStartChat(Id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
+          <Button onClick={() => handleStartChat(data._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
 

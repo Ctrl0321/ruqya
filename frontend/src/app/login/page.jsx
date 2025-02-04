@@ -10,30 +10,47 @@ import { login } from "@/lib/api";
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
+import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+
+
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    setError("");
 
     try {
       const response = await login(email, password);
 
       if (response && response.role === "user") {
+        localStorage.setItem("fe-token", response.token);
         setLoading(false);
-        router.push("/");
+        setError("Login Successful.");
+        const redirectPath = localStorage.getItem("redirectPath") || "/";
+        console.log('====================================');
+        console.log(redirectPath);
+        console.log('====================================');
+        localStorage.removeItem("redirectPath");
+        router.push(redirectPath);
       } else {
         setLoading(false);
+        setError("Invalid login credentials.");
       }
     } catch (err) {
       console.error(err);
       setLoading(false);
+      if (err.response && err.response.status === 404) {
+        setError("Invalid login credentials.");
+      } else {
+        setError("An error occurred during login. Please try again.");
+      }
     }
   };
 
@@ -66,6 +83,7 @@ function Login() {
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
             <form onSubmit={handleSubmit} className="space-y-8">
+              {error && <ErrorMessage message={error} />}
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
