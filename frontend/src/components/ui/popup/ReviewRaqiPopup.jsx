@@ -9,6 +9,8 @@ function ReviewRaqiPopup(props) {
   const { raqiData = [], title, onClose } = props;
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [error, setError] = useState(null);
+  const [existingReview, setExistingReview] = useState(null);
 
   const handleClosePopup = () => {
     if (onClose) {
@@ -18,11 +20,15 @@ function ReviewRaqiPopup(props) {
 
   const handleSubmit = async () => {
     try {
-      console.log(raqiData);
-      await addReviews(raqiData._id, raqiData.meetingId, rating, comment);
+      await addReviews(raqiData.rakiId, raqiData.meetingId, rating, comment);
       handleClosePopup();
     } catch (error) {
-      <ErrorMessage messasge={error.message} />;
+      if (error.response && error.response.status === 409) {
+        setError(error.response.data.message);
+        setExistingReview(error.response.data.existingReview);
+      } else {
+        setError(error.response.data.message);
+      }
     }
   };
 
@@ -42,6 +48,14 @@ function ReviewRaqiPopup(props) {
           </div>
         </div>
         <div className="p-3">
+          {error && <ErrorMessage message={error} />}
+          {existingReview && (
+            <div className="bg-yellow-100 p-4 rounded-lg mb-4">
+              <h3 className="text-lg font-bold">Existing Review</h3>
+              <p><strong>Rating:</strong> {existingReview.points}</p>
+              <p><strong>Comment:</strong> {existingReview.comment}</p>
+            </div>
+          )}
           <div className="flex flex-col md:flex-row justify-center items-center">
             <div className="w-1/2 mt-5">
               <h3 className="text-lg font-bold">Add a review on your session </h3>

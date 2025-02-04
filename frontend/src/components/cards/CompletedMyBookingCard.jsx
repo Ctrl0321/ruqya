@@ -98,23 +98,23 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
             <div className="flex flex-col mt-1">
               {rakiData?.country && (
                 <p className="text-gray-600 flex items-center my-0.5">
-                  {rakiData.country ? <ReactCountryFlag countryCode={rakiData.country} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
+                  {rakiData.country ? <ReactCountryFlag countryCode={rakiData.country} svg className="mr-2 mb-1.5" /> : <FaGlobe className="mr-2 text-RuqyaGreen mb-1.5" />}
                   {getCountryLabel(rakiData.country)}
                 </p>
               )}
               <p className="text-gray-600 flex items-center my-1 text-xs rounded-md">
                 {rakiData?.languages ? (
                   rakiData.languages.map((lang, index) => (
-                    <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] rounded-md">
+                    <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] font-bold rounded-md">
                       {getLanguageLabel(lang)}
                     </span>
                   ))
                 ) : (
-                  <span className="px-4 py-1 bg-[#F4D6AA99] rounded-md">English</span>
+                  <span className="px-4 py-1 bg-[#F4D6AA99] font-bold rounded-md">English</span>
                 )}
               </p>
-              <p className="text-gray-600 flex items-center my-1">
-                <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {calculateTimeUntilSession(booking.date)}
+              <p className="text-gray-600 flex items-center my-2">
+                <FaCalendarAlt className="mr-2 text-RuqyaGreen mb-1.5" /> <div className="">{calculateTimeUntilSession(booking.date)}</div>
               </p>
             </div>
           </div>
