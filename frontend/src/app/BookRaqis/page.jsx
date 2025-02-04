@@ -3,28 +3,26 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import RaqisCard from "@/components/cards/RaqisCard";
-import sampledata from "@/data/sampledata";
 import { FaFilter, FaRegCalendarAlt, FaTimes } from "react-icons/fa";
 import "rc-slider/assets/index.css";
 import Slider from "rc-slider";
 import Grid from "@/components/ui/layout/GridForBooking";
 import RatingInput from "@/components/ui/input/rating";
-import { useSearchParams } from "next/navigation";
-import { languages } from "@/lib/constance";
+import { useSearchParams, useRouter } from "next/navigation";
+import { languages, countries } from "@/lib/constance";
+import { getRakis } from "@/lib/api";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
+import {getLanguageLabel} from "@/lib/utils"
+
+const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
 // Main Page Component
 export default function BookRaqis() {
-  // Add these near the top with other calculations
-  const experienceRange = {
-    min: Math.min(...sampledata.map((raqi) => raqi.Experience || 0)),
-    max: Math.max(...sampledata.map((raqi) => raqi.Experience || 0)),
-    current: 0,
-  };
-
-  // State management
-  const [filteredData, setFilteredData] = useState(sampledata);
+  const [raqiData, setRaqiData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // State to manage loading
+  const [filteredData, setFilteredData] = useState([]);
   const [userSelections, setUserSelections] = useState({
-    experience: [experienceRange.min, experienceRange.max],
+    experience: [0, 0],
     languages: [],
     availability: {
       date: null,
@@ -34,11 +32,29 @@ export default function BookRaqis() {
     countries: [],
   });
   const [rating, setRating] = useState(0);
-
-  // State for mobile filter visibility
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  // Updated experience change handler
+  useEffect(() => {
+    async function fetchRakis() {
+      const rakis = await getRakis();
+      setRaqiData(rakis);
+      setFilteredData(rakis); // Update filteredData after fetching
+      setIsLoading(false); // Set loading to false after data is fetched
+
+      const experienceRange = {
+        min: rakis.length > 0 ? Math.min(...rakis.map((raqi) => raqi.yearOfExperience || 0)) : 0,
+        max: rakis.length > 0 ? Math.max(...rakis.map((raqi) => raqi.yearOfExperience || 0)) : 0,
+      };
+
+      setUserSelections((prev) => ({
+        ...prev,
+        experience: [experienceRange.min, experienceRange.max],
+      }));
+    }
+
+    fetchRakis();
+  }, []);
+
   const handleExperienceChange = (values) => {
     setUserSelections((prev) => ({
       ...prev,
@@ -46,36 +62,65 @@ export default function BookRaqis() {
     }));
   };
 
-  // Modify the availableLanguages extraction to use full language names
-  const availableLanguages = [...new Set(
-    sampledata
-      .filter(raqi => Array.isArray(raqi.Languages) && raqi.Languages.length > 0)
-      .flatMap(raqi => raqi.Languages)
-      .map(langCode => {
-        const langObj = languages.find(l => l.value === langCode);
-        return langObj ? langObj.label : langCode;
-      })
-  )].sort();
+const handleLanguageChange = (event, languageLabel) => {
+  const languageCode = languages.find((l) => l.label === languageLabel)?.value || languageLabel;
+  setUserSelections((prev) => ({
+    ...prev,
+    languages: event.target.checked ? [...prev.languages, languageCode] : prev.languages.filter((l) => l !== languageCode),
+  }));
+};
 
-  // Extract unique values from sample data
-  const availableCountries = [...new Set(sampledata.map((raqi) => raqi.Country))].sort();
-  const availableDurations = [...new Set(sampledata.map((raqi) => raqi.bookedDuration))].sort((a, b) => a - b);
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("searchQuery");
+  const language = searchParams.get("language");
+  const router = useRouter();
 
-  // Update the language change handler to work with labels
-  const handleLanguageChange = (event, languageLabel) => {
-    const languageCode = languages.find(l => l.label === languageLabel)?.value;
-    setUserSelections(prev => ({
-      ...prev,
-      languages: event.target.checked
-        ? [...prev.languages, languageCode]
-        : prev.languages.filter(l => l !== languageCode),
-    }));
+  const handleRemoveSearchQuery = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("searchQuery");
+    router.push(`/BookRaqis?${params.toString()}`);
   };
 
-  const handleCountryChange = (event, country) => {
+  const handleRemoveLanguage = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("language");
     setUserSelections((prev) => ({
       ...prev,
-      countries: event.target.checked ? [...prev.countries, country] : prev.countries.filter((c) => c !== country),
+      languages: [],
+    }));
+    router.push(`/BookRaqis?${params.toString()}`);
+  };
+
+  const availableLanguages = [
+    ...new Set(
+      raqiData
+        .filter((raqi) => Array.isArray(raqi.languages) && raqi.languages.length > 0)
+        .flatMap((raqi) => raqi.languages)
+        .map((langCode) => {
+          const langObj = languages.find((l) => l.value === langCode);
+          return langObj ? langObj.label : langCode;
+        })
+    ),
+    ...userSelections.languages.filter((lang) => !languages.some((l) => l.value === lang)),
+    ...(language && !languages.some((l) => l.value === language) ? [language] : []),
+  ].filter((lang) => lang !== getLanguageLabel(language)).sort();
+
+  const availableCountries = [
+    ...new Set(
+      raqiData.map((raqi) => {
+        const countryObj = countries.find((c) => c.value === raqi.country);
+        return countryObj ? countryObj.label : raqi.country;
+      })
+    ),
+  ].sort();
+
+  const availableDurations = [...new Set(raqiData.map((raqi) => raqi.bookedDuration))].sort((a, b) => a - b);
+
+  const handleCountryChange = (event, countryLabel) => {
+    const countryCode = countries.find((c) => c.label === countryLabel)?.value;
+    setUserSelections((prev) => ({
+      ...prev,
+      countries: event.target.checked ? [...prev.countries, countryCode] : prev.countries.filter((c) => c !== countryCode),
     }));
   };
 
@@ -93,10 +138,6 @@ export default function BookRaqis() {
     }));
   };
 
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("searchQuery");
-  const language = searchParams.get("language");
-
   useEffect(() => {
     if (searchQuery || language) {
       setUserSelections((prev) => ({
@@ -106,31 +147,25 @@ export default function BookRaqis() {
     }
   }, [searchQuery, language]);
 
-  // Updated filter logic with null check
   useEffect(() => {
-    let result = sampledata;
+    let result = raqiData;
 
-    // Filter by search query
     if (searchQuery) {
       result = result.filter((raqi) => raqi.name.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
-    // Filter by languages if any are selected
     if (userSelections.languages.length > 0) {
-      result = result.filter((raqi) => Array.isArray(raqi.Languages) && raqi.Languages.length > 0 && userSelections.languages.every((lang) => raqi.Languages.includes(lang)));
+      result = result.filter((raqi) => Array.isArray(raqi.languages) && raqi.languages.length > 0 && userSelections.languages.every((lang) => raqi.languages.includes(lang)));
     }
 
-    // Filter by countries
     if (userSelections.countries.length > 0) {
-      result = result.filter((raqi) => userSelections.countries.includes(raqi.Country));
+      result = result.filter((raqi) => userSelections.countries.includes(raqi.country));
     }
 
-    // Filter by experience
-    if (userSelections.experience[0] > 0 || userSelections.experience[1] < experienceRange.max) {
-      result = result.filter((raqi) => raqi.Experience >= userSelections.experience[0] && raqi.Experience <= userSelections.experience[1]);
+    if (userSelections.experience[0] > 0 || userSelections.experience[1] < Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))) {
+      result = result.filter((raqi) => raqi.yearOfExperience >= userSelections.experience[0] && raqi.yearOfExperience <= userSelections.experience[1]);
     }
 
-    // Filter by availability
     if (userSelections.availability.date) {
       result = result.filter((raqi) => raqi.bookedDate === userSelections.availability.date);
     }
@@ -139,23 +174,24 @@ export default function BookRaqis() {
       result = result.filter((raqi) => raqi.bookedDuration === userSelections.availability.duration);
     }
 
-    // Filter by rating
     if (rating > 0) {
       result = result.filter((raqi) => raqi.rating && raqi.rating.averageRating >= rating);
     }
 
     setFilteredData(result);
-  }, [userSelections, rating, searchQuery]);
+  }, [userSelections, rating, searchQuery, raqiData]);
 
-  // Add this before the return statement
-  const experienceLevels = sampledata
-    .map((raqi) => raqi.Experience)
+  const experienceLevels = raqiData
+    .map((raqi) => raqi.yearOfExperience)
     .filter((exp) => exp !== undefined)
     .sort((a, b) => a - b);
 
+  if (isLoading) {
+    return <LoadingSpinner />; // Show loading spinner while data is being fetched
+  }
+
   return (
     <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
-      
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li>
@@ -168,28 +204,44 @@ export default function BookRaqis() {
         </ol>
       </nav>
       <div className="flex flex-col md:flex-row gap-1">
-        
         {/* Filters Sidebar */}
-       <aside className={`w-full md:w-72 xl:w-80 md:space-y-6 h-screen ${
-          isFilterVisible ? "block" : "hidden"
-        } md:block fixed md:relative z-50 md:h-auto top-0 left-0 right-0 bottom-0 
-        ${isFilterVisible ? "-mx-6 md:mx-0 -mt-8 md:mt-0" : ""}`}>
-          
+        <aside
+          className={`w-full md:w-72 xl:w-80 md:space-y-6 h-screen ${isFilterVisible ? "block" : "hidden"} md:block fixed md:relative z-50 md:h-auto top-0 left-0 right-0 bottom-0 
+        ${isFilterVisible ? "-mx-6 md:mx-0 -mt-8 md:mt-0" : ""}`}
+        >
           {/* Dark overlay for mobile */}
-          {isFilterVisible && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 md:hidden" 
-                 onClick={() => setIsFilterVisible(false)} />
-          )}
-          
-          <div className="bg-RuqyaLightPurple p-4 rounded-none md:rounded-lg border border-gray-300 
+          {isFilterVisible && <div className="fixed inset-0 bg-black bg-opacity-50 md:hidden" onClick={() => setIsFilterVisible(false)} />}
+
+          <div
+            className="bg-RuqyaLightPurple p-4 rounded-none md:rounded-lg border border-gray-300 
                         fixed md:relative w-full md:w-auto h-full md:h-auto 
-                        overflow-y-auto pb-20 md:pb-4 top-0 left-0 right-0 bottom-0">
+                        overflow-y-auto md:overflow-visible pb-20 md:pb-4 top-0 left-0 right-0 bottom-0"
+          >
             <div className="pt-10 md:pt-0">
               {/* Close button for mobile view */}
-              <button className="md:hidden absolute top-4 right-4 text-primary z-50" 
-                      onClick={() => setIsFilterVisible(false)}>
+              <button className="md:hidden absolute top-4 right-4 text-primary z-50" onClick={() => setIsFilterVisible(false)}>
                 <FaTimes size={24} />
               </button>
+
+              {/* Search Query Display */}
+              {searchQuery && (
+                <div className="mb-4 p-2 bg-white rounded-md flex items-center justify-between">
+                  <span>User search: {searchQuery}</span>
+                  <button onClick={handleRemoveSearchQuery} className="text-red-500">
+                    <FaTimes />
+                  </button>
+                </div>
+              )}
+
+              {/* Language Display */}
+              {language && (
+                <div className="mb-4 p-2 bg-white rounded-md flex items-center justify-between">
+                  <span>Language: {getLanguageLabel(language)}</span>
+                  <button onClick={handleRemoveLanguage} className="text-red-500">
+                    <FaTimes />
+                  </button>
+                </div>
+              )}
 
               {/* Updated Experience Level Section */}
               <div className="filter-section border-b border-gray-200 pb-6">
@@ -203,8 +255,8 @@ export default function BookRaqis() {
                 <div className="space-y-4 ml-5">
                   <Slider
                     range
-                    min={experienceRange.min}
-                    max={experienceRange.max}
+                    min={Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0))}
+                    max={Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))}
                     value={userSelections.experience}
                     onChange={handleExperienceChange}
                     trackStyle={[{ backgroundColor: "green", height: 2 }]}
@@ -217,7 +269,7 @@ export default function BookRaqis() {
 
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>
-                      {experienceRange.min} Year{experienceRange.min !== 1 ? "s" : ""}
+                      {Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0))} Year{Math.min(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) !== 1 ? "s" : ""}
                     </span>
                     <div className="flex ">
                       {experienceLevels.map((level) => (
@@ -225,7 +277,7 @@ export default function BookRaqis() {
                       ))}
                     </div>
                     <span>
-                      {experienceRange.max} Year{experienceRange.max !== 1 ? "s" : ""}
+                      {Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))} Year{Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0)) !== 1 ? "s" : ""}
                     </span>
                   </div>
                 </div>
@@ -237,12 +289,10 @@ export default function BookRaqis() {
                   <span className="flex-1 font-semibold">Languages</span>
                   <div className="text-xs text-gray-500">{userSelections.languages.length} selected</div>
                 </h2>
-                <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                <div className="space-y-1">
                   {availableLanguages.map((language) => (
                     <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
-                      <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(
-                  languages.find(l => l.label === language)?.value
-                )} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
+                      <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(languages.find((l) => l.label === language)?.value)} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
                       <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2  cursor-pointer">
                         {language}
                       </label>
@@ -257,10 +307,10 @@ export default function BookRaqis() {
                   <span className="flex-1 font-semibold">Countries</span>
                   <div className="text-xs text-gray-500">{userSelections.countries.length} selected</div>
                 </h2>
-                <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                <div className="space-y-1">
                   {availableCountries.map((country) => (
                     <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
-                      <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(country)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
+                      <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(countries.find((c) => c.label === country)?.value)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
                       <label htmlFor={`country-${country}`} className="text-sm pl-2 flex-1 cursor-pointer">
                         {country}
                       </label>
@@ -277,17 +327,6 @@ export default function BookRaqis() {
                     <label className="text-sm text-gray-600 block mb-1">Date</label>
                     <input type="date" value={userSelections.availability.date || ""} onChange={(e) => handleDateChange(e.target.value)} className="w-full rounded-md border border-gray-300 text-sm pl-10 p-2 focus:border-primary focus:ring-primary" />
                   </div>
-                  {/*<div>*/}
-                  {/*  <label className="text-sm text-gray-600 block mb-1">Duration (minutes)</label>*/}
-                  {/*  <select value={userSelections.availability.duration || ""} onChange={(e) => handleDurationChange(e.target.value)} className="w-full rounded-md border border-gray-300 text-sm pl-10 p-2 focus:border-primary focus:ring-primary">*/}
-                  {/*    <option value="">Any duration</option>*/}
-                  {/*    {availableDurations.map((duration) => (*/}
-                  {/*      <option key={duration} value={duration}>*/}
-                  {/*        {duration} min*/}
-                  {/*      </option>*/}
-                  {/*    ))}*/}
-                  {/*  </select>*/}
-                  {/*</div>*/}
                 </div>
               </div>
 
@@ -295,7 +334,9 @@ export default function BookRaqis() {
               <div className="flex flex-col justify-start items-start m-auto filter-section pb-6">
                 <div className="flex justify-between items-center text-lg mb-4 w-full">
                   <span className="flex-1 font-semibold">Rating</span>
-                  <div className="text-xs text-gray-500 ml-auto">{rating == 5 ? "Minimun":"Minimun"} {rating} stars </div>
+                  <div className="text-xs text-gray-500 ml-auto">
+                    {rating == 5 ? "Minimun" : "Minimun"} {rating} stars{" "}
+                  </div>
                 </div>
                 <RatingInput rating={rating} setRating={setRating} />
               </div>
@@ -315,23 +356,15 @@ export default function BookRaqis() {
 
         {/* Practitioners Grid */}
         <main className="flex-1">
-          
           {/* Filter button for mobile view */}
           <button className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg shadow-gray-500/50 border-2 border-[#0C8281] z-20" onClick={() => setIsFilterVisible(true)}>
             {isFilterVisible ? <FaTimes size={24} /> : <FaFilter size={24} />}
           </button>
-          {/* <div className="mb-6">
-            <h1 className="text-2xl font-bold">Available Practitioners</h1>
-            <p className="text-gray-600">Found {filteredData.length} practitioners matching your criteria</p>
-          </div> */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> */}
-          {/* <div className="grid grid-cols-1 ipad:grid-cols-2 ipad-landscape:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6  gap-6"> */}
           <Grid>
             {filteredData.map((practitioner, index) => (
-              <RaqisCard key={`${practitioner.id}-${index}`} raqi={practitioner} className={"z-5"} />
+              <RaqisCard key={`${practitioner._id}-${index}`} raqi={practitioner} className={"z-5"} />
             ))}
           </Grid>
-          {/* </div> */}
           {filteredData.length === 0 && <div className="text-center py-8 text-gray-500">No practitioners found matching your criteria</div>}
         </main>
       </div>

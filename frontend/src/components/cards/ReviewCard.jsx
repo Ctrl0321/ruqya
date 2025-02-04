@@ -1,9 +1,25 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { getUserProfile } from "@/lib/api";
 
 const ReviewCard = ({ review, colorIndex }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const wordLimit = 40;
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUserProfile(review.userId);
+      setUser(user);
+    };
+
+    fetchUser();
+  }, []);
+
+  if(!user){
+    return null;
+  }
 
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => {
@@ -18,7 +34,10 @@ const ReviewCard = ({ review, colorIndex }) => {
   };
 
   const getInitials = (name) => {
-    return name.split(" ").map((n) => n[0]).join("");
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("");
   };
 
   const formatRating = (rating) => {
@@ -37,13 +56,19 @@ const ReviewCard = ({ review, colorIndex }) => {
     if (isExpanded) {
       return (
         <>
-          {comment} <span className="text-blue-500 cursor-pointer" onClick={toggleExpand}>Show less</span>
+          {comment}{" "}
+          <span className="text-blue-500 cursor-pointer" onClick={toggleExpand}>
+            Show less
+          </span>
         </>
       );
     }
     return (
       <>
-        {words.slice(0, wordLimit).join(" ")}... <span className="text-blue-500 cursor-pointer" onClick={toggleExpand}>Show more</span>
+        {words.slice(0, wordLimit).join(" ")}...{" "}
+        <span className="text-blue-500 cursor-pointer" onClick={toggleExpand}>
+          Show more
+        </span>
       </>
     );
   };
@@ -54,18 +79,18 @@ const ReviewCard = ({ review, colorIndex }) => {
   const circleColor = darkColors[colorIndex % darkColors.length];
 
   return (
-    <div className="p-4 rounded-lg shadow-md mb-4" style={{ backgroundColor }}>
+    <div className="p-4 rounded-lg shadow-md mb-4 font-sans font-normal" style={{ backgroundColor }}>
       <div className="flex items-center mb-2">
         <div className="flex items-center justify-center w-10 h-10 rounded-full text-white font-bold mr-3" style={{ backgroundColor: circleColor }}>
-          {getInitials(review.name)}
+          {getInitials(user.name)}
         </div>
         <div>
-          <div className="text-lg font-semibold">{review.name}</div>
+          <div className="text-lg font-semibold">{user.name}</div>
           <div className="text-gray-600 text-xs">{review.date}</div>
         </div>
         <div className="ml-auto flex items-center text-yellow-500">
-          <span className="mr-2 text-xl font-bold text-gray-800">{formatRating(review.rating)}</span>
-          {renderStars(review.rating)}
+          <span className="mr-2 text-xl font-bold text-gray-800 ">{formatRating(review.points)}</span>
+          {renderStars(review.points)}
         </div>
       </div>
       <div className="mt-2">{renderComment(review.comment)}</div>
@@ -74,4 +99,3 @@ const ReviewCard = ({ review, colorIndex }) => {
 };
 
 export default ReviewCard;
-

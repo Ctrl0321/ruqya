@@ -4,6 +4,10 @@ import EditProfilePopup from "@/components/ui/popup/editPofile";
 import { countries, languages } from "@/lib/constance";
 import CustomSelect from "@/components/ui/input/select";
 import Loading from "@/components/shared/common/LoadingSpinner"
+import {getOwnProfile, updateUserProfile} from "@/lib/api";
+import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
+import { camelCase, startCase } from "lodash";
 
 const MyProfile = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -11,7 +15,7 @@ const MyProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: "",
+    name: "",
     email: "",
     gender: "",
     dob: "",
@@ -22,7 +26,7 @@ const MyProfile = () => {
     confirmPassword: "",
   });
   const [popupData, setPopupData] = useState({
-    firstName: "",
+    name: "",
     email: "",
     gender: "",
     dob: "",
@@ -36,17 +40,19 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://679f4f5c24322f8329c352a8.mockapi.io/ruqya-api/user/users/getUser');
-        const data = await response.json();
+        const data = await getOwnProfile();
+        if (!data) {
+          throw new Error("No data returned from API");
+        }
         setUserData(data);
         setFormData({
-          firstName: data[0].firstName || "",
-          email: data[0].email || "",
-          gender: data[0].gender || "",
-          dob: data[0].DOB || "",
-          country: data[0].country || "",
-          language: data[0].language || "",
-          mobile: data[0].mobile || "",
+          name: startCase(data.name) || "",
+          email: data.email || "",
+          gender: data.gender || "",
+          dob: data.DOB || "",
+          country: data.country || "",
+          language: data.language || "",
+          mobile: data.mobile || "",
           password: "",
           confirmPassword: "",
         });
@@ -54,6 +60,7 @@ const MyProfile = () => {
       } catch (error) {
         console.error('Error fetching user data:', error);
         setIsLoading(false);
+        setUserData(null);
       }
     };
 
@@ -127,7 +134,7 @@ const MyProfile = () => {
     }));
   };
 
-  const handleSaveButtonClick = () => {
+  const handleSaveButtonClick = async () => {
     // Only check passwords if both password fields have values
     if (popupData.password || popupData.confirmPassword) {
       if (popupData.password !== popupData.confirmPassword) {
@@ -168,20 +175,29 @@ const MyProfile = () => {
       ...prevState,
       ...changedValues
     }));
-    
-    setIsDataSaved(true);
-    setIsEditPopupOpen(false);
 
-    const displayChanges = {};
-    Object.keys(changedValues).forEach(key => {
-      if (key !== 'password' && key !== 'confirmPassword') {
-        const label = key.charAt(0).toUpperCase() + key.slice(1);
-        displayChanges[label] = changedValues[key];
+    try {
+      await updateUserProfile({
+        ...formData,
+        ...changedValues
+      });
+      setIsDataSaved(true);
+      setIsEditPopupOpen(false);
+
+      const displayChanges = {};
+      Object.keys(changedValues).forEach(key => {
+        if (key !== 'password' && key !== 'confirmPassword') {
+          const label = key.charAt(0).toUpperCase() + key.slice(1);
+          displayChanges[label] = changedValues[key];
+        }
+      });
+
+      if (Object.keys(displayChanges).length > 0) {
+        alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
       }
-    });
-
-    if (Object.keys(displayChanges).length > 0) {
-      alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      alert('Error updating user profile. Please try again later.');
     }
   };
 
@@ -222,7 +238,7 @@ const MyProfile = () => {
   if (!userData) {
     return (
       <div className="flex items-center justify-center min-h-screen text-black">
-        <p>Data not available.</p>
+        <ErrorMessage message="Error fetching user data. Please try again later." />
       </div>
     );
   }
@@ -232,7 +248,7 @@ const MyProfile = () => {
       <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
       <div className="profile-details grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 bg-white p-6 rounded-lg shadow-lg">
         <p>
-          <strong>First Name:</strong> {formData.firstName}
+          <strong>First Name:</strong> {formData.name}
         </p>
         <p>
           <strong>Email:</strong> {formData.email}
@@ -241,16 +257,16 @@ const MyProfile = () => {
           <strong>Gender:</strong> {formData.gender}
         </p>
         <p>
-          <strong>Age:</strong> {calculateAge(formData.dob)}
+          <strong>Age:</strong> {formData.dob? calculateAge(formData.dob): ""}
         </p>
         <p>
-          <strong>Date of Birth:</strong> {formatDate(formData.dob)}
+          <strong>Date of Birth:</strong> {formData.dob? formatDate(formData.dob) : "YYYY-MM-DD"}
         </p>
         <p>
-          <strong>Country:</strong> {formData.country}
+          <strong>Country:</strong> {getCountryLabel(formData.country)}
         </p>
         <p>
-          <strong>Language:</strong> {formData.language}
+          <strong>Language:</strong> {getLanguageLabel(formData.language)}
         </p>
         <p>
           <strong>Mobile Number:</strong> {formData.mobile}
@@ -277,8 +293,8 @@ const MyProfile = () => {
                   <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                     <input
                       type="text"
-                      name="firstName"
-                      value={popupData.firstName}
+                      name="name"
+                      value={popupData.name}
                       onChange={handleChange}
                       placeholder="First Name"
                       className="text-sm w-full outline-none"

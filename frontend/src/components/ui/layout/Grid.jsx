@@ -21,6 +21,7 @@ const Grid = ({
       `3xl:grid-cols-${cols}`, // Ensure one row for desktop view
       `gap-${gap}`,
       'my-4', // Margin
+      'place-items-center', // Center items in the grid
       className
     )}>
       {children}

@@ -4,9 +4,15 @@ import Link from "next/link";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
+
 
 function Third(props) {
   const { raqiData } = props;
+
+  if (!raqiData) {
+    return null;
+  }
 
   return (
     <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">
@@ -22,7 +28,7 @@ function Third(props) {
           )}
         </div>
         <ResponsiveGrid data={raqiData} breakpoints={{ mobile:3, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 4, '3xl': 5, '4xl': 6, '5xl': 6 }}>
-          {(data) => <MyBookingCard key={data.id} booking={data} />}
+          {(data) => <MyBookingCard key={data._id} booking={data} />}
         </ResponsiveGrid>
       </div>
     </div>

@@ -1,6 +1,8 @@
+'use client';
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 export const ErrorMessage = ({ message = 'Something went wrong' }) => {
   const notify = () => {
@@ -15,7 +17,7 @@ export const ErrorMessage = ({ message = 'Something went wrong' }) => {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     notify();
   }, [message]);
 

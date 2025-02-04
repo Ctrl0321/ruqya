@@ -29,7 +29,7 @@ const NotFound = () => {
                         <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z" />
                     </svg>
                 </motion.div>
-                <Link href="/admin">
+                <Link href="/">
                     <motion.a
                         whileHover={{ scale: 1.1 }}
                         className="mt-6 inline-block px-6 py-3 text-white bg-[#0C8281] rounded-lg shadow-lg hover:shadow-xl transition-all"

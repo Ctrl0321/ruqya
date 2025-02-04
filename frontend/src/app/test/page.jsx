@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
 import { FaStar } from "react-icons/fa";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-
+import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 import { motion } from "framer-motion";
 import Loading from "@/components/shared/common/LoadingSpinner";
 
@@ -16,6 +16,7 @@ const ReviewsSection = () => {
   });
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   const testErrorMessage = () => {
     setErrorMessage("This is a test error message!");
@@ -31,8 +32,6 @@ const ReviewsSection = () => {
     // and update the state accordingly
   }, []);
 
-
-
   const chartData = [
     { name: "5 ★", value: data.reviewBreakdown[0], fill: "#4caf50" },
     { name: "4 ★", value: data.reviewBreakdown[1], fill: "#9c27b0" },
@@ -40,10 +39,6 @@ const ReviewsSection = () => {
     { name: "2 ★", value: data.reviewBreakdown[3], fill: "#03a9f4" },
     { name: "1 ★", value: data.reviewBreakdown[4], fill: "#ffeb3b" },
   ];
-
-  return(
-    <Loading></Loading>
-  )
 
   return (
     <div className="p-4">
@@ -55,6 +50,20 @@ const ReviewsSection = () => {
       >
         Test Error Message
       </button>
+
+      <button 
+        onClick={() => setShowPopup(true)}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Add Review
+      </button>
+
+      {showPopup && (
+        <ReviewRaqiPopup 
+          raqiData={data} 
+          onClose={() => setShowPopup(false)} 
+        />
+      )}
 
       <div className="bg-gray-100 rounded-md p-4 mb-4">
         <h2 className="text-lg font-medium">Average Rating</h2>

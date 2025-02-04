@@ -40,6 +40,7 @@ export const MeetingLayout = ({ navigate }) => {
                     right: "10px",
                     zIndex: 100,
                     padding: "5px 10px",
+                    margin: "auto",
                     background: "rgba(0, 0, 0, 0.5)",
                     color: "white",
                     borderRadius: "4px",

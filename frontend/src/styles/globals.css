@@ -199,30 +199,61 @@ animation-play-state: paused;
 .str-video {
   /*background-color: #2BA2A5;*/
   color: #ffffff;
-  height: 100dvh;
-  width: 100vw;
+  /* height: 100dvh; */
+  width: 100%;
   display: flex;
   flex-direction: column;
   min-width: 0;
   max-width: 100%;
   padding: 0;
   margin: 0;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ensure it takes full viewport height */
+  overflow: hidden; /* Prevent scrolling for the video meeting part */
 }
 
 .str-video__speaker-layout__wrapper {
    flex-grow: 0 !important;
   overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .str-video__call-controls {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1.5rem !important;
   padding: 0.6rem 0.6rem !important;
-  background-color: #a3a3a3;
+  background-color: #008080;
   border-radius: 25px;
   width: fit-content;
-  margin: 30px auto ;
+  margin: 30px auto;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  margin: 0 auto;
+  gap: 1rem; /* Ensure there is a gap between video and controls */
+}
+
+@media (max-width: 768px) {
+  .str-video__call-controls {
+    /* margin: 20px 10px; */
+    gap: 1rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .str-video__call-controls {
+    position: fixed;
+    bottom: 20px;
+  }
 }
 
 .noise-btn{

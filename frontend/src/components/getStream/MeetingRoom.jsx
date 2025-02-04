@@ -27,7 +27,7 @@ export const MeetingRoom = () => {
         const participants = useParticipants();
 
         return (
-            <div className="fixed top-15 right-8 z-50 px-4 py-2 bg-black/60 text-white rounded-lg font-medium flex items-center space-x-2">
+            <div className="fixed top-4 right-4 z-50 px-4 py-2 bg-black/60 text-white rounded-lg font-medium flex items-center space-x-2">
                 <svg
                     className="w-5 h-5"
                     fill="none"
@@ -175,14 +175,18 @@ export const MeetingRoom = () => {
     }
 
     return (
-        <StreamVideo client={client}>
-            <StreamCall call={call}>
-                <StreamTheme>
-                    <ParticipantCount/>
-                    <SpeakerLayout participantsBarPosition="bottom"/>
-                    <Controls onLeave={() => router.push('/')}/>
-                </StreamTheme>
-            </StreamCall>
-        </StreamVideo>
+        <div className="flex flex-col items-center justify-center w-full h-full p-2 md:p-4">
+            <StreamVideo client={client}>
+                <StreamCall call={call}>
+                    <StreamTheme>
+                        <ParticipantCount />
+                        <div className="w-full max-w-3xl m-auto">
+                            <SpeakerLayout participantsBarPosition="bottom" />
+                        </div>
+                        <Controls onLeave={() => router.push('/')} />
+                    </StreamTheme>
+                </StreamCall>
+            </StreamVideo>
+        </div>
     );
 };

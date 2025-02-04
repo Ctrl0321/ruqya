@@ -1,11 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
-import Button from "@/components/ui/buttons/DefaultButton";
-import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
+'use client'
+import { useState, useEffect } from "react";
 import '@/styles/globals.css';
-
-import MyBookingCard from "@/components/cards/MyBookingCard";
-import RaqisCard from "@/components/cards/RaqisCard";
+import {getRakis,getMyBookings} from "@/lib/api"
 
 import Flower from "@/assets/svg/flower-right";
 import FlowerLeft from "@/assets/svg/flower-left";
@@ -17,9 +13,29 @@ import Third from "@/components/ui/home/Third";
 import Forth from "@/components/ui/home/Forth";
 
 import sampledata from "@/data/sampledata";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
+
 
 export default function Home() {
- 
+  const [raqiData, setRaqiData] = useState();
+  const [myBookings, setMyBookings] = useState();
+
+  useEffect(() => {
+    async function fetchRakis() {
+      const rakis = await getRakis();
+      setRaqiData(rakis);
+
+      const bookings = await getMyBookings();
+      setMyBookings(bookings);
+    }
+
+    fetchRakis();
+  }, []);
+
+  if (!raqiData && !myBookings) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div className="bg-white color-header min-h-screen text-center md:text-left">
       <First className="" />
@@ -33,8 +49,8 @@ export default function Home() {
       </div>
       <Search />
       <Second />
-      <Third raqiData={sampledata} />
-      <Forth raqiData={sampledata} title="Meet Our Expert Raqis" />
+      <Third raqiData={myBookings} />
+      <Forth raqiData={raqiData} title="Meet Our Expert Raqis" />
     </div>
   );
 }
