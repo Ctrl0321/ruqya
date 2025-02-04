@@ -12,7 +12,7 @@ import {
 
 
 export const Controls = ({ onLeave }) => (
-    <div className="str-video__call-controls">
+    <div className="str-video__call-controls bottom-0">
         <SpeakingWhileMutedNotification>
             <ToggleAudioPublishingButton />
         </SpeakingWhileMutedNotification>

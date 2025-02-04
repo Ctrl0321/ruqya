@@ -55,9 +55,12 @@ export default function MeetingPage() {
     }
 
     return (
-        <MeetingProvider userId={data.name} callId={data.meetingId}>
-            <MeetingRoom/>
-        </MeetingProvider>
-
+        <div className="w-full max-h-screen flex items-center justify-center p-4 md:p-5">
+            <div className="w-full max-w-4xl bg-white m-auto rounded-lg p-4 md:p-6">
+                <MeetingProvider userId={data.name} callId={data.meetingId}>
+                    <MeetingRoom />
+                </MeetingProvider>
+            </div>
+        </div>
     );
 }
