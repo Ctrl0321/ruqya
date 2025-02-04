@@ -8,7 +8,7 @@ const api = axios.create({
 
 // Attach token to requests automatically
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("fe-token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
@@ -19,7 +19,7 @@ const userTimeZone = getUserTimeZone();
 // Authentication
 export const login = async (email, password) => {
     const response = await api.post("ruqya-api/auth/login", { email, password });
-    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("fe-token", response.data.token);
     return response.data;
 };
 

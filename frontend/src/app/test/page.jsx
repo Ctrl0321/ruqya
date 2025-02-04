@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
 import { FaStar } from "react-icons/fa";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 
 import { motion } from "framer-motion";
 import Loading from "@/components/shared/common/LoadingSpinner";
@@ -41,9 +42,9 @@ const ReviewsSection = () => {
     { name: "1 ★", value: data.reviewBreakdown[4], fill: "#ffeb3b" },
   ];
 
-  return(
-    <Loading></Loading>
-  )
+  // return(
+  //   <Loading></Loading>
+  // )
 
   return (
     <div className="p-4">

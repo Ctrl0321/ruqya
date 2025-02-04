@@ -27,6 +27,7 @@ function Raqis() {
   const maxAboutLength = 300; // Set the maximum length for the about section
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
+  const { setUserId } = useChat();
 
   useEffect(() => {
     async function fetchData() {
@@ -41,14 +42,12 @@ function Raqis() {
     fetchData();
   }, [Id]);
 
-  const { setUserId } = useChat();
-
   const handleStartChat = (otherUser) => {
     setUserId(otherUser);
   };
 
   useEffect(() => {
-    setUserId(Id);
+    Id && setUserId(Id);
   }, [Id]);
 
   if (!Id) {

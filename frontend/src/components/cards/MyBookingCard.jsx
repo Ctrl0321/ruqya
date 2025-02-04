@@ -114,7 +114,7 @@ const MyBookingCard = ({ booking }) => {
           <p>{calculateTimeUntilSession(bookedDateTime, bookedDuration)}</p>
         </div>
       </div>
-      <Button text="Join Now" color="RuqyaGreen" bg={true} className="rounded-xl" disabled={!isSessionWithinOneHour(bookedDateTime) && !isSessionActive(bookedDateTime, bookedDuration)} />
+      <Button text="Join Now" color="RuqyaGreen" bg={true} className="rounded-xl w-full" disabled={!isSessionWithinOneHour(bookedDateTime) && !isSessionActive(bookedDateTime, bookedDuration)} />
     </div>
   );
 };
