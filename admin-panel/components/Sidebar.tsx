@@ -15,6 +15,7 @@ const menuItems = [
   { icon: Users, label: 'Users', href: '/admin/users', roles: ["admin", "super-admin"] },
   { icon: Calendar, label: 'Availability', href: '/admin/availability', roles: ["admin", "super-admin"] },
   { icon: Calendar, label: 'Sessions', href: '/admin/sessions', roles: ["admin", "super-admin"] },
+  { icon: DollarSign, label: 'Payment', href: '/admin/payment', roles: ["admin", "super-admin"] },
   { icon: Settings, label: 'Settings', href: '/admin/settings', roles: ["admin", "super-admin"] },
 ];
 

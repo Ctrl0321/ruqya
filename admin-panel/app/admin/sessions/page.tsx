@@ -39,8 +39,9 @@ export default function SessionsPage() {
             }
         };
 
-        fetchData();
-    }, []);
+        if (currentUser) fetchData();
+
+    }, [currentUser]);
 
     const currentDate = new Date();
 
