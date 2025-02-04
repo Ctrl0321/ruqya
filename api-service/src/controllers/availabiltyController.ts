@@ -33,7 +33,6 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
 
         console.log("Raw date input:", date);
 
-        // Parse the date in DD/MM/YYYY format strictly
         const parsedDate = moment(date, 'YYYY-MM-DD', true);
 
         console.log("convert date input:", parsedDate);
@@ -43,11 +42,9 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
             return res.status(400).json({ message: 'Invalid date format. Expected DD/MM/YYYY' });
         }
 
-        // Convert parsed date to UTC
         const convertedDate = parsedDate.format('YYYY-MM-DD');
         console.log("Converted Date:", convertedDate);
 
-        // Get UTC range for the selected date
 
         const startOfDayUTC = moment.tz(date, 'YYYY-MM-DD', validatedTimeZone).startOf('day').utc().toISOString();
         const endOfDayUTC = moment.tz(date, 'YYYY-MM-DD', validatedTimeZone).endOf('day').utc().toISOString();
@@ -55,7 +52,6 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
 
         console.log("Start to End UTC:", startOfDayUTC, endOfDayUTC);
 
-        // Fetch all availability records for the given date and Raki ID
         const availabilityRecords = await RakiAvailability.find({
             rakiId,
             startTime: { $gte: startOfDayUTC, $lte: endOfDayUTC },
@@ -64,7 +60,7 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
         console.log("Availability Records:", availabilityRecords);
 
         if (!availabilityRecords || availabilityRecords.length === 0) {
-            return res.status(404).json({ message: 'No availability found' });
+            return res.status(200).json({ message: 'No availability found',data:null });
         }
 
         // Extract and convert time slots
