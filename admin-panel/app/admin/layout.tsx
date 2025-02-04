@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {!isMeetingPage && (
                     <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
                 )}
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-primary-50 p-6">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-primary-25 p-6">
                     {children}
                 </main>
             </div>
