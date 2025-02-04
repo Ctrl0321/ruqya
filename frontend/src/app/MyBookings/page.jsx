@@ -55,7 +55,7 @@ function MyBookings() {
           </button>
         </div>
       </div>
-      <Grid>{showUpcoming ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} booking={booking} />) : completedBookings.map((booking, index) => <CompletedMyBookingCard key={index} booking={booking} />)}</Grid>
+      <Grid>{showUpcoming ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} booking={booking} />) : completedBookings.map((booking, index) => <CompletedMyBookingCard key={index} booking={booking} show={true} />)}</Grid>
     </div>
   );
 }

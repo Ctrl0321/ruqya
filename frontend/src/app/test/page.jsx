@@ -4,7 +4,6 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid 
 import { FaStar } from "react-icons/fa";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
-
 import { motion } from "framer-motion";
 import Loading from "@/components/shared/common/LoadingSpinner";
 
@@ -33,8 +32,6 @@ const ReviewsSection = () => {
     // and update the state accordingly
   }, []);
 
-
-
   const chartData = [
     { name: "5 ★", value: data.reviewBreakdown[0], fill: "#4caf50" },
     { name: "4 ★", value: data.reviewBreakdown[1], fill: "#9c27b0" },
@@ -42,10 +39,6 @@ const ReviewsSection = () => {
     { name: "2 ★", value: data.reviewBreakdown[3], fill: "#03a9f4" },
     { name: "1 ★", value: data.reviewBreakdown[4], fill: "#ffeb3b" },
   ];
-
-  // return(
-  //   <Loading></Loading>
-  // )
 
   return (
     <div className="p-4">

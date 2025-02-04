@@ -1,22 +1,33 @@
-'use client'
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { FaGlobe, FaCalendarAlt } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 import { languages } from "@/lib/constance";
+import { getUserProfile } from "@/lib/api";
 
-const MyBookingCard = ({ booking }) => {
+const MyBookingCard = ({ booking = {}, show = false }) => {
+  // const { name, languages, bookedDate, bookedTime, image, country, _id: id } = booking;
+  // const []
+  // useEffect(() => {
+  //   async function fetch() {
+  //     const getUserProfile = await getUserProfile(id);
+
+  //   }
+  //   fetch();
+  // }, [id]);
+
   const [showPopup, setShowPopup] = useState(false);
-  const Languages = booking.Languages;
+  const Languages = booking?.languages || [];
 
   const getLanguageLabel = (value) => {
-    const language = languages.find(lang => lang.value === value);
+    const language = languages.find((lang) => lang.value === value);
     return language ? language.label : value;
   };
 
   const calculateEndTime = (startTime, duration) => {
-    const [hours, minutes] = startTime.split(":").map(Number);
+    const [hours, minutes] = startTime?.split(":").map(Number);
     const endTime = new Date();
     endTime.setHours(hours);
     endTime.setMinutes(minutes + parseInt(duration, 10));
@@ -36,7 +47,7 @@ const MyBookingCard = ({ booking }) => {
   const isSessionActive = (bookedDate, bookedTime) => {
     const currentDate = new Date();
     const sessionDate = new Date(`${bookedDate}T${bookedTime}`);
-    return currentDate >= sessionDate && currentDate <= new Date(sessionDate.getTime() + booking.bookedDuration * 60000);
+    return currentDate >= sessionDate && currentDate <= new Date(sessionDate.getTime() + (booking?.bookedDuration || 0) * 60000);
   };
 
   const calculateTimeUntilSession = (bookedDate, bookedTime) => {
@@ -49,11 +60,11 @@ const MyBookingCard = ({ booking }) => {
     }
 
     if (timeDifference <= 0) {
-      const completedDate = new Date(sessionDate.getTime() + booking.bookedDuration * 60000);
+      const completedDate = new Date(sessionDate.getTime() + (booking?.bookedDuration || 0) * 60000);
       const daysSinceCompletion = Math.floor((currentDate - completedDate) / (1000 * 60 * 60 * 24));
 
       if (daysSinceCompletion < 7) {
-        const dayOfWeek = completedDate.toLocaleDateString('en-US', { weekday: 'long' });
+        const dayOfWeek = completedDate.toLocaleDateString("en-US", { weekday: "long" });
         return `Completed on  ${`Last ` + dayOfWeek}`;
       } else {
         return `Completed on ${completedDate.toLocaleDateString()}`;
@@ -74,19 +85,19 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:max-w-[450px] text-left drop-shadow-lg p-2 mb-5 flex flex-col justify-between h-full">
+    <div className={`bg-white rounded-xl h-auto md:max-w-[450px] text-left p-2 mb-5 flex flex-col justify-between border border-black ${booking.className}`}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4 mb-0">
           <div className="col-span-3 rounded-lg">
-            <img src={booking.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
+            <img src={booking?.image ? booking.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={booking.name} className="rounded-xl w-28 h-28 object-cover object-top" />
           </div>
 
           <div className="flex flex-col">
             <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{ fontWeight: "900", color: "000000" }}>
-              <span className="font-extrabold text-xl">{booking.name}</span>
+              <span className="font-extrabold text-xl">{booking?.name || " "}</span>
             </h1>
             <div className="flex flex-col mt-1">
-              {booking.Country && (
+              {booking?.Country && (
                 <p className="text-gray-600 flex items-center my-0.5">
                   {booking.CountryCode ? <ReactCountryFlag countryCode={booking.CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
                   {booking.Country}
@@ -110,14 +121,9 @@ const MyBookingCard = ({ booking }) => {
           </div>
         </div>
       </div>
-      <Button
-        text="Add a Review"
-        color="RuqyaGreen"
-        bg={true}
-        className="rounded-xl mt-auto"
-        disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)}
-        onClick={() => setShowPopup(true)}
-      />
+      { show && (
+      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-auto" disabled={isSessionWithinOneHour(booking.bookedDate, booking.bookedTime) && isSessionActive(booking.bookedDate, booking.bookedTime)} onClick={() => setShowPopup(true)} />
+      )}
       {showPopup && <ReviewRaqiPopup raqiData={booking} onClose={() => setShowPopup(false)} />}
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-const RatingInput = ({ rating, setRating }) => {
+const RatingInput = ({ rating, setRating, className }) => {
   const [hover, setHover] = useState(null);
 
   const handleRatingClick = (ratingValue) => {
@@ -22,7 +22,7 @@ const RatingInput = ({ rating, setRating }) => {
               >
                 <FaStar
                     size={30}
-                    className="transition-colors duration-200"
+                    className={`transition-colors duration-200 ${className}`}
                     color={ratingValue <= (hover || rating) ? "#FFC107" : "#8e8e8f"}
                 />
               </button>
