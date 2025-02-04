@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 import { AuthenticatedRequest } from "../@types/express";
-import { Response } from "express";
+import {response, Response} from "express";
 import moment from "moment-timezone";
 import { validateAndConvertTimezone } from "../utils/timezone";
 import Meeting, {MeetingStatus} from "../models/meeting";
@@ -11,7 +11,7 @@ import {client} from "../config/streamConfig";
 
 
 
-const MEETING_COST = 50;
+const MEETING_COST = Number(process.env.SESSION_COST) || 50;
 
 
 interface MeetingRequest {
@@ -21,7 +21,8 @@ interface MeetingRequest {
     rakiId: string;
     notificationSend?: boolean;
     timeZone?: string;
-    duration: number;
+    duration?: number;
+    status?:string
 }
 
 interface StatisticsResponse {
@@ -69,15 +70,38 @@ export const getAllMeetings = async (req: AuthenticatedRequest, res: Response): 
 export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
+        const user = req.user;
         const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
-        const now = moment.tz(validatedTimeZone);
-        const endOfToday = moment.tz(validatedTimeZone).endOf('day');
+        // Convert `now` and `endOfToday` to UTC before querying MongoDB
+        const nowLocal = moment.tz(validatedTimeZone);
+        const endOfTodayLocal = moment.tz(validatedTimeZone).endOf('day');
 
-        const meetings = await Meeting.find({ date: { $gte: now.toDate(), $lte: endOfToday.toDate() } });
+        const nowUTC = nowLocal.utc().toDate();
+        const endOfTodayUTC = endOfTodayLocal.utc().toDate();
+
+        console.log("Local Now:", nowLocal.format(), "UTC Now:", nowUTC);
+        console.log("Local End of Day:", endOfTodayLocal.format(), "UTC End of Day:", endOfTodayUTC);
+        console.log("User Role:", user?.role);
+
+        let meetings;
+
+        if (user?.role === "super-admin") {
+            meetings = await Meeting.find({
+                date: { $gte: nowUTC, $lte: endOfTodayUTC }
+            });
+        } else {
+            meetings = await Meeting.find({
+                date: { $gte: nowUTC, $lte: endOfTodayUTC },
+                rakiId: user?.id
+            });
+        }
+
         res.status(200).json(convertMeetingDates(meetings, validatedTimeZone));
+
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        console.error("Error fetching meetings:", error);
+        res.status(500).json({ message: "Server error", error });
     }
 };
 
@@ -87,13 +111,16 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
         const userId = req.user?.id;
         if (!userId) return res.status(401).json({ message: 'User ID not found in request' });
 
-        const { meetingId, topic, date, rakiId, notificationSend = false, timeZone = 'UTC', duration = 60 } = req.body as MeetingRequest;
-        if (!meetingId || !topic || !date || !rakiId || !duration) {
+        const { meetingId, topic, date, rakiId, notificationSend = false, timeZone = 'UTC', duration = 60,status=MeetingStatus.SCHEDULED } = req.body as MeetingRequest;
+        console.log(meetingId,topic,date,rakiId)
+        if (!meetingId || !topic || !date || !rakiId ) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
         const validatedTimeZone = validateAndConvertTimezone(timeZone);
-        const utcDate = moment.tz(date, validatedTimeZone).utc().toDate();
+
+        const utcDate = moment.tz(date, "YYYY-MM-DD HH:mm:ss", validatedTimeZone).utc().toISOString();
+
 
         const existingMeetings = await Meeting.find({
             $or: [{ rakiId }, { userId }],
@@ -105,7 +132,7 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
         }
 
         // Create meeting in DB
-        const newMeeting = new Meeting({ meetingId, topic, date: utcDate, rakiId, userId, notificationSend, duration });
+        const newMeeting = new Meeting({ meetingId, topic, date: utcDate, rakiId, userId, notificationSend, duration ,status});
         const savedMeeting = await newMeeting.save();
 
         try {
@@ -360,13 +387,15 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
                 });
         }
 
-        let query: any = { rakiId };
+        let query: any = {  };
         if (dateRange) {
             query.date = {
                 $gte: dateRange.start,
                 $lte: dateRange.end
             };
         }
+
+        console.log(query)
 
         const meetings = await Meeting.find(query);
 
