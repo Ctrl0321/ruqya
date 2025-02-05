@@ -268,7 +268,7 @@ function Raqis() {
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
 
-          {/* <Button text="Book Now"  link={"/Raqis/" + data.id + '/book'} onClick className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"></Button> */}
+          <Button text="Book Now"  link={"/Raqi/" + data._id + '/book'} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"/>
         </div>
       </div>
       {data.about && (
