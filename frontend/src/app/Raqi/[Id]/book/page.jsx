@@ -5,7 +5,6 @@ import Button from "@/components/ui/buttons/DefaultButton";
 import SampleData from "@/data/sampledata.json";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-import GridForRaqiBooking from "@/components/ui/layout/GridForRaqiBooking";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -14,14 +13,13 @@ const BookSessionPage = () => {
   const [selectedDate, setSelectedDate] = useState(null); // Changed from new Date() to null
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingData, setBookingData] = useState(null);
+  // const [sessionType, setSessionType] = useState("Standard");
   const [errors, setErrors] = useState({});
   const dateRef = useRef(null);
   const timeRef = useRef(null);
   const bookingRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
-  const [step, setStep] = useState(1);
-  const totalSteps = 3;
 
   useEffect(() => {
     if (Id) {
@@ -49,6 +47,10 @@ const BookSessionPage = () => {
   const handleTimeChange = (event) => {
     setSelectedTime(event.target.value);
   };
+
+  // const handleSessionTypeChange = (event) => {
+  //   setSessionType(event.target.value);
+  // };
 
   const scrollToRef = (ref) => {
     if (window.innerWidth <= 768) {
@@ -119,159 +121,59 @@ const BookSessionPage = () => {
     return times;
   };
 
-  const renderStepIndicator = () => {
-    return (
-      <div className="flex justify-between mb-8 relative">
-        <div className="absolute top-1/2 h-0.5 w-full bg-gray-200 -z-10"></div>
-        {[...Array(totalSteps)].map((_, index) => (
-          <div 
-            key={index} 
-            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              step > index + 1 
-                ? "bg-RuqyaGreen text-white" 
-                : step === index + 1 
-                ? "bg-RuqyaGreen text-white" 
-                : "bg-gray-200"
-            }`}
-          >
-            {index + 1}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const handleNext = () => {
-    if (step === 1 && !selectedDate) {
-      setErrorMessage("Please select a date");
-      setShowError(true);
-      return;
-    }
-    if (step === 2 && !selectedTime) {
-      setErrorMessage("Please select a time");
-      setShowError(true);
-      return;
-    }
-    if (step < totalSteps) {
-      setStep(step + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
-
-  const renderStepContent = () => {
-    switch (step) {
-      case 1:
-        return (
+  return (
+    <div className="mx-auto p-4 min-h-screen flex flex-col md:flex-row gap-5 relative">
+      {showError && <div className="fixed top-0 left-0 right-0 z-50">
+        <ErrorMessage message={errorMessage} />
+      </div>}
+      <div className="w-full border border-gray-300 rounded-lg shadow-lg p-4 order-2 md:order-1">
+        <div className="mb-4 border-b pb-4">
+          <h1 className="text-2xl font-bold ">Book Your Ruqyah Session</h1>
+          <p>Choose your preferred date & time.</p>
+        </div>
+        <form className="space-y-4">
+          {/* <div>
+            <label className="block text-gray-700">Session Type</label>
+            <select value={sessionType} onChange={handleSessionTypeChange} className="mt-3 p-3 block w-full bg-LightGray border border-gray-300 rounded-md shadow-sm focus:ring-RuqyaGreen focus:border-RuqyaGreen text-sm md:text-md appearance-none">
+              <option value="Standard">Standard</option>
+              <option value="Premium">Premium</option>
+              <option value="VIP">VIP</option>
+            </select>
+          </div> */}
           <div ref={dateRef}>
-            <h2 className="text-xl font-semibold mb-4">Select Date</h2>
-            <GridForRaqiBooking minWidth="120px">
+            <label className="block text-gray-700">Select Date:</label>
+            <div className="mt-1 flex gap-2 overflow-x-auto w-full">
               {getUpcomingDates().map((date, index) => (
-                <div 
-                  key={index} 
-                  className={`p-3 border rounded-md cursor-pointer text-center 
-                    ${selectedDate && selectedDate.toDateString() === date.toDateString() 
-                      ? "bg-RuqyaGreen text-white" 
-                      : "bg-LightGray hover:bg-gray-200"}`} 
-                  onClick={() => handleDateChange(date)}
-                >
+                <div key={index} className={`p-3 border rounded-md cursor-pointer flex-1 text-center ${selectedDate && selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
                   {date.getDate()} {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </div>
               ))}
-            </GridForRaqiBooking>
+            </div>
+            {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
           </div>
-        );
-      case 2:
-        return (
           <div ref={timeRef}>
-            <h2 className="text-xl font-semibold mb-4">Select Time</h2>
-            <GridForRaqiBooking minWidth="100px">
+            <label className="block text-gray-700">Select Time:</label>
+            <div className="mt-1 grid grid-cols-4 gap-2">
               {getAvailableTimes().map((time, index) => (
-                <div 
-                  key={index} 
-                  className={`p-3 border rounded-md cursor-pointer text-center 
-                    ${selectedTime === time 
-                      ? "bg-RuqyaGreen text-white" 
-                      : "bg-LightGray hover:bg-gray-200"}`} 
-                  onClick={() => handleTimeChange({ target: { value: time } })}
-                >
+                <div key={index} className={`p-3 border rounded-md cursor-pointer text-center ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleTimeChange({ target: { value: time } })}>
                   {time}
                 </div>
               ))}
-            </GridForRaqiBooking>
+            </div>
+            {errors.time && <p className="text-red-500 text-sm">{errors.time}</p>}
           </div>
-        );
-      case 3:
-        return (
-          <div ref={bookingRef}>
-            <h2 className="text-xl font-semibold mb-4">Confirm Booking</h2>
-            {bookingData && (
-              <div className="space-y-4">
-                <BookingCard Booking={bookingData} />
-                <div className="border-t pt-4">
-                  <p className="font-semibold">Selected Date & Time:</p>
-                  <p>{selectedDate?.toDateString()} at {selectedTime}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="mx-auto p-4 min-h-screen max-w-4xl">
-      {showError && (
-        <div className="fixed top-0 left-0 right-0 z-50">
-          <ErrorMessage message={errorMessage} />
-        </div>
-      )}
-      
-      <div className="border border-gray-300 rounded-lg shadow-lg p-6">
-        <div className="mb-6 border-b pb-4">
-          <h1 className="text-2xl font-bold">Book Your Ruqyah Session</h1>
-          <p className="text-gray-600">Complete the steps below to book your session.</p>
-        </div>
-
-        {renderStepIndicator()}
-        
-        <div className="min-h-[400px]">
-          {renderStepContent()}
-        </div>
-
-        <div className="flex justify-between mt-6 pt-4 border-t">
-          <button
-            onClick={handleBack}
-            className={`px-6 py-2 rounded-lg ${
-              step === 1 
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-            disabled={step === 1}
-          >
-            Back
-          </button>
-          {step === totalSteps ? (
-            <Button
-              text="Confirm Booking"
-              color="RuqyaGreen"
-              bg={true}
-              className="rounded-lg"
-              onClick={handleButtonClick}
-            />
+        </form>
+      </div>
+      <div className="w-full md:w-1/2 md:mx-5 order-1 md:order-2" ref={bookingRef}>
+        <div className="border border-gray-300 rounded-lg shadow-lg p-4">
+          <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
+          {bookingData ? (
+            <>
+              <BookingCard Booking={bookingData} />
+              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
+            </>
           ) : (
-            <button
-              onClick={handleNext}
-              className="px-6 py-2 rounded-lg bg-RuqyaGreen text-white hover:bg-opacity-90"
-            >
-              Next
-            </button>
+            <p>No booking data available.</p>
           )}
         </div>
       </div>
