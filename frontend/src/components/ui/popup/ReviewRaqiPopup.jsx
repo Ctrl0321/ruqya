@@ -59,7 +59,7 @@ function ReviewRaqiPopup(props) {
           <div className="flex flex-col md:flex-row ">
             <div className="md:w-2/3">
               <h3 className="text-md md:text-2xl my-2 ml-1 font-bold w-full">Add a review on your session </h3>
-              <RaqiCard className=" border border-black h-auto" booking={raqiData} />
+              <RaqiCard className=" border border-black " booking={raqiData} />
             </div>
             <div className="flex items-center justify-center md:w-1/2">
               <div className="flex flex-col items-center mb-5 font-extrabold gap-5">

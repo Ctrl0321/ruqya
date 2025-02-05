@@ -28,7 +28,7 @@ export default function RuqyahPage() {
             <ChevronDownIcon className={`w-5 h-5 transition-transform ${isNavOpen ? 'rotate-180' : ''}`} />
           </button>
           <nav className={`
-            overflow-hidden bg-RuqyaLightPurple font-sans rounded-lg
+            overflow-hidden bg-RuqyaLightPurple  rounded-lg
             ${isNavOpen ? 'max-h-96' : 'max-h-0 md:max-h-96'}
             transition-all duration-300 ease-in-out
             md:h-96 md:block
