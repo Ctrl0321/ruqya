@@ -84,11 +84,11 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
   };
 
   return (
-    <div className={`bg-white rounded-xl h-full md:max-w-[450px] text-left p-2 mb-5 flex flex-col justify-between ${className}`}>
+    <div className={`bg-white rounded-xl h-full mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between  w-full ${className}`}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4 mb-0">
           <div className="col-span-3 rounded-lg">
-            <img src={rakiData?.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData?.name} className="rounded-xl w-28 h-28 object-cover object-top" />
+            <img src={rakiData?.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData?.name} className="rounded-xl w-36 h-36 object-cover object-top" />
           </div>
 
           <div className="flex flex-col">

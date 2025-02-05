@@ -7,7 +7,7 @@ import { getUserProfile, getOwnProfile } from "@/lib/api";
 import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-const MyBookingCard = ({ booking }) => {
+const MyBookingCard = ({ booking, className }) => {
   const router = useRouter();
   const [rakiData, setRakiData] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -92,35 +92,35 @@ const MyBookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:min-w-[400px] text-left drop-shadow-xl shadow-lg p-2 mb-5 ">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-row gap-4">
+    <div className={`bg-white rounded-xl h-full  w-full mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between ${className}`}>
+      <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-row gap-4 w-full">
           <div className="col-span-2 rounded-lg">
-            <img src={rakiData.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData.name} className="rounded-xl w-28 h-28 object-cover object-top" />
+            <img src={rakiData.image ? rakiData.image : "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg"} alt={rakiData.name} className="rounded-xl w-48 h-32 object-cover object-top" />
           </div>
 
-          <div className="flex flex-col">
-            <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight" style={{ fontWeight: "900", color: "000000" }}>
-              <span className="font-extrabold text-xl">{rakiData.name}</span>
+          <div className="flex flex-col w-full">
+            <h1 className="text-left text-sm md:text-lg text-RuqyaGray leading-tight w-full" style={{ fontWeight: "900", color: "000000" }}>
+              <span className="font-extrabold text-xl w-full">{rakiData.name}</span>
             </h1>
-            <div className="grid grid-rows-3 mt-1">
+            <div className="grid grid-rows-3 mt-1 w-full">
               {rakiData.country && (
-                <p className="text-gray-600 flex items-center my-1">
+                <p className="text-gray-600 flex items-center my-1 w-full">
                   {rakiData.country ? <ReactCountryFlag countryCode={rakiData.country} svg className="mr-2 mb-1.5" /> : <FaGlobe className="mr-2  mb-1.5 text-RuqyaGreen" />}
                   {getCountryLabel(rakiData.country)}
                 </p>
               )}
-              <p className="text-gray-600 flex items-center my-1">
+              <p className="text-gray-600 flex items-center my-1 w-full">
                 <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {new Date(bookedDateTime).toLocaleDateString()}
               </p>
-              <p className="text-gray-600 flex items-center my-1">
-                <FaClock className="mr-2 text-RuqyaGreen" /> {formatTime(bookedDateTime)} - <br className="flex md:hidden" />
+              <p className="text-gray-600 flex items-center my-1 w-full">
+                <FaClock className="mr-2 text-RuqyaGreen" /> {formatTime(bookedDateTime)} - <br className="hidden" />
                 {formatTime(new Date(new Date(bookedDateTime).getTime() + bookedDuration * 60000))}
               </p>
             </div>
           </div>
         </div>
-        <div className="text-RuqyaGray text-left mb-2 mr-5 mt-auto">
+        <div className="text-RuqyaGray text-left mb-2 ml-1 mt-auto">
           <p>{calculateTimeUntilSession(bookedDateTime, bookedDuration)}</p>
         </div>
       </div>
