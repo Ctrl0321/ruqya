@@ -63,11 +63,32 @@ const BookingCard = ({ Booking, selectedDate, selectedTime }) => {
     return timeString;
   };
 
-  const bookedDateTime = selectedDate ? `${selectedDate.toISOString().split('T')[0]}T${selectedTime}` : Booking.date;
-  const bookedDuration = Booking.bookedDuration || 60; // Assuming a default duration if not provided
-
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  const bookedDateTime = selectedDate && selectedTime ? `${selectedDate.toISOString().split('T')[0]}T${selectedTime.padStart(5, '0')}` : Booking.date;
+  const bookedDuration = Booking.bookedDuration || 60; // Assuming a default duration if not provided
+
+  const endTime = new Date(new Date(bookedDateTime).getTime() + 60 * 60000); // Adding 1 hour
+
+  const addOneHourToTime = (time) => {
+    const [timeString, period] = time.split(" ");
+    let [hours, minutes] = timeString.split(":").map(Number);
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes + 60);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   };
 
   return (
@@ -100,13 +121,17 @@ const BookingCard = ({ Booking, selectedDate, selectedTime }) => {
                   <span className="px-4 py-1 bg-[#F4D6AA99] rounded-md">English</span>
                 )}
               </p>
-              <p className="text-gray-600 flex items-center my-1">
-                <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {new Date(bookedDateTime).toLocaleDateString()}
-              </p>
-              <p className="text-gray-600 flex items-center my-1">
-                <FaClock className="mr-2 text-RuqyaGreen" /> {formatTime(bookedDateTime)} - <br className="hidden" />
-                {formatTime(new Date(new Date(bookedDateTime).getTime() + bookedDuration * 60000))}
-              </p>
+              
+              {selectedDate && (
+                <p className="text-gray-600 flex items-center my-1">
+                  <FaCalendarAlt className="mr-2 text-RuqyaGreen" /> {formatDate(selectedDate)}
+                </p>
+              )}
+              {selectedTime && (
+                <p className="text-gray-600 flex items-center my-1">
+                  <FaClock className="mr-2 text-RuqyaGreen" /> {selectedTime} - {addOneHourToTime(selectedTime)}
+                </p>
+              )}
             </div>
           </div>
         </div>

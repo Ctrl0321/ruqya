@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import Button from "@/components/ui/buttons/DefaultButton";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-import { getRakiAvailability, getUserProfile } from "@/lib/api";
+import { getRakiAvailability, getUserProfile, setRakiAvailability } from "@/lib/api";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -28,7 +28,6 @@ const BookSessionPage = () => {
       const fetchUserProfile = async () => {
         try {
           const userProfile = await getUserProfile(Id);
-          console.log("User profile:", userProfile);
           setBookingData(userProfile);
         } catch (error) {
           console.error("Error fetching user profile:", error);
@@ -52,10 +51,18 @@ const BookSessionPage = () => {
     const fetchAvailability = async () => {
       if (selectedDate) {
         try {
-          const timeSlots = await getRakiAvailability(Id, selectedDate.toISOString().split('T')[0]);
-          setAvailableTimes(timeSlots.map(slot => slot.startTime));
+          const response = await getRakiAvailability(Id, selectedDate.toISOString().split('T')[0]);
+          
+          // Check if response is valid and has data
+          if (!response || response.message === "No availability found" || !Array.isArray(response)) {
+            setAvailableTimes([]); 
+          } else {
+            // Only map if response is an array
+            setAvailableTimes(response.map(slot => slot.startTime));
+          }
         } catch (error) {
           console.error("Error fetching availability:", error);
+          setAvailableTimes([]);  
         }
       } else {
         setAvailableTimes([]);
@@ -115,14 +122,37 @@ const BookSessionPage = () => {
     return true;
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (validateForm()) {
-      // Handle booking logic here
-      alert(`Booking session with Raqi ID: ${Id}\nDate: ${selectedDate.toDateString()}\nTime: ${selectedTime}`);
-      setTimeout(() => scrollToRef(bookingRef), 100);
-      console.log("Booking session with Raqi ID:", Id);
-      console.log("Date:", selectedDate);
-      console.log("Time:", selectedTime);
+      try {
+        const formattedDate = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        
+        // Convert 12-hour format to 24-hour format
+        let timeSlot = selectedTime;
+        if (selectedTime.includes('PM')) {
+          const [hours, minutesWithPM] = selectedTime.replace(' PM', '').split(':');
+          const hour24 = hours === '12' ? '12' : String(Number(hours) + 12);
+          timeSlot = `${hour24}:${minutesWithPM}`;
+        } else {
+          const [hours, minutesWithAM] = selectedTime.replace(' AM', '').split(':');
+          const hour24 = hours === '12' ? '00' : hours.padStart(2, '0');
+          timeSlot = `${hour24}:${minutesWithAM}`;
+        }
+
+        console.log("Formatted Date:", formattedDate);
+        console.log("Time Slot:", timeSlot);
+        const response = await setRakiAvailability(formattedDate, [timeSlot]);
+        
+        if (response) {
+          console.log("Booking successful:", response);
+          alert("Session booked successfully!");
+          // Optionally redirect or update UI
+        }
+      } catch (error) {
+        console.error("Error booking session:", error);
+        setErrorMessage("Failed to book session. Please try again.");
+        setShowError(true);
+      }
     }
   };
 
@@ -141,7 +171,14 @@ const BookSessionPage = () => {
     if (availableTimes.length === 0) {
       return ["No available time slots"];
     }
-    return availableTimes;
+    return availableTimes.map(time => {
+      const [hour, minute] = time.split(":");
+      const hourInt = parseInt(hour, 10);
+      const ampm = hourInt >= 12 ? "PM" : "AM";
+      const formattedHour = hourInt % 12 || 12;
+      const formattedMinute = minute ? minute.padStart(2, '0') : '00';
+      return `${formattedHour}:${formattedMinute} ${ampm}`;
+    });
   };
 
   return (
@@ -178,7 +215,15 @@ const BookSessionPage = () => {
             <label className="block text-gray-700">Select Time:</label>
             <div className="mt-1 grid grid-cols-4 gap-2">
               {getAvailableTimes().map((time, index) => (
-                <div key={index} className={`p-3 border rounded-md cursor-pointer text-center ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleTimeChange({ target: { value: time } })}>
+                <div 
+                  key={index} 
+                  className={`p-3 border rounded-md ${
+                    time === "No available time slots" 
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+                      : `cursor-pointer ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`
+                  }`}
+                  onClick={() => time !== "No available time slots" && handleTimeChange({ target: { value: time } })}
+                >
                   {time}
                 </div>
               ))}
@@ -192,7 +237,7 @@ const BookSessionPage = () => {
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
           {bookingData ? (
             <>
-              <BookingCard Booking={bookingData} />
+              <BookingCard Booking={bookingData} selectedDate={selectedDate} selectedTime={selectedTime} />
               <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4 w-full" onClick={handleButtonClick} />
             </>
           ) : (
