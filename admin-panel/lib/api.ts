@@ -84,7 +84,7 @@ export const getRakis = async () =>
 // Sessions & Meetings
 export const addSession = async ( topic: string,date:string,rakiId:string,) =>
     (
-        await api.post("ruqya-api/meeting/cancel", { topic,date,rakiId,timeZone: userTimeZone })
+        await api.post("ruqya-api/meeting/add-meetings", { topic,date,rakiId,timeZone: userTimeZone })
     ).data;
 
 
