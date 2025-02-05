@@ -202,9 +202,9 @@ const BookSessionPage = () => {
           </div> */}
           <div ref={dateRef}>
             <label className="block text-gray-700">Select Date:</label>
-            <div className="mt-3 grid grid-cols-3 md:flex gap-2 overflow-x-auto w-full">
+            <div className="mt-3 grid grid-cols-3 md:flex gap-2 overflow-x-auto w-full place-items-center">
               {getUpcomingDates().map((date, index) => (
-                <div key={index} className={`flex-1 p-3 mt-2 border rounded-md cursor-pointer text-center ${selectedDate && selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
+                <div key={index} className={`flex-1 p-3 mt-2 border rounded-md cursor-pointer text-center w-full ${selectedDate && selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
                   {date.getDate()} {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </div>
               ))}
@@ -213,11 +213,11 @@ const BookSessionPage = () => {
           </div>
           <div ref={timeRef} className="mt-10">
             <label className="block text-gray-700">Select Time:</label>
-            <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 ">
+            <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 place-items-center">
               {getAvailableTimes().map((time, index) => (
                 <div 
                   key={index} 
-                  className={`p-3 border rounded-md text-center mt-2  ${
+                  className={`p-3 border rounded-md text-center mt-2 w-full ${
                     time === "No available time slots" 
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed col-span-3 md:col-span-4" 
                       : `cursor-pointer ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`

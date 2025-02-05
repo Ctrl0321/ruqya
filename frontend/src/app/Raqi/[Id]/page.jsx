@@ -47,9 +47,8 @@ function Raqis() {
         // setAvailability(raqiAvailability);
         const rakiReviews = await getReviews(Id);
         if (rakiReviews.message === "No reviews found for this raki") {
-
         } else {
-          setReview(rakiReviews); 
+          setReview(rakiReviews);
         }
         console.log(rakiReviews);
       } catch (err) {
@@ -57,16 +56,7 @@ function Raqis() {
           setReview({
             averageRating: 0,
             totalReviews: 0,
-            reviews: [{
-              "_id": "67a252df4d5ce1e16cf62b26",
-              "rakiId": "679bba3f3d6f1d200346271e",
-              "meetingId": "9999",
-              "userId": "678fec27c3bb5a04822519a9",
-              "points": 0,
-              "comment": "Its Good",
-              "__v": 0
-          }
-  ],
+            reviews: [],
           });
         } else {
           console.error(err);
@@ -268,7 +258,7 @@ function Raqis() {
             <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
           </Button>
 
-          <Button text="Book Now"  link={"/Raqi/" + data._id + '/book'} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3"/>
+          <Button text="Book Now" link={"/Raqi/" + data._id + "/book"} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3" />
         </div>
       </div>
       {data.about && (
@@ -285,12 +275,12 @@ function Raqis() {
         </div>
       )}
 
-      <div className="mx-3 md:mx-10 mt-10">
+      <div className="mx-5 md:mx-7 mt-10">
         <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4">
           {review && review.averageRating !== undefined && (
             <>
-              <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
+              <div className="flex justify-center items-center mr-4 mx-auto flex-col border-gray-300 w-full">
                 <div className="w-full text-left">
                   <h2 className="text-lg font-bold mb-3">Average Rating</h2>
                   <div className="flex flex-row justify-start items-center gap-3">
