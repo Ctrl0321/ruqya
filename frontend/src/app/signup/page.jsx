@@ -1,14 +1,69 @@
 "use client";
-import { useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
+import { signup } from "@/lib/api";
+import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
 function SignUp() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(""); // Clear error when user types
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess(false);
+    
+    // Validation
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError("All fields are required");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await signup(formData.email, formData.name, formData.password);
+      setSuccess(true);
+      setError("Registration successful!");
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to create account");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center p-4 relative">
       <Image src={bg} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
@@ -43,37 +98,74 @@ function SignUp() {
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold pb-3 border-b-2">Registration</h1>
 
-            <form className="space-y-8">
+            {error && <ErrorMessage message={error} type={success ? "success" : "error"} />}
+
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Full Name</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="text" name="name" placeholder="Enter your full name here" className="text-sm" />
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name here"
+                    className="text-sm"
+                  />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" name="email" placeholder="Enter your Email Address here" className="text-sm " />
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your Email Address here"
+                    className="text-sm"
+                  />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" name="password" placeholder="Create a Password" className="text-sm" />
+                  <Input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Create a Password"
+                    className="text-sm"
+                  />
                 </div>
               </div>
 
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Confirm Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" name="confirm-password" placeholder="Re-enter your created password" className="text-sm" />
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Re-enter your created password"
+                    className="text-sm"
+                  />
                 </div>
               </div>
 
               <div className="mt-10">
-                <Button type="submit" bg={true} text="Sign Up" color={"RuqyaGreen"} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
+                <Button
+                  type="submit"
+                  bg={true}
+                  text={loading ? "Signing up..." : "Sign Up"}
+                  color={"RuqyaGreen"}
+                  disabled={loading}
+                  className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5"
+                />
               </div>
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">

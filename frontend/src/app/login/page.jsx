@@ -5,14 +5,14 @@ import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/api";
+import { login, googleSignup, googleLogin } from "@/lib/api";
+import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-
-
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -49,6 +49,50 @@ function Login() {
       } else {
         setError(err.response.message);
       }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const userData = {
+        email: result.user.email,
+        displayName: result.user.displayName,
+        photoURL: result.user.photoURL,
+        uid: result.user.uid
+      };
+
+      console.log(userData);
+      
+    //   try {
+    //     const response = await googleLogin(userData);
+    //     if (response && response.role === "user") {
+    //       setError("Login Successful.");
+    //       const redirectPath = localStorage.getItem("redirectPath") || "/";
+    //       localStorage.removeItem("redirectPath");
+    //       router.push(redirectPath);
+    //     }
+    //   } catch (backendError) {
+    //     console.error("Backend Error:", backendError);
+    //     // If user doesn't exist, try to sign up
+    //     if (backendError.response?.status === 404) {
+    //       try {
+    //         const signupResponse = await googleSignup(userData);
+    //         if (signupResponse && signupResponse.role === "user") {
+    //           setError("Registration Successful.");
+    //           router.push('/');
+    //         }
+    //       } catch (signupError) {
+    //         console.error("Signup Error:", signupError);
+    //         setError("Failed to create account");
+    //       }
+    //     } else {
+    //       setError("Failed to authenticate");
+    //     }
+    //   }
+    } catch (error) {
+      console.error("Firebase Error:", error);
+      setError("Failed to sign in with Google");
     }
   };
 
@@ -110,10 +154,19 @@ function Login() {
                 </div>
               </div>
               <div className="mt-5 rounded-3xl">
-                <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  bg={true} 
+                  text="Log In with Google" 
+                  color={"RuqyaGreen"} 
+                  className="w-full rounded-3xl py-3 border-2"
+                  onClick={handleGoogleSignIn}
+                />
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}
+                
                 <Link href="/signup" className="text-blue-600 hover:underline">
                   Sign Up
                 </Link>
