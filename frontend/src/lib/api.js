@@ -31,7 +31,7 @@ export const login = async (email, password) => {
 
 export const signup = async (email,name,password) => {
     const response = await apiSignup.post("ruqya-api/auth/register", {email,name,password});
-    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("fe-token", response.data.token);
     return response.data;
 };
 
