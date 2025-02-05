@@ -186,7 +186,7 @@ const BookSessionPage = () => {
       {showError && <div className="fixed top-0 left-0 right-0 z-50">
         <ErrorMessage message={errorMessage} />
       </div>}
-      <div className="w-full border border-gray-300 rounded-lg shadow-lg p-4 order-2 md:order-1">
+      <div className="w-full border border-gray-300 rounded-lg shadow-lg p-4 order-1">
         <div className="mb-4 border-b pb-4">
           <h1 className="text-2xl font-bold ">Book Your Ruqyah Session</h1>
           <p>Choose your preferred date & time.</p>
@@ -202,24 +202,24 @@ const BookSessionPage = () => {
           </div> */}
           <div ref={dateRef}>
             <label className="block text-gray-700">Select Date:</label>
-            <div className="mt-1 flex gap-2 overflow-x-auto w-full">
+            <div className="mt-3 grid grid-cols-3 md:flex gap-2 overflow-x-auto w-full">
               {getUpcomingDates().map((date, index) => (
-                <div key={index} className={`p-3 border rounded-md cursor-pointer flex-1 text-center ${selectedDate && selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
+                <div key={index} className={`flex-1 p-3 mt-2 border rounded-md cursor-pointer text-center ${selectedDate && selectedDate.toDateString() === date.toDateString() ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`} onClick={() => handleDateChange(date)}>
                   {date.getDate()} {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </div>
               ))}
             </div>
             {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
           </div>
-          <div ref={timeRef}>
+          <div ref={timeRef} className="mt-10">
             <label className="block text-gray-700">Select Time:</label>
-            <div className="mt-1 grid grid-cols-4 gap-2">
+            <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 ">
               {getAvailableTimes().map((time, index) => (
                 <div 
                   key={index} 
-                  className={`p-3 border rounded-md ${
+                  className={`p-3 border rounded-md text-center mt-2  ${
                     time === "No available time slots" 
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed col-span-3 md:col-span-4" 
                       : `cursor-pointer ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`
                   }`}
                   onClick={() => time !== "No available time slots" && handleTimeChange({ target: { value: time } })}
@@ -232,7 +232,10 @@ const BookSessionPage = () => {
           </div>
         </form>
       </div>
-      <div className="w-full md:w-1/2 md:mx-5 order-1 md:order-2" ref={bookingRef}>
+
+
+
+      <div className="w-full md:w-1/2 md:mx-5 order-2" ref={bookingRef}>
         <div className="border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
           {bookingData ? (
