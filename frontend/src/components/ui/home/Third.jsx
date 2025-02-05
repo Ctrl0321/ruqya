@@ -27,7 +27,7 @@ function Third(props) {
             </div>
           )}
         </div>
-        <ResponsiveGrid data={raqiData} breakpoints={{ mobile:3, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 4, '3xl': 5, '4xl': 6, '5xl': 6 }}>
+        <ResponsiveGrid data={raqiData} breakpoints={{ mobile:3, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 4, '4xl': 5, '5xl': 6 }}>
           {(data) => <MyBookingCard key={data._id} booking={data} />}
         </ResponsiveGrid>
       </div>

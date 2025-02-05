@@ -33,15 +33,35 @@ function Raqis() {
 
   useEffect(() => {
     async function fetchData() {
-      const foundData = await getUserProfile(Id);
-      setData(foundData);
-      const rakis = await getRakis();
-      setRaqiData(rakis);
-      // const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
-      // setAvailability(raqiAvailability);
-      const rakiReviews = await getReviews(Id);
-      setReview(rakiReviews); // Update to match the provided structure
-      console.log(rakiReviews);
+      try {
+        const foundData = await getUserProfile(Id);
+        setData(foundData);
+        const rakis = await getRakis();
+        setRaqiData(rakis);
+        // const raqiAvailability = await getRakiAvailability(Id, new Date().toISOString().split("T")[0]);
+        // setAvailability(raqiAvailability);
+        const rakiReviews = await getReviews(Id);
+        if (rakiReviews.message === "No reviews found for this raki") {
+          setReview({
+            averageRating: 0,
+            totalReviews: 0,
+            reviews: []
+          });
+        } else {
+          setReview(rakiReviews); // Update to match the provided structure
+        }
+        console.log(rakiReviews);
+      } catch (err) {
+        if (err.response.status === 404) {
+          setReview({
+            averageRating: 0,
+            totalReviews: 0,
+            reviews: []
+          });
+        } else {
+          console.error(err);
+        }
+      }
     }
 
     fetchData();
@@ -76,14 +96,21 @@ function Raqis() {
     );
   }
 
-  const overallAverage = data.rating?.reviewBreakdown ? data.rating.reviewBreakdown.reduce((sum, value) => sum + value, 0) / data.rating.reviewBreakdown.length : 0;
+  const overallAverage = review && review.reviews.length > 0 ? review.reviews.reduce((sum, r) => sum + r.points, 0) / review.reviews.length : 0;
+
+  const reviewCounts = [0, 0, 0, 0, 0];
+  if (review && review.reviews.length > 0) {
+    review.reviews.forEach(r => {
+      reviewCounts[r.points - 1]++;
+    });
+  }
 
   const chartData = [
-    { name: "5", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[0] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[0], overallAverage) : 0, fill: "#4caf50" },
-    { name: "4", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[1] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[1], overallAverage) : 0, fill: "#9c27b0" },
-    { name: "3", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[2] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[2], overallAverage) : 0, fill: "#ffeb3b" },
-    { name: "2", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[3] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[3], overallAverage) : 0, fill: "#03a9f4" },
-    { name: "1", real: data.rating?.reviewBreakdown ? data.rating.reviewBreakdown[4] : 0, value: data.rating?.reviewBreakdown ? Math.min(data.rating.reviewBreakdown[4], overallAverage) : 0, fill: "#ffeb3b" },
+    { name: "5", real: reviewCounts[4], value: reviewCounts[4], fill: "#4caf50" },
+    { name: "4", real: reviewCounts[3], value: reviewCounts[3], fill: "#9c27b0" },
+    { name: "3", real: reviewCounts[2], value: reviewCounts[2], fill: "#ffeb3b" },
+    { name: "2", real: reviewCounts[1], value: reviewCounts[1], fill: "#03a9f4" },
+    { name: "1", real: reviewCounts[0], value: reviewCounts[0], fill: "#ffeb3b" },
   ];
 
   const renderStars = (rating) => {
@@ -247,11 +274,13 @@ function Raqis() {
           </p>
         </div>
       )}
+      
       <div className="mx-3 md:mx-10 mt-10">
+      <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
           {review && review.averageRating && (
             <>
-              <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
+              
               <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
                 <div className="w-full text-left">
                   <h2 className="text-lg font-bold mb-3">Average Rating</h2>
@@ -280,7 +309,7 @@ function Raqis() {
               </div>
             </>
           )}
-          {data.rating && review && (
+          {review && review.totalReviews && (
             <>
               <div className="hidden md:flex flex-row font-bold items-center">
                 <div className="flex flex-col gap-0">

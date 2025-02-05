@@ -5,6 +5,6 @@ import {addReview, getReviewsByRakiId} from "../controllers/reviewController";
 const router = express.Router();
 
 router.post('/add-review',protect, authorizeRoles('user'), addReview);
-router.get('/get-review/:rakiId',protect, getReviewsByRakiId);
+router.get('/get-review/:rakiId', getReviewsByRakiId);
 
 export default router
