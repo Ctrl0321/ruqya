@@ -85,7 +85,7 @@ export default function RaqisCard({ raqi }) {
                   <span className="text-gray-600">Country</span>
                   <div className="flex items-center gap-1">
                     <div className="flex-1 max-w-[120px] overflow-hidden">
-                      {countryLabel.length > 10 ? (
+                      {countryLabel.length > 15 ? (
                         <div className="languages-scroll animate">
                           <div className="flex">
                             <span className="mx-1 rounded-full text-sm whitespace-nowrap">
