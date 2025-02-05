@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Button from "@/components/ui/buttons/DefaultButton";
-import SampleData from "@/data/sampledata.json";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import { getRakiAvailability, getUserProfile } from "@/lib/api";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -20,13 +20,21 @@ const BookSessionPage = () => {
   const bookingRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
+  const [availableTimes, setAvailableTimes] = useState([]);
 
   useEffect(() => {
     if (Id) {
       console.log("ID:", Id);
-      const matchedData = SampleData.find((data) => data.id === Id);
-      console.log("Matched Data:", matchedData);
-      setBookingData(matchedData);
+      const fetchUserProfile = async () => {
+        try {
+          const userProfile = await getUserProfile(Id);
+          console.log("User profile:", userProfile);
+          setBookingData(userProfile);
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      };
+      fetchUserProfile();
     }
   }, [Id]);
 
@@ -40,8 +48,27 @@ const BookSessionPage = () => {
     }
   }, [showError]);
 
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      if (selectedDate) {
+        try {
+          const timeSlots = await getRakiAvailability(Id, selectedDate.toISOString().split('T')[0]);
+          setAvailableTimes(timeSlots.map(slot => slot.startTime));
+        } catch (error) {
+          console.error("Error fetching availability:", error);
+        }
+      } else {
+        setAvailableTimes([]);
+      }
+    };
+
+    fetchAvailability();
+  }, [selectedDate, Id]);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setSelectedTime("");
+    setAvailableTimes([]); 
   };
 
   const handleTimeChange = (event) => {
@@ -111,14 +138,10 @@ const BookSessionPage = () => {
   };
 
   const getAvailableTimes = () => {
-    const times = [];
-    for (let i = 0; i < 24; i++) {
-      const hour = i % 12 === 0 ? 12 : i % 12;
-      const period = i < 12 ? "AM" : "PM";
-      const time = `${hour.toString().padStart(2, "0")}:00 ${period}`;
-      times.push(time);
+    if (availableTimes.length === 0) {
+      return ["No available time slots"];
     }
-    return times;
+    return availableTimes;
   };
 
   return (
@@ -170,7 +193,7 @@ const BookSessionPage = () => {
           {bookingData ? (
             <>
               <BookingCard Booking={bookingData} />
-              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4" onClick={handleButtonClick} />
+              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4 w-full" onClick={handleButtonClick} />
             </>
           ) : (
             <p>No booking data available.</p>

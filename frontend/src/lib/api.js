@@ -95,15 +95,12 @@ export const getRevenueData = async (filter) =>
     ).data;
 
 // Availability Management
-export const getRakiAvailability = async (
-    rakiId ,
-    date
-) =>
+export const getRakiAvailability = async (rakiId, date) =>
     (
         await api.get("ruqya-api/raki/get-availability", {
             params: { rakiId, date, timeZone: userTimeZone },
         })
-    ).data;
+    ).data.timeSlots;
 
 export const setRakiAvailability = async (date, timeSlots) =>
     (
