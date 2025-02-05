@@ -28,7 +28,12 @@ function Raqis() {
   const maxAboutLength = 300; // Set the maximum length for the about section
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
-  const [review, setReview] = useState(null);
+  const [review, setReview] = useState({
+    rakiId: "679bba3f3d6f1d200346271e",
+    totalReviews: 0,
+    averageRating: 0,
+    reviews: [],
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -42,13 +47,9 @@ function Raqis() {
         // setAvailability(raqiAvailability);
         const rakiReviews = await getReviews(Id);
         if (rakiReviews.message === "No reviews found for this raki") {
-          setReview({
-            averageRating: 0,
-            totalReviews: 0,
-            reviews: []
-          });
+
         } else {
-          setReview(rakiReviews); // Update to match the provided structure
+          setReview(rakiReviews); 
         }
         console.log(rakiReviews);
       } catch (err) {
@@ -56,7 +57,16 @@ function Raqis() {
           setReview({
             averageRating: 0,
             totalReviews: 0,
-            reviews: []
+            reviews: [{
+              "_id": "67a252df4d5ce1e16cf62b26",
+              "rakiId": "679bba3f3d6f1d200346271e",
+              "meetingId": "9999",
+              "userId": "678fec27c3bb5a04822519a9",
+              "points": 0,
+              "comment": "Its Good",
+              "__v": 0
+          }
+  ],
           });
         } else {
           console.error(err);
@@ -100,7 +110,7 @@ function Raqis() {
 
   const reviewCounts = [0, 0, 0, 0, 0];
   if (review && review.reviews.length > 0) {
-    review.reviews.forEach(r => {
+    review.reviews.forEach((r) => {
       reviewCounts[r.points - 1]++;
     });
   }
@@ -274,13 +284,12 @@ function Raqis() {
           </p>
         </div>
       )}
-      
+
       <div className="mx-3 md:mx-10 mt-10">
-      <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
+        <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4 pr-5">
-          {review && review.averageRating && (
+          {review && review.averageRating !== undefined && (
             <>
-              
               <div className="flex justify-center items-center mr-2 flex-col border-gray-300 w-full">
                 <div className="w-full text-left">
                   <h2 className="text-lg font-bold mb-3">Average Rating</h2>
@@ -293,11 +302,11 @@ function Raqis() {
               </div>
             </>
           )}
-          {review && review.totalReviews && (
+          {review && review.totalReviews !== undefined && (
             <>
               <div className="flex justify-center items-center flex-col ml-4 border-l pl-5  md:border-r border-gray-300">
                 <div className="w-full text-left">
-                  <h2 className="text-lg font-bold mb-5">Total Reviews</h2>
+                  <h2 className="text-lg font-bold mb-3">Total Reviews</h2>
                   <div className="flex flex-row text-3xl font-bold">
                     {formatReviewsCount(review.totalReviews)}
                     <span className={`text-sm ml-3 rounded-lg flex m-auto py-0.5 px-2 items-center  ${review.totalReviews > 0 ? "bg-green-100" : "bg-red-100"}`}>
@@ -309,7 +318,7 @@ function Raqis() {
               </div>
             </>
           )}
-          {review && review.totalReviews && (
+          {review && review.totalReviews !== undefined && (
             <>
               <div className="hidden md:flex flex-row font-bold items-center">
                 <div className="flex flex-col gap-0">
@@ -347,7 +356,7 @@ function Raqis() {
       </div>
       <div className="mx-8 mt-5">
         <div className="border-b w-full mb-5"></div>
-        {review && review.reviews.length > 0 ? review.reviews.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
+        {review && review.reviews.length >= 0 ? review.reviews.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
       <ChatWidgetWrapper />
