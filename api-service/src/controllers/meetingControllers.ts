@@ -111,9 +111,8 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
         const userId = req.user?.id;
         if (!userId) return res.status(401).json({ message: 'User ID not found in request' });
 
-        const { meetingId, topic, date, rakiId, notificationSend = false, timeZone = 'UTC', duration = 60,status=MeetingStatus.SCHEDULED } = req.body as MeetingRequest;
-        console.log(meetingId,topic,date,rakiId)
-        if (!meetingId || !topic || !date || !rakiId ) {
+        const { topic, date, rakiId, notificationSend = false, timeZone = 'UTC', duration = 60,status=MeetingStatus.SCHEDULED } = req.body as MeetingRequest;
+        if ( !topic || !date || !rakiId ) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
@@ -131,14 +130,25 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
             return res.status(409).json({ message: 'Meeting scheduling conflict', conflictingMeetings: existingMeetings });
         }
 
-        // Create meeting in DB
-        const newMeeting = new Meeting({ meetingId, topic, date: utcDate, rakiId, userId, notificationSend, duration ,status});
+        const newMeeting = new Meeting({
+            topic,
+            date: utcDate,
+            rakiId,
+            userId,
+            notificationSend,
+            duration,
+            status,
+        });
+
+        // @ts-ignore
+        newMeeting.meetingId = newMeeting._id.toString();
+
         const savedMeeting = await newMeeting.save();
 
         try {
-            console.log(`Creating Stream video call for meetingId: ${meetingId}`);
+            console.log(`Creating Stream video call for meetingId: ${newMeeting.meetingId}`);
 
-            const call = client.video.call('default', meetingId);
+            const call = client.video.call('default', newMeeting.meetingId);
             const streamResponse = await call.create({
                 data: {
                     created_by_id: rakiId,

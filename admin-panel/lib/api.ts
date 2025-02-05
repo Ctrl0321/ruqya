@@ -82,6 +82,12 @@ export const getRakis = async () =>
     (await api.get("ruqya-api/raki/rakis")).data;
 
 // Sessions & Meetings
+export const addSession = async ( topic: string,date:string,rakiId:string,) =>
+    (
+        await api.post("ruqya-api/meeting/add-meetings", { topic,date,rakiId,timeZone: userTimeZone })
+    ).data;
+
+
 export const getTodaySessions = async (): Promise<Session[]> =>
     (
         await api.get(
