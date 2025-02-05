@@ -134,6 +134,15 @@ export const getRakiAvailability = async (
         })
     ).data;
 
+export const getRakisIdByDate = async (
+    date: string
+) =>
+    (
+        await api.get("ruqya-api/raki/get-rakis-date", {
+            params: {  date, timeZone: userTimeZone },
+        })
+    ).data;
+
 export const setRakiAvailability = async (date: string, timeSlots: TimeSlot[]) =>
     (
         await api.post("ruqya-api/raki/set-availability", {

@@ -82,6 +82,61 @@ export const getAvailability = async (req: AuthenticatedRequest, res: Response):
     }
 };
 
+export const getRakiByAvailabilityByDate = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const { date, timeZone = 'UTC' } = req.query;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        let validatedTimeZone: string;
+        try {
+            validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
+        } catch (error) {
+            return res.status(400).json({
+                message: error instanceof Error ? error.message : 'Invalid timezone',
+            });
+        }
+
+        if (typeof date !== 'string' || !date.trim()) {
+            return res.status(400).json({ message: 'Invalid or missing date' });
+        }
+
+        const parsedDate = moment(date, 'YYYY-MM-DD', true);
+
+        if (!parsedDate.isValid()) {
+            return res.status(400).json({ message: 'Invalid date format. Expected YYYY-MM-DD' });
+        }
+
+        const convertedDate = parsedDate.format('YYYY-MM-DD');
+
+        const startOfDayUTC = moment.tz(date, 'YYYY-MM-DD', validatedTimeZone).startOf('day').utc().toISOString();
+        const endOfDayUTC = moment.tz(date, 'YYYY-MM-DD', validatedTimeZone).endOf('day').utc().toISOString();
+
+        const availabilityRecords = await RakiAvailability.find({
+            startTime: { $gte: startOfDayUTC, $lte: endOfDayUTC }
+        }).exec();
+
+        if (!availabilityRecords || availabilityRecords.length === 0) {
+            return res.status(200).json({ message: 'No availability found', data: null });
+        }
+
+        const rakiIds = availabilityRecords.map((record) => record.rakiId.toString());
+
+        const uniqueRakiIds = Array.from(new Set(rakiIds));
+
+        return res.status(200).json({
+            date: convertedDate,
+            timeZone: validatedTimeZone,
+            rakiIds: uniqueRakiIds, // Return the unique rakiIds
+        });
+    } catch (error) {
+        console.error('Error fetching availability:', error);
+        res.status(500).json({ message: 'Error fetching availability', error });
+    }
+};
 
 
 
