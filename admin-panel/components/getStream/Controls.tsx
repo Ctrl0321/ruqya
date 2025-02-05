@@ -7,7 +7,7 @@ import {
     ScreenShareButton,
     RecordCallButton,
     ReactionsButton,
-    CancelCallButton, useNoiseCancellation,
+    CancelCallButton,
 } from '@stream-io/video-react-sdk';
 
 interface ControlsProps {
@@ -29,28 +29,3 @@ export const Controls: React.FC<ControlsProps> = ({ onLeave }) => (
 );
 
 
-// const MyToggleNoiseCancellationButton = () => {
-//     const {isSupported, isEnabled, setEnabled} = useNoiseCancellation();
-//     return (
-//         <div>
-//             <button
-//                 id="noise-cancellation-button"
-//                 className="noise-btn"
-//                 disabled={!isSupported}
-//                 type="button"
-//                 onClick={() => {
-//                     setEnabled(!isEnabled);
-//                     console.log(isEnabled);
-//                 }}
-//             >
-//                 {isEnabled ? <MdOutlineNoiseAware size={25}/> : <MdNoiseControlOff size={25}/>}
-//             </button>
-//             <Tooltip
-//                 content={() => (
-//                     <span>{isEnabled ? "Disable Noise Cancellation" : "Enable Noise Cancellation"}</span>
-//                 )}
-//                 place="top"
-//             />
-//         </div>
-//     );
-// };

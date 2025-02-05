@@ -152,7 +152,7 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
             const streamResponse = await call.create({
                 data: {
                     created_by_id: rakiId,
-                    members: [{ user_id: rakiId, role: 'admin' }, { user_id: userId }],
+                    members: [{ user_id: rakiId, role: 'raki' }, { user_id: userId }],
                     custom: { topic },
                     // settings_override: {
                     //     recording: { mode: 'available' }

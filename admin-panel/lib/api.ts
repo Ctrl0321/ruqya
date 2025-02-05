@@ -37,6 +37,12 @@ export const login = async (email: string, password: string) => {
     return response.data;
 };
 
+export const socialLogin = async (token: string) => {
+    const response = await api.post("ruqya-api/auth/social", { token });
+    localStorage.setItem("token", response.data.token);
+    return response.data;
+};
+
 export const signup = async (email:string,name:string,password:string) => {
     const response = await apiSignup.post("ruqya-api/auth/register", {email,name,password});
     localStorage.setItem("token", response.data.token);
@@ -86,7 +92,6 @@ export const addSession = async ( topic: string,date:string,rakiId:string,) =>
     (
         await api.post("ruqya-api/meeting/add-meetings", { topic,date,rakiId,timeZone: userTimeZone })
     ).data;
-
 
 export const getTodaySessions = async (): Promise<Session[]> =>
     (
@@ -174,13 +179,15 @@ export const verifyMeetingAccess = async (callId: string, userId: string) => {
             `ruqya-api/get-stream/getCallDetails/${callId}`
         );
         const members = response.data.callDetails?.members ?? [];
+        console.log("Members",members)
         const user = members.find(
             (member: { user_id: string }) => member.user_id === userId
         );
+        console.log("Why",user)
 
         if (!user) throw new Error("Unauthorized");
 
-        return { role: user.role || "member", authorized: true, name: user.name };
+        return { role: user.user.role || "user", authorized: true, name: user.name };
     } catch (error) {
         throw new Error("Meeting verification failed");
     }
