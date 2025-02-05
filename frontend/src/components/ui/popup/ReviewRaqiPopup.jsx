@@ -50,7 +50,7 @@ function ReviewRaqiPopup(props) {
         <div className="px-3">
           {error && <ErrorMessage message={error} />}
           {existingReview && (
-            <div className="bg-yellow-100 p-4 rounded-lg mb-4">
+            <div className="bg-yellow-100 p-4 rounded-lg mb-2 mt-2">
               <h3 className="text-xl font-bold">Existing Review</h3>
               <p><strong>Rating:</strong> {existingReview.points}</p>
               <p><strong>Comment:</strong> {existingReview.comment}</p>
