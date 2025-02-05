@@ -17,6 +17,8 @@ export interface IMeeting extends Document {
     userId:string,
     notificationSend:boolean,
     status:string,
+    isPaid:boolean,
+    requestedAt:Date,
     note:string
 }
 
@@ -28,6 +30,8 @@ const meetingSchema: Schema<IMeeting> = new Schema({
     userId: { type: String },
     notificationSend:{type:Boolean},
     status:{type:String},
+    isPaid:{type:Boolean, default: false},
+    requestedAt:{type:Date},
     note:{type:String}
 });
 

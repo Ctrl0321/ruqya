@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import { useState, useEffect } from "react";
 import { format, startOfDay, isBefore } from "date-fns";
 import { CalendarIcon, Plus, Trash2 } from "lucide-react";
@@ -48,7 +47,8 @@ export default function AvailabilityPage() {
     try {
       const dateKey = format(date, "yyyy-MM-dd");
       const data = await getRakiAvailability(currentUser?._id, dateKey);
-      setAvailability(data ?? null);
+
+      setAvailability(data ? { ...data, timeSlots: data.timeSlots || [] } : null);
     } catch (error) {
       setAvailability(null);
       console.error("Failed to fetch availability:", error);
@@ -76,7 +76,7 @@ export default function AvailabilityPage() {
         date: dateKey,
         timeSlots: availability
             ? [...availability.timeSlots, newTimeSlot]
-            : [newTimeSlot],
+            : [newTimeSlot], // Default to new time slot if availability is null
       };
 
       await setRakiAvailability(newAvailability.date, [newTimeSlot]);
