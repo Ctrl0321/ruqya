@@ -33,7 +33,7 @@ export default function MeetingPage() {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center h-full">
+            <div className="flex flex-col items-center justify-center h-full bg-gradient-to-t from-white to-RuqyaGreen">
                 <div className="flex items-center justify-center">
                     <motion.div
                         animate={{rotate: 360}}
@@ -55,8 +55,8 @@ export default function MeetingPage() {
     }
 
     return (
-        <div className="w-full max-h-screen flex items-center justify-center p-4 md:p-5">
-            <div className="w-full max-w-4xl bg-white m-auto rounded-lg p-4 md:p-6">
+        <div className="w-full max-h-screen flex items-center justify-center p-4 md:p-5 bg-RuqyaLightGreen">
+            <div className="w-full max-w-4xl bg-RuqyaLightGreen  m-auto rounded-lg p-4 md:p-6">
                 <MeetingProvider userId={data.name} callId={data.meetingId}>
                     <MeetingRoom />
                 </MeetingProvider>

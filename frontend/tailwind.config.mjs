@@ -26,7 +26,8 @@ export default {
         RuqyaGreen: "#008080",
         RuqyaLightPurple: "#E6E6FA",//#E6E6FA80
         LightGray: "#E6E6FA80",
-        mobilePurple:"#E6E6FA"
+        mobilePurple:"#E6E6FA",
+        RuqyaLightGreen: "#00CCCC",
       },
       fontFamily: {
         fullsans: ['"FullSans-LC50Book"', 'sans-serif'],

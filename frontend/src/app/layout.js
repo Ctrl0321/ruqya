@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
 
   
   useEffect(() => {
-    if (pathname === "/login" || pathname === "/signup" || pathname === "/Meeting" || meetingRegex.test(pathname)) {
+    if (pathname === "/login" || pathname === "/signup" || pathname === "/meeting" || meetingRegex.test(pathname)) {
       setShowFooter(false);
     } else {
       setShowFooter(true);
@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
         <title>Ruqya</title>
         <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
       </head>
-      <body className="bg-background text-foreground text-RuqyaGray text-[16px]">
+      <body className={`${pathname === "/Meeting" || meetingRegex.test(pathname) ? "bg-RuqyaLightGreen" : "bg-background"} text-foreground text-RuqyaGray text-[16px]`}>
         {showHeader && <Header />}
         <AuthProvider>
           <ChatProvider>{children}</ChatProvider>
