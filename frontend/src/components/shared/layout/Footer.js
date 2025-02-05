@@ -23,19 +23,19 @@ function Footer() {
               <div className="space-y-3">
                 <div className="flex flex-col md:items-start text-center m-auto w-56 md:w-auto gap-5  justify-start">
                   <div className="flex items-center justify-center md:justify-start gap-3">
-                    <div className="hidden md:flex p-2 rounded-full bg-[#FFE4C7]">
+                    <div className="hidden md:flex p-2 rounded-full bg-white">
                       <FaMapMarkerAlt />
                     </div>
                     <span className="text-[#424867]">Address goes here</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-start gap-3">
-                    <div className="hidden md:flex p-2 rounded-full bg-[#FFE4C7]">
+                    <div className="hidden md:flex p-2 rounded-full bg-white">
                       <FaPhoneAlt />
                     </div>
                     <span className="text-[#424867]">071 - 3833341</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-start gap-3">
-                    <div className="hidden md:flex p-2 rounded-full bg-[#FFE4C7]">
+                    <div className="hidden md:flex p-2 rounded-full bg-white">
                       <FaEnvelope />
                     </div>
                     <span className="text-[#424867]">pramudithakhp@gmail.com</span>
