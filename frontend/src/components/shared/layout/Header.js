@@ -54,20 +54,13 @@ const Header = () => {
     const token = localStorage.getItem("fe-token");
     const raqiRegex = /^\/Raqi\/[a-f0-9]{24}$/;
     if (!token) {
-      if (
-        pathname !== "/" &&
-        pathname !== "/BookRaqis" &&
-        pathname !== "/SelfRuqyah" &&
-        pathname !== "/signup" &&
-        pathname !== "/login" &&
-        !raqiRegex.test(pathname)
-      ) {
+      if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
         router.push("/login");
       }
     } else {
       // Optionally, add logic to check if the token is expired
       // If expired, show error message and redirect to login page
-      const isTokenExpired = false; 
+      const isTokenExpired = false;
       if (isTokenExpired) {
         alert("Session expired. Please log in again.");
         localStorage.removeItem("fe-token");
@@ -182,13 +175,13 @@ const Header = () => {
                     } else {
                       setMobileProfileDropdownOpen(!mobileProfileDropdownOpen);
                     }
-                    handleLinkClick();
+  
                   }}
-                  className={`${isActive("/MyProfile")} w-full px-4 py-3 rounded-lg flex items-center justify-between ${mobileProfileDropdownOpen ? "bg-RuqyaGreen text-white" : "hover:bg-gray-100"} transition-colors duration-200`}
+                  className={`${isActive("/MyProfile")} w-full px-4 py-3 rounded-lg flex flex-row items-center  ${mobileProfileDropdownOpen ? "bg-RuqyaGreen text-white" : "hover:bg-gray-100"} transition-colors duration-200`}
                 >
                   <span>
                     {localStorage.getItem("fe-token") ? (
-                      <span>
+                      <span className="flex justify-center items-center gap-2 flex-row w-full">
                         My Profile
                         <svg className={`w-4 h-4 transform transition-transform duration-200 ${mobileProfileDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
