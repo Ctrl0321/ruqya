@@ -43,6 +43,12 @@ export const signup = async (email:string,name:string,password:string) => {
     return response.data;
 };
 
+export const googleSignup = async (tokenId:string) => {
+    const response = await apiSignup.post("ruqya-api/auth/social", {tokenId});
+    localStorage.setItem("token", response.data.token);
+    return response.data;
+};
+
 // User Profile
 export const getUserProfile = async (id: string) =>
     (await api.get(`ruqya-api/user/${id}`)).data;
