@@ -91,7 +91,9 @@ function MyBookings() {
         </div>
       </div>
       <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} booking={booking} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
+      <div className="min-h-screen">
       {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
+      </div>
     </div>
   );
 }

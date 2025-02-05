@@ -47,29 +47,29 @@ function ReviewRaqiPopup(props) {
             </button>
           </div>
         </div>
-        <div className="p-3">
+        <div className="px-3">
           {error && <ErrorMessage message={error} />}
           {existingReview && (
             <div className="bg-yellow-100 p-4 rounded-lg mb-4">
-              <h3 className="text-lg font-bold">Existing Review</h3>
+              <h3 className="text-xl font-bold">Existing Review</h3>
               <p><strong>Rating:</strong> {existingReview.points}</p>
               <p><strong>Comment:</strong> {existingReview.comment}</p>
             </div>
           )}
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <div className="w-1/2 mt-5">
-              <h3 className="text-lg font-bold">Add a review on your session </h3>
-              <RaqiCard className=" border border-black " booking={raqiData} />
+          <div className="flex flex-col md:flex-row ">
+            <div className="md:w-2/3">
+              <h3 className="text-md md:text-2xl my-2 ml-1 font-bold w-full">Add a review on your session </h3>
+              <RaqiCard className=" border border-black h-auto" booking={raqiData} />
             </div>
-            <div className="flex items-center justify-center w-1/2">
-              <div className="flex flex-col text-2xl font-extrabold gap-5">
-                <h3 className=" font-bold">Add your Rating</h3>
-                <RatingInput rating={rating} className="w-12 h-12 text-yellow-200" setRating={setRating} />
+            <div className="flex items-center justify-center md:w-1/2">
+              <div className="flex flex-col items-center mb-5 font-extrabold gap-5">
+                <h3 className="font-bold md:text-2xl text-lg">Add your Rating</h3>
+                <RatingInput rating={rating} className="w-8 md:w-12 h-12 text-yellow-200" setRating={setRating} />
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <h3 className="textlg font-bold">Add a Comment</h3>
+          <div className="my-2">
+            <h3 className="text-md md:text-2xl mb-2 ml-1 font-bold">Add a Comment</h3>
             <textarea className="w-full h-32 border border-gray-300 rounded-lg p-4" placeholder="Write your review here" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
           </div>
           <div className="p-4 flex justify-end">
