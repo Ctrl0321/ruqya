@@ -133,10 +133,16 @@ export default function BookRaqis() {
   const fetchAvailableRakis = async (date) => {
     try {
       const availableData = await getRakisIdByDate(date);
-      setAvailableRakisIds(availableData.rakiIds || []);
+      if (!availableData.rakiIds || availableData.rakiIds.length === 0) {
+        setFilteredData([]); // Clear filtered data if no IDs found
+        setAvailableRakisIds([]);
+      } else {
+        setAvailableRakisIds(availableData.rakiIds);
+      }
     } catch (error) {
       console.error('Error fetching available Rakis:', error);
       setAvailableRakisIds([]);
+      setFilteredData([]); // Clear filtered data on error
     }
   };
 
@@ -189,6 +195,12 @@ export default function BookRaqis() {
 
   useEffect(() => {
     let result = raqiData;
+
+    // If date is selected but no available rakis, show empty result
+    if (userSelections.availability.date && availableRakisIds.length === 0) {
+      setFilteredData([]);
+      return;
+    }
 
     if (searchQuery) {
       result = result.filter((raqi) => raqi.name.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -424,7 +436,13 @@ export default function BookRaqis() {
               <RaqisCard key={`${practitioner._id}-${index}`} raqi={practitioner} className={"z-5"} />
             ))}
           </Grid>
-          {filteredData.length === 0 && <div className="text-center py-8 text-gray-500">No practitioners found matching your criteria</div>}
+          {filteredData.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {userSelections.availability.date && availableRakisIds.length === 0 
+                ? "No practitioners available for the selected date"
+                : "No practitioners found matching your criteria"}
+            </div>
+          )}
         </main>
       </div>
     </div>
