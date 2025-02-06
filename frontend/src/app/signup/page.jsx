@@ -7,6 +7,8 @@ import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { signup } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
@@ -53,7 +55,7 @@ function SignUp() {
       setLoading(true);
       await signup(formData.email, formData.name, formData.password);
       setSuccess(true);
-      setError("Registration successful!");
+      setError({message: "Registration successful!", type:"success"});
       setTimeout(() => {
         router.push("/");
       }, 2000);
@@ -61,6 +63,35 @@ function SignUp() {
       setError(err.response?.data?.message || "Failed to create account");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const userData = {
+        email: result.user.email,
+        displayName: result.user.displayName,
+        photoURL: result.user.photoURL,
+        uid: result.user.uid
+      };
+
+      console.log(userData);
+      
+      // Uncomment and implement when backend is ready
+      // try {
+      //   await googleSignup(userData);
+      //   setSuccess(true);
+      //   setError("Registration successful!");
+      //   setTimeout(() => {
+      //     router.push("/");
+      //   }, 2000);
+      // } catch (err) {
+      //   setError(err.response?.data?.message || "Failed to create account");
+      // }
+    } catch (error) {
+      console.error("Firebase Error:", error);
+      setError("Failed to sign up with Google");
     }
   };
 
@@ -176,7 +207,15 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-5">
-                <Button type="button" variant="outline" bg={true} text="Sign Up with Google" color={"RuqyaGreen"} className="w-full rounded-full py-3 border-2" />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  bg={true} 
+                  text="Sign Up with Google" 
+                  color={"RuqyaGreen"} 
+                  className="w-full rounded-full py-3 border-2"
+                  onClick={handleGoogleSignUp}
+                />
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Already have an Account?{" "}

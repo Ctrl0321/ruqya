@@ -30,6 +30,7 @@ const BookSessionPage = () => {
           const userProfile = await getUserProfile(Id);
           setBookingData(userProfile);
         } catch (error) {
+          showError("Error fetching user profile:", error);
           console.error("Error fetching user profile:", error);
         }
       };
@@ -145,7 +146,7 @@ const BookSessionPage = () => {
         
         if (response) {
           console.log("Booking successful:", response);
-          alert("Session booked successfully!");
+          alert({message: "Session booked successfully!", type:"success"});
           // Optionally redirect or update UI
         }
       } catch (error) {
