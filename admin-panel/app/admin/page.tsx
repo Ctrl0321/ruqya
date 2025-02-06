@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CancelSessionDialog } from '@/components/CancelSessionDialog';
 import { RescheduleSessionDialog } from '@/components/ResheduledSessionDialog';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
@@ -11,8 +10,9 @@ import { toast } from '@/components/ui/use-toast';
 import withAuth from '@/hoc/withAuth';
 import { cancelSession, rescheduleSession } from '@/lib/api';
 import SessionTable from "@/components/ui/dashboard/SessionTable";
-import {IRevenueData, useDashboardData} from "@/components/ui/dashboard/useDashboardData";
+import {useDashboardData} from "@/components/ui/dashboard/useDashboardData";
 import {useAuth} from "@/contexts/AuthContexts";
+import {DashboardStats} from "@/components/ui/dashboard/DashboardStats";
 
 const AdminDashboard = () => {
     const { setUserId } = useChat();
@@ -69,18 +69,4 @@ const AdminDashboard = () => {
 export default withAuth(AdminDashboard, ["admin", "super-admin"]);
 
 
-const DashboardStats = ({ revenueData }:{revenueData:IRevenueData}) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        {[
-            { title: "Total Sessions", value: revenueData.totalMeetings, bg: "" },
-            { title: "Completed Sessions", value: revenueData.completedMeetings, bg: "#C1E1C1" },
-            { title: "Cancelled Sessions", value: revenueData.cancelledMeetings, bg: "#FF6961" },
-            { title: "Total Revenue", value: `$${revenueData.revenue.toFixed(2)}`, bg: "#A1D6B2" }
-        ].map(({ title, value, bg }) => (
-            <Card key={title} style={{ background: bg }}>
-                <CardHeader><CardTitle>{title}</CardTitle></CardHeader>
-                <CardContent><p className="text-3xl font-bold">{value}</p></CardContent>
-            </Card>
-        ))}
-    </div>
-);
+

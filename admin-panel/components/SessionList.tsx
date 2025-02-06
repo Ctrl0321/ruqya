@@ -50,58 +50,57 @@ export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
 
 
   return (
-      <div className={cn(
-          "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3"
-      )} >
-      {sessions.map((session) => (
-        <Card
-            key={session.id}
-            onClick={()=>goToMeeting(session.meetingId)}
-            className={cn(
-                "flex m-3 flex-col h-full w-full min-w-[18rem] max-w-[22rem] cursor-pointer select-none space-y-2 overflow-hidden rounded-3xl p-4 transition-colors duration-300 ease-in-out hover:border-primary-200 hover:bg-primary-50/60 active:border-primary-300 "
-            )}
-        >
-          <img
-            alt="cover"
-            src={"/images/makka.png"}
-            className={cn("h-44 w-full rounded-2xl object-cover")}
-          />
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3">
 
-          <div
-            className={cn("flex items-center gap-2.5 text-sm font-semibold")}
-          >
+        {sessions.map((session) => (
+            <Card
+                key={session.id}
+                onClick={() => goToMeeting(session.meetingId)}
+                className={cn(
+                    "flex m-3 flex-col h-full w-full min-w-[18rem] max-w-[22rem] cursor-pointer select-none space-y-2 overflow-hidden rounded-3xl p-4 transition-colors duration-300 ease-in-out hover:border-primary-200 hover:bg-primary-50/60 active:border-primary-300 "
+                )}
+            >
+              <img
+                  alt="cover"
+                  src={"/images/makka.png"}
+                  className={cn("h-44 w-full rounded-2xl object-cover")}
+              />
+
+              <div
+                  className={cn("flex items-center gap-2.5 text-sm font-semibold")}
+              >
             <span className={cn("flex items-center gap-2")}>
               <UserTag size="32" color="#0C8281" variant="Bold"/>
               {session?.rakiName}
             </span>
-          </div>
+              </div>
 
-          <div className={cn("space-y-1")}>
-            <CardTitle
-              className={cn("line-clamp-2 text-base leading-tight lg:text-lg")}
-            >
-              {session
-                ? session?.topic
-                : "Vivamus ex augue tempus id diam at, dictum cursus metus"}
-            </CardTitle>
-          </div>
+              <div className={cn("space-y-1")}>
+                <CardTitle
+                    className={cn("line-clamp-2 text-base leading-tight lg:text-lg")}
+                >
+                  {session
+                      ? session?.topic
+                      : "Vivamus ex augue tempus id diam at, dictum cursus metus"}
+                </CardTitle>
+              </div>
 
-          <CardDescription className={cn("line-clamp-3")}>
-            {session
-              ? session?.userName
-              : "Praesent non orci eu augue egestas lobortis. Fusce dapibus, urna non dignissim ultrices, libero dolor porta tellus, eget tincidunt mi."}
-          </CardDescription>
+              <CardDescription className={cn("line-clamp-3")}>
+                {session
+                    ? session?.userName
+                    : "Praesent non orci eu augue egestas lobortis. Fusce dapibus, urna non dignissim ultrices, libero dolor porta tellus, eget tincidunt mi."}
+              </CardDescription>
 
-          <CardDescription
-            className={cn("!mt-auto flex items-center gap-2 pt-3")}
-          >
-            {/*<Calendar size="25" color="#0C8281" variant="Bold"/>*/}
-            {session ? formatSessionDate(session?.date) : ""}
+              <CardDescription
+                  className={cn("!mt-auto flex items-center gap-2 pt-3")}
+              >
+                {/*<Calendar size="25" color="#0C8281" variant="Bold"/>*/}
+                {session ? formatSessionDate(session?.date) : ""}
 
-            {/*<StudentCountLabel count={Number(course?.enrollmentCount)} />*/}
-          </CardDescription>
-        </Card>
-      ))}
-    </div>
+                {/*<StudentCountLabel count={Number(course?.enrollmentCount)} />*/}
+              </CardDescription>
+            </Card>
+        ))}
+      </div>
   );
 };

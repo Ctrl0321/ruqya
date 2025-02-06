@@ -13,7 +13,7 @@ const menuItems = [
   { icon: Home, label: 'Dashboard', href: '/admin', roles: ["admin", "super-admin"] },
   { icon: BookOpen, label: 'Rakis', href: '/admin/rakis', roles: ["super-admin"] },
   { icon: Users, label: 'Users', href: '/admin/users', roles: ["admin", "super-admin"] },
-  { icon: Calendar, label: 'Availability', href: '/admin/availability', roles: ["admin", "super-admin"] },
+  { icon: Calendar, label: 'Availability', href: '/admin/availability', roles: ["admin"] },
   { icon: Calendar, label: 'Sessions', href: '/admin/sessions', roles: ["admin", "super-admin"] },
   { icon: DollarSign, label: 'Payment', href: '/admin/payment', roles: ["admin", "super-admin"] },
   { icon: Settings, label: 'Settings', href: '/admin/settings', roles: ["admin", "super-admin"] },

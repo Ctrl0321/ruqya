@@ -117,7 +117,8 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
                         //     setChannel(null);
                         // }
                     // }
-                } else {
+                }
+                if (currentUser?.role === "user")  {
                     if (otherUserId) {
                         const sortedMembers = [userId, otherUserId].sort();
                         const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]}`;
