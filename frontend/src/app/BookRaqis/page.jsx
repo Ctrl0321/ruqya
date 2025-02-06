@@ -13,9 +13,7 @@ import { languages, countries } from "@/lib/constance";
 import { getRakis, getRakisIdByDate } from "@/lib/api";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 import { getLanguageLabel } from "@/lib/utils";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { FaCalendarAlt } from "react-icons/fa";
+import { DateInput } from "@/components/ui/input/input";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -146,20 +144,6 @@ export default function BookRaqis() {
     }
   };
 
-  const CustomInput = ({ value, onClick }) => (
-    <div className="relative">
-      <input
-        type="text"
-        value={value}
-        onClick={onClick}
-        readOnly
-        className="w-full rounded-md border border-gray-300 text-sm p-2 pl-10 focus:border-primary focus:ring-primary cursor-pointer bg-white"
-        placeholder="Select date"
-      />
-      <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-    </div>
-  );
-
   const handleDateChange = async (date) => {
     if (date) {
       const formattedDate = date.toISOString().split('T')[0];
@@ -248,21 +232,11 @@ export default function BookRaqis() {
       <div className="space-y-4 bg-white/50 p-4 rounded-lg font-sans">
         <div>
           <label className="text-sm text-gray-600 block mb-1">Date</label>
-          <DatePicker
+          <DateInput
             selected={userSelections.availability.date ? new Date(userSelections.availability.date) : null}
             onChange={handleDateChange}
-            minDate={new Date()}
-            customInput={<CustomInput />}
-            dateFormat="MMMM d, yyyy"
-            isClearable={true}
             placeholderText="Select a date"
-            className="w-full"
-            calendarClassName="custom-datepicker"
-            wrapperClassName="w-full relative"
-            popperClassName="custom-popper"
-            popperPlacement="bottom-start"
-            showPopperArrow={false}
-            excludeDates={[]}  // You can add excluded dates here
+            min={new Date()}
           />
         </div>
       </div>

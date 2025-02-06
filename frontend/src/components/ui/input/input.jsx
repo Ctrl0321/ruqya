@@ -1,4 +1,7 @@
 import React from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaCalendarAlt } from "react-icons/fa";
 
 export const Input = ({ type, placeholder, name, className, value, onChange }) => {
   return (
@@ -23,5 +26,42 @@ export const BorderInput = ({ label, type, name, placeholder, className, value, 
     </div>
   )
 }
+
+export const DateInput = ({ selected, onChange, placeholderText, max, min }) => {
+  const CustomInput = ({ value, onClick }) => (
+    <div className="relative">
+      <input
+        type="text"
+        value={value}
+        onClick={onClick}
+        {...(max && { max })}
+        {...(min && { min })}
+        readOnly
+        className="w-full rounded-md border border-gray-300 text-sm p-2 pl-10 focus:border-primary focus:ring-primary cursor-pointer bg-white"
+        placeholder="Select date"
+      />
+      <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+    </div>
+  );
+
+  return (
+    <DatePicker
+      selected={selected}
+      onChange={onChange}
+      customInput={<CustomInput />}
+      dateFormat="MMMM d, yyyy"
+      isClearable={true}
+      placeholderText={placeholderText}
+      className="w-full"
+      calendarClassName="custom-datepicker"
+      wrapperClassName="w-full relative"
+      popperClassName="custom-popper"
+      popperPlacement="bottom-start"
+      showPopperArrow={false}
+      minDate={min}
+      maxDate={max}
+    />
+  );
+};
 
 

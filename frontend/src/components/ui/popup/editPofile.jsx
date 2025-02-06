@@ -71,30 +71,24 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
         <div className="p-6 overflow-y-auto max-h-[80vh]">
           <div className="flex flex-col md:grid gap-6 md:grid-cols-2">
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">First Name</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="text"
-                  name="name"
-                  value={popupData.name}
-                  onChange={handleChange}
-                  placeholder="First Name"
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                type="text"
+                name="name"
+                label={"First Name"}
+                value={popupData.name}
+                onChange={handleChange}
+                placeholder="First Name"
+              />
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Email</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="email"
-                  name="email"
-                  value={popupData.email}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                type="email"
+                name="email"
+                label={"Email"}
+                value={popupData.email}
+                onChange={handleChange}
+                placeholder="Email"
+              />
             </div>
             <div className="relative mb-6">
               <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Gender</label>
@@ -109,17 +103,14 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               </div>
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Date of Birth</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="date"
-                  name="dob"
-                  value={popupData.dob}
-                  onChange={handleChange}
-                  max={new Date().toISOString().split('T')[0]}
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                type="date"
+                name="dob"
+                label={"Date of Birth"}
+                value={popupData.dob}
+                onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]}
+              />
             </div>
             <div className="relative mb-6">
               <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-2 mb-2 w-auto">Country</label>
@@ -146,17 +137,13 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               </div>
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Mobile Number</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="tel"
-                  name="mobile"
-                  value={popupData.mobile}
-                  onChange={handleChange}
-                  placeholder="(XXX) XXX-XXXX"
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                type="tel"
+                name="mobile"
+                value={popupData.mobile}
+                onChange={handleChange}
+                placeholder="(XXX) XXX-XXXX"
+              />
             </div>
             <div className="grid grid-cols-2 col-span-2 gap-6">
               <button onClick={onClose} className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-full py-3 mt-5 transition duration-300">
