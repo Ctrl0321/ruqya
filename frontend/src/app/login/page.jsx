@@ -5,7 +5,7 @@ import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { login, googleSignup, googleLogin } from "@/lib/api";
+import { login, googleSignup } from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 
@@ -53,45 +53,47 @@ function Login() {
 
   const handleGoogleSignIn = async () => {
     try {
+      setLoading(true);
+      setError({ message: "", type: "" });
+      
       const result = await signInWithPopup(auth, googleProvider);
+      
+      if (!result?.user?.email) {
+        throw new Error("No email provided from Google");
+      }
+
+      // Extract required user data
       const userData = {
+        tokenId: result._tokenResponse.idToken,
         email: result.user.email,
-        displayName: result.user.displayName,
-        photoURL: result.user.photoURL,
-        uid: result.user.uid
+        name: result.user.displayName || "",
+        photoURL: result.user.photoURL || "",
+        uid: result.user.uid,
+        idToken: result._tokenResponse.idToken
       };
 
-      console.log(userData);
+      console.log(result);
+      // Send to backend
+      const response = await googleSignup(userData.idToken);
       
-    //   try {
-    //     const response = await googleLogin(userData);
-    //     if (response && response.role === "user") {
-    //       setError("Login Successful.");
-    //       const redirectPath = localStorage.getItem("redirectPath") || "/";
-    //       localStorage.removeItem("redirectPath");
-    //       router.push(redirectPath);
-    //     }
-    //   } catch (backendError) {
-    //     console.error("Backend Error:", backendError);
-    //     // If user doesn't exist, try to sign up
-    //     if (backendError.response?.status === 404) {
-    //       try {
-    //         const signupResponse = await googleSignup(userData);
-    //         if (signupResponse && signupResponse.role === "user") {
-    //           setError("Registration Successful.");
-    //           router.push('/');
-    //         }
-    //       } catch (signupError) {
-    //         console.error("Signup Error:", signupError);
-    //         setError("Failed to create account");
-    //       }
-    //     } else {
-    //       setError("Failed to authenticate");
-    //     }
-    //   }
+      if (response && response.token) {
+        localStorage.setItem("fe-token", response.token);
+        setError({ message: "Login Successful", type: "success" });
+        const redirectPath = localStorage.getItem("redirectPath") || "/";
+        localStorage.removeItem("redirectPath");
+        router.push(redirectPath);
+      } else {
+        throw new Error("Invalid response from server");
+      }
+
     } catch (error) {
-      console.error("Firebase Error:", error);
-      setError({ message: "Failed to sign in with Google", type: "error" });
+      console.error("Google Sign-in Error:", error);
+      setError({ 
+        message: error.response?.data?.message || error.message || "Failed to sign in with Google", 
+        type: "error" 
+      });
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -3,7 +3,8 @@ import User from '../models/user';
 import generateToken from '../utils/generateToken';
 import {client, serverClientChat} from "../config/streamConfig";
 import {getStreamAdminRole} from "../utils/getStreamAdminRole";
-import {googleClient} from "../config/googleAuthConfig";
+import {verifyToken} from "../utils/firebase";
+import admin from "../utils/firebase";
 
 
 
@@ -87,100 +88,32 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 export const loginWithGoogle = async (req: Request, res: Response): Promise<void> => {
+    const { tokenId } = req.body;
+
     try {
-        const { tokenId } = req.body;
+        const decodedToken = await verifyToken(tokenId);
+        const { email, name, uid } = decodedToken;
 
-        const ticket = await googleClient.verifyIdToken({
-            idToken: tokenId,
-            audience: process.env.GOOGLE_CLIENT_ID
-        });
+        let user = await User.findOne({ email });
 
-        const payload = ticket.getPayload();
-        if (!payload || !payload.email) {
-            res.status(400).json({ message: 'Invalid Google token' });
-            return;
-        }
-
-        let user = await User.findOne({
-            $or: [
-                { email: payload.email },
-                { googleId: payload.sub }
-            ]
-        });
-
-        if (user) {
-            if (!user.googleId) {
-                user.googleId = payload.sub;
-                await user.save();
-            }
-
-            await client.upsertUsers([{
-                id: user.id,
-                name: user.name,
-                role: getStreamAdminRole({role: user.role}),
-                image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
-            }]);
-
-            await serverClientChat.upsertUsers([{
-                id: user.id,
-                name: user.name,
-                role: getStreamAdminRole({role: user.role}),
-                image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
-            }]);
-
-            res.status(200).json({
-                _id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                token: generateToken(user.id, user.role)
-            });
-
-
-            res.json({
-                _id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                token: generateToken(user.id, user.role),
-                isGoogleAccount: true
-            });
-        } else {
-            const newUser = await User.create({
-                name: payload.name,
-                email: payload.email,
-                googleId: payload.sub,
-                picture: payload.picture,
-                role: 'user',
-                password: ''
-            });
-
-            await client.upsertUsers([{
-                id: newUser.id,
-                name: newUser.name,
-                role: getStreamAdminRole({role: newUser.role}),
-                image: `https://getstream.io/random_svg/?id=${newUser.id}&name=${newUser.name}`
-            }]);
-
-            await serverClientChat.upsertUsers([{
-                id: newUser.id,
-                name: newUser.name,
-                role: getStreamAdminRole({role:  newUser.role}),
-                image: `https://getstream.io/random_svg/?id=${newUser.id}&name=${newUser.name}`
-            }]);
-
-
-            res.status(201).json({
-                _id: newUser.id,
-                name: newUser.name,
-                email: newUser.email,
-                role: newUser.role,
-                token: generateToken(newUser.id, newUser.role),
-                isGoogleAccount: true
+        if (!user) {
+            user = await User.create({
+                name,
+                email,
+                password: uid, // Use uid as a placeholder password
+                role: 'user' // Default role
             });
         }
-    } catch (error) {
-        console.error('Google login error:', error);
-        res.status(500).json({ message: 'Server error' });
+
+        res.json({
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            token: generateToken(user.id, user.role),
+        });
+    } catch (error: any) {
+        console.error("Firebase verification error:", error); // Log the error
+        res.status(401).json({ message: 'Invalid token', error: error.message }); // Send the error message
     }
 };
