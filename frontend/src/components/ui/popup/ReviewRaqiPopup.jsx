@@ -38,45 +38,64 @@ function ReviewRaqiPopup(props) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg relative w-full max-w-3xl mx-4 md:mx-0 shadow-lg">
-        <div className="bg-gray-200 p-4 flex justify-between rounded-t-lg items-center">
-          <span className="text-gray-600 text-xl font-bold ">Add Review</span>
-          <div className="w-7 h-7 bg-red-600 rounded-sm flex items-center justify-center">
-            <button onClick={handleClosePopup} className="text-white text-lg font-bold">
-              &times;
-            </button>
-          </div>
+      <div className="bg-white rounded-lg relative mx-4 md:mx-0 shadow-xl max-w-lg ">
+        {/* Header */}
+        <div className="bg-gray-100 p-4 flex justify-between rounded-t-lg items-center">
+          <span className="text-gray-700 text-xl font-semibold">Add Review</span>
+          <button onClick={handleClosePopup} className="hover:text-gray-600 focus:outline-none p-1 text-white bg-red-500 rounded-lg">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <div className="px-3">
+
+        {/* Content */}
+        <div className="px-6 py-4">
           {error && <ErrorMessage message={error} />}
           {existingReview && (
-            <div className="bg-yellow-100 p-4 rounded-lg mb-2 mt-2">
-              <h3 className="text-xl font-bold">Existing Review</h3>
-              <p><strong>Rating:</strong> {existingReview.points}</p>
-              <p><strong>Comment:</strong> {existingReview.comment}</p>
+            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4">
+              <h3 className="text-lg font-semibold text-yellow-700">Existing Review</h3>
+              <p>
+                <strong>Rating:</strong> {existingReview.points}
+              </p>
+              <p>
+                <strong>Comment:</strong> {existingReview.comment}
+              </p>
             </div>
           )}
-          <div className="flex flex-col md:flex-row ">
-            <div className="md:w-2/3">
-              <h3 className="text-md md:text-2xl my-2 ml-1 font-bold w-full">Add a review on your session </h3>
-              <RaqiCard className=" border border-black " booking={raqiData} />
+
+          <div className="flex flex-col items-center mb-4">
+            <h3 className="text-xl md:text-2xl text-center my-2 font-fullsansbold text-gray-800">Add a review on your session</h3>
+            <div className="mb-4">
+              <RaqiCard className="rounded-md shadow-md border border-gray-200 p-4 m-2" booking={raqiData} />
             </div>
-            <div className="flex items-center justify-center md:w-1/2">
-              <div className="flex flex-col items-center mb-5 font-extrabold gap-5">
-                <h3 className="font-bold md:text-2xl text-lg">Add your Rating</h3>
-                <RatingInput rating={rating} className="w-8 md:w-12 h-12 text-yellow-200" setRating={setRating} />
+
+            {/* Rating Input Box */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 w-full max-w-md">
+              <div className="flex flex-row items-center justify-center gap-4">
+                <h3 className="text-lg font-semibold text-gray-700">Your Rating:</h3>
+                <RatingInput rating={rating} className="w-6 md:w-10 h-10 text-yellow-400" setRating={setRating} />
               </div>
             </div>
           </div>
-          <div className="my-2">
-            <h3 className="text-md md:text-2xl mb-2 ml-1 font-bold">Add a Comment</h3>
-            <textarea className="w-full h-32 border border-gray-300 rounded-lg p-4" placeholder="Write your review here" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
+
+          {/* Comment Input */}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Add a Comment</h3>
+            <textarea
+              className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-blue-500"
+              placeholder="Write your review here"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            ></textarea>
           </div>
-          <div className="p-4 flex justify-end">
-            <button onClick={handleClosePopup} className="bg-red-600 text-white px-4 py-2 rounded-lg">
+
+          {/* Actions */}
+          <div className="flex justify-end gap-2">
+            <button onClick={handleClosePopup} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Close
             </button>
-            <button onClick={handleSubmit} className="bg-green-600 text-white px-4 py-2 rounded-lg ml-4">
+            <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Submit
             </button>
           </div>

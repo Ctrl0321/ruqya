@@ -52,7 +52,7 @@ const ChangePassword = ({ onClose, onSubmit }) => {
       <div className="bg-white rounded-lg relative w-full max-w-md mx-4 md:mx-0 shadow-lg mb-10">
         <div className="bg-gray-200 p-4 flex justify-between rounded-t-lg items-center">
           <span className="text-gray-600 text-lg">Change Password</span>
-          <button onClick={handleClose} className="text-white px-3 py-1.5 rounded-lg font-sans bg-red-500 text-lg font-bold">
+          <button onClick={handleClose} className="text-white px-3 py-1.5 rounded-lg font-sans hover:text-gray-600 bg-red-500 text-lg font-bold">
             &times;
           </button>
         </div>

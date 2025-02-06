@@ -64,7 +64,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
       <div className="bg-white rounded-lg relative w-full max-w-3xl mx-4 md:mx-0 shadow-lg mb-10">
         <div className="bg-gray-200 p-4 flex justify-between rounded-t-lg items-center">
           <span className="text-gray-600 text-lg">Edit Profile Details</span>
-            <button onClick={onClose} className="text-white px-3 py-1.5 rounded-lg font-sans bg-red-500 text-lg font-bold " >
+            <button onClick={onClose} className="text-white px-3 py-1.5 rounded-lg font-sans hover:text-gray-600 bg-red-500 text-lg font-bold " >
               &times;
             </button>
         </div>
