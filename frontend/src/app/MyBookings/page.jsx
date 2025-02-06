@@ -9,6 +9,7 @@ import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 import { getMyBookings } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import { parseBookingDate } from "@/lib/utils";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -56,9 +57,13 @@ function MyBookings() {
     return <ErrorMessage message={error} />;
   }
 
-  if (bookings.length === 0) {
-    return <p className="min-h-screen text-black">No bookings found.</p>;
+  if(!bookings){
+    return <LoadingSpinner />;
   }
+  
+  // if (bookings.length === 0) {
+  //   return <p className="min-h-screen flex justify-center items-center text-black">No bookings found.</p>;
+  // }
 
   return (
     <div className="min-h-screen text-black mx-5 md:mx-10 mt-10 text-xs md:text-base">
@@ -104,7 +109,7 @@ function MyBookings() {
           </button>
         </div>
       </div>
-      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
+      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
       <div className="min-h-screen">
       {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
       </div>
