@@ -34,6 +34,7 @@ function Raqis() {
     averageRating: 0,
     reviews: [],
   });
+  const [visibleReviews, setVisibleReviews] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -151,6 +152,10 @@ function Raqis() {
       return;
     }
     router.push(`/Raqi/${data._id}/book`);
+  };
+
+  const handleShowMore = () => {
+    setVisibleReviews((prev) => prev + 5);
   };
 
   return (
@@ -311,7 +316,7 @@ function Raqis() {
           {review && review.totalReviews !== undefined && (
             <>
               <div className="hidden md:flex flex-row font-bold items-center">
-                <div className="flex flex-col gap-0">
+                <div className="flex flex-col gap-0 mr-3">
                   <span className="flex flex-row items-center">
                     <FaStar className="text-gray-400 mr-2" />5
                   </span>
@@ -328,15 +333,33 @@ function Raqis() {
                     <FaStar className="text-gray-400 mr-2" />1
                   </span>
                 </div>
-                <BarChart width={300} height={105} data={chartData} layout="vertical" className="mt-[3px]">
-                  <XAxis type="number" hide />
+                <BarChart 
+                  width={260} 
+                  height={105} 
+                  data={chartData} 
+                  layout="vertical" 
+                  className="mt-[3px]"
+                  margin={{ left: 0, right: 40, top: 5, bottom: 5 }}
+                >
+                  <XAxis type="number" hide domain={[0, 'auto']} />
                   <YAxis type="category" dataKey="name" hide />
                   <CartesianGrid horizontal={false} vertical={false} />
-                  <Bar dataKey="value" radius={[30, 30, 30, 30]} barSize={10}>
-                    <LabelList dataKey="real" position="right" />
-                    {chartData.map((entry, index) => (
-                      <Bar key={`bar-${index}`} dataKey="value" fill={entry.fill} />
-                    ))}
+                  <Bar 
+                    dataKey="value" 
+                    radius={[30, 30, 30, 30]} 
+                    barSize={8}
+                  >
+                    <LabelList 
+                      dataKey="real" 
+                      position="right"
+                      offset={5}
+                      formatter={(value, entry) => `${value}`}
+                      style={(entry) => ({
+                        fill: entry.fill,
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                      })}
+                    />
                   </Bar>
                 </BarChart>
               </div>
@@ -344,9 +367,31 @@ function Raqis() {
           )}
         </div>
       </div>
-      <div className="mx-8 mt-5">
-        <div className="border-b w-full mb-5"></div>
-        {review && review.reviews.length >= 0 ? review.reviews.map((review, index) => <ReviewCard key={index} review={review} colorIndex={index} />) : <p>No reviews available.</p>}
+      <div className="mx-8 mt-10">
+        <div className="border-b w-full mb-5">
+          <h1 className="font-bold text-xl mb-2">Customer Reviews</h1>
+        </div>
+        {review && review.reviews.length > 0 ? (
+          <>
+            <div className="space-y-4">
+              {review.reviews.slice(0, visibleReviews).map((review, index) => (
+                <ReviewCard key={index} review={review} colorIndex={index} />
+              ))}
+            </div>
+            {visibleReviews < review.reviews.length && (
+              <div className="flex justify-center mt-6">
+                <button onClick={handleShowMore} className="px-6 py-2 bg-RuqyaGreen text-white rounded-lg hover:bg-teal-700 transition-colors">
+                  Show More Reviews
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-10 bg-gray-50 rounded-lg">
+            <div className="text-gray-500 text-lg mb-2">No reviews yet</div>
+            <p className="text-gray-400">Be the first to review this Raqi</p>
+          </div>
+        )}
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
       <ChatWidgetWrapper />
