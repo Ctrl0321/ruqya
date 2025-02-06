@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Input from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
-import { signup } from "@/lib/api";
+import { signup, googleSignup } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
@@ -68,30 +68,41 @@ function SignUp() {
 
   const handleGoogleSignUp = async () => {
     try {
+      setLoading(true);
+      setError("");
+
       const result = await signInWithPopup(auth, googleProvider);
+
+      if (!result?.user?.email) {
+        setError("Failed to sign up with Google");
+        return;
+      }
+
       const userData = {
+        tokenId: result._tokenResponse.idToken,
         email: result.user.email,
-        displayName: result.user.displayName,
-        photoURL: result.user.photoURL,
-        uid: result.user.uid
+        name: result.user.displayName || "",
+        photoURL: result.user.photoURL || "",
+        uid: result.user.uid,
+        idToken: result._tokenResponse.idToken,
       };
 
-      console.log(userData);
-      
-      // Uncomment and implement when backend is ready
-      // try {
-      //   await googleSignup(userData);
-      //   setSuccess(true);
-      //   setError("Registration successful!");
-      //   setTimeout(() => {
-      //     router.push("/");
-      //   }, 2000);
-      // } catch (err) {
-      //   setError(err.response?.data?.message || "Failed to create account");
-      // }
+      const response = await googleSignup(userData.idToken);
+
+      if (response && response.token) {
+        localStorage.setItem("fe-token", response.token);
+        setError({ message: "Registration successful!", type: "success" });
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
       console.error("Firebase Error:", error);
-      setError("Failed to sign up with Google");
+      setError(error.response?.data?.message || "Failed to sign up with Google");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -207,15 +218,13 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-5">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  bg={true} 
-                  text="Sign Up with Google" 
-                  color={"RuqyaGreen"} 
-                  className="w-full rounded-full py-3 border-2"
+                <button
+                  type="button"
+                  className="login-with-google-btn w-full rounded-lg"
                   onClick={handleGoogleSignUp}
-                />
+                >
+                  Sign Up with Google
+                </button>
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Already have an Account?{" "}

@@ -55,11 +55,11 @@ function Login() {
     try {
       setLoading(true);
       setError({ message: "", type: "" });
-      
+
       const result = await signInWithPopup(auth, googleProvider);
-      
+
       if (!result?.user?.email) {
-        throw new Error("No email provided from Google");
+        setError({ message: "Failed to sign in with Google", type: "error" });
       }
 
       // Extract required user data
@@ -69,28 +69,27 @@ function Login() {
         name: result.user.displayName || "",
         photoURL: result.user.photoURL || "",
         uid: result.user.uid,
-        idToken: result._tokenResponse.idToken
+        idToken: result._tokenResponse.idToken,
       };
 
-      console.log(result);
       // Send to backend
       const response = await googleSignup(userData.idToken);
-      
+
       if (response && response.token) {
         localStorage.setItem("fe-token", response.token);
         setError({ message: "Login Successful", type: "success" });
+        setTimeout(() => setError({ message: "Login Successful", type: "success" }), 3000);
         const redirectPath = localStorage.getItem("redirectPath") || "/";
         localStorage.removeItem("redirectPath");
         router.push(redirectPath);
       } else {
         throw new Error("Invalid response from server");
       }
-
     } catch (error) {
       console.error("Google Sign-in Error:", error);
-      setError({ 
-        message: error.response?.data?.message || error.message || "Failed to sign in with Google", 
-        type: "error" 
+      setError({
+        message: error.response?.data?.message || error.message || "Failed to sign in with Google",
+        type: "error",
       });
     } finally {
       setLoading(false);
@@ -154,20 +153,14 @@ function Login() {
                   <span className="px-2 bg-white text-gray-500">OR</span>
                 </div>
               </div>
-              <div className="mt-5 rounded-3xl">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  bg={true} 
-                  text="Log In with Google" 
-                  color={"RuqyaGreen"} 
-                  className="w-full rounded-3xl py-3 border-2"
-                  onClick={handleGoogleSignIn}
-                />
+              <div className=" rounded-3xl">
+                {/* <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" onClick={handleGoogleSignIn} /> */}
+                <button type="button" className="login-with-google-btn w-full rounded-lg" onClick={handleGoogleSignIn}>
+                  Sign in with Google
+                </button>
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}
-                
                 <Link href="/signup" className="text-blue-600 hover:underline">
                   Sign Up
                 </Link>
