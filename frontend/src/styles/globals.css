@@ -48,8 +48,8 @@ input {
   background-color: white !important; /* Ensure the background is white */
   border: none;
   outline: none;
-  padding: 0.5rem;
-  border-radius: 0.375rem; /* Adjust as needed */
+  /* padding: 0.5rem; */
+  /* border-radius: 0.375rem;  */
 }
 
 input:focus {

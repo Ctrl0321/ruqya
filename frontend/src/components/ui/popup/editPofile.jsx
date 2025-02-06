@@ -91,7 +91,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               />
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Gender</label>
+              <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1 w-auto">Gender</label>
               <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                 <CustomSelect 
                   options={genderOptions} 
@@ -113,7 +113,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               />
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-2 mb-2 w-auto">Country</label>
+              <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-2 mb-2 w-auto">Country</label>
               <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                 <CustomSelect 
                   options={countries} 
@@ -125,7 +125,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               </div>
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Language</label>
+              <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1 w-auto">Language</label>
               <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
                 <CustomSelect 
                   options={languages} 
