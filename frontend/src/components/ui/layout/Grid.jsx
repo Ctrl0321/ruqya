@@ -16,12 +16,14 @@ const Grid = ({
       `md:grid-cols-${Math.min(cols, 2)}`,
       `ipad-landscape:grid-cols-${Math.min(cols, 3)}`,
       `lg:grid-cols-${Math.min(cols, 3)}`,
-      `xl:grid-cols-${cols}`, // Ensure one row for desktop view
-      `2xl:grid-cols-${cols}`, // Ensure one row for desktop view
-      `3xl:grid-cols-${cols}`, // Ensure one row for desktop view
+      `xl:grid-cols-${Math.min(cols, 4)}`, 
+      `2xl:grid-cols-${Math.min(cols, 4)}`,
+      `3xl:grid-cols-${cols}`, 
+      `4xl:grid-cols-${cols}`,
+      `5xl:grid-cols-${cols}`,
       `gap-${gap}`,
-      'my-4', // Margin
-      'place-items-center', // Center items in the grid
+      'my-4', 
+      'place-items-center', 
       className
     )}>
       {children}
