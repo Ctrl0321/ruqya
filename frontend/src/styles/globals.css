@@ -131,12 +131,14 @@ select {
 
 /* for raqicard */
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+  width: 12px;
+  height: 12px;
+  display: block;
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: auto;
+  scrollbar-width: auto;
 }
 
 @keyframes scrollX {
@@ -293,4 +295,88 @@ animation-play-state: paused;
   height: 24px;
   border-radius: 50%;
   display: inline-block;
+}
+
+
+
+/* DatePicker Custom Styles */
+.react-datepicker {
+  font-family: inherit;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.react-datepicker__header {
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.react-datepicker__day--selected {
+  background-color: #0C8281 !important;
+  color: white !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: rgba(12, 130, 129, 0.1) !important;
+  color: #0C8281 !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: rgba(12, 130, 129, 0.1) !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #cbd5e0 !important;
+  cursor: not-allowed !important;
+}
+
+.custom-popper {
+  z-index: 9999 !important;
+}
+
+/* DatePicker Clear Button Custom Style */
+.react-datepicker__close-icon {
+  padding: 0;
+  display: flex;
+  color: #6B7280;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-datepicker__close-icon::after {
+  background-color: transparent !important;
+  color: #6B7280;
+  font-size: 1.5rem;
+  padding: 0;
+  content: "×";
+}
+
+.react-datepicker__close-icon:hover::after {
+  color: #6B7280;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
 }

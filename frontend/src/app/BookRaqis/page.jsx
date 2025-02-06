@@ -10,9 +10,12 @@ import Grid from "@/components/ui/layout/GridForBooking";
 import RatingInput from "@/components/ui/input/rating";
 import { useSearchParams, useRouter } from "next/navigation";
 import { languages, countries } from "@/lib/constance";
-import { getRakis } from "@/lib/api";
+import { getRakis, getRakisIdByDate } from "@/lib/api";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
-import {getLanguageLabel} from "@/lib/utils"
+import { getLanguageLabel } from "@/lib/utils";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaCalendarAlt } from "react-icons/fa";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -33,6 +36,7 @@ export default function BookRaqis() {
   });
   const [rating, setRating] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [availableRakisIds, setAvailableRakisIds] = useState([]);
 
   useEffect(() => {
     async function fetchRakis() {
@@ -62,13 +66,13 @@ export default function BookRaqis() {
     }));
   };
 
-const handleLanguageChange = (event, languageLabel) => {
-  const languageCode = languages.find((l) => l.label === languageLabel)?.value || languageLabel;
-  setUserSelections((prev) => ({
-    ...prev,
-    languages: event.target.checked ? [...prev.languages, languageCode] : prev.languages.filter((l) => l !== languageCode),
-  }));
-};
+  const handleLanguageChange = (event, languageLabel) => {
+    const languageCode = languages.find((l) => l.label === languageLabel)?.value || languageLabel;
+    setUserSelections((prev) => ({
+      ...prev,
+      languages: event.target.checked ? [...prev.languages, languageCode] : prev.languages.filter((l) => l !== languageCode),
+    }));
+  };
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("searchQuery");
@@ -103,7 +107,9 @@ const handleLanguageChange = (event, languageLabel) => {
     ),
     ...userSelections.languages.filter((lang) => !languages.some((l) => l.value === lang)),
     ...(language && !languages.some((l) => l.value === language) ? [language] : []),
-  ].filter((lang) => lang !== getLanguageLabel(language)).sort();
+  ]
+    .filter((lang) => lang !== getLanguageLabel(language))
+    .sort();
 
   const availableCountries = [
     ...new Set(
@@ -124,11 +130,45 @@ const handleLanguageChange = (event, languageLabel) => {
     }));
   };
 
-  const handleDateChange = (date) => {
-    setUserSelections((prev) => ({
-      ...prev,
-      availability: { ...prev.availability, date },
-    }));
+  const fetchAvailableRakis = async (date) => {
+    try {
+      const availableData = await getRakisIdByDate(date);
+      setAvailableRakisIds(availableData.rakiIds || []);
+    } catch (error) {
+      console.error('Error fetching available Rakis:', error);
+      setAvailableRakisIds([]);
+    }
+  };
+
+  const CustomInput = ({ value, onClick }) => (
+    <div className="relative">
+      <input
+        type="text"
+        value={value}
+        onClick={onClick}
+        readOnly
+        className="w-full rounded-md border border-gray-300 text-sm p-2 pl-10 focus:border-primary focus:ring-primary cursor-pointer bg-white"
+        placeholder="Select date"
+      />
+      <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+    </div>
+  );
+
+  const handleDateChange = async (date) => {
+    if (date) {
+      const formattedDate = date.toISOString().split('T')[0];
+      setUserSelections((prev) => ({
+        ...prev,
+        availability: { ...prev.availability, date: formattedDate },
+      }));
+      await fetchAvailableRakis(formattedDate);
+    } else {
+      setUserSelections((prev) => ({
+        ...prev,
+        availability: { ...prev.availability, date: null },
+      }));
+      setAvailableRakisIds([]);
+    }
   };
 
   const handleDurationChange = (duration) => {
@@ -166,8 +206,8 @@ const handleLanguageChange = (event, languageLabel) => {
       result = result.filter((raqi) => raqi.yearOfExperience >= userSelections.experience[0] && raqi.yearOfExperience <= userSelections.experience[1]);
     }
 
-    if (userSelections.availability.date) {
-      result = result.filter((raqi) => raqi.bookedDate === userSelections.availability.date);
+    if (userSelections.availability.date && availableRakisIds.length > 0) {
+      result = result.filter((raqi) => availableRakisIds.includes(raqi._id));
     }
 
     if (userSelections.availability.duration) {
@@ -179,7 +219,7 @@ const handleLanguageChange = (event, languageLabel) => {
     }
 
     setFilteredData(result);
-  }, [userSelections, rating, searchQuery, raqiData]);
+  }, [userSelections, rating, searchQuery, raqiData, availableRakisIds]);
 
   const experienceLevels = raqiData
     .map((raqi) => raqi.yearOfExperience)
@@ -189,6 +229,33 @@ const handleLanguageChange = (event, languageLabel) => {
   if (isLoading) {
     return <LoadingSpinner />; // Show loading spinner while data is being fetched
   }
+
+  const renderAvailabilityFilter = () => (
+    <div className="filter-section pb-6">
+      <h2 className="text-lg font-semibold mb-4">Availability</h2>
+      <div className="space-y-4 bg-white/50 p-4 rounded-lg font-sans">
+        <div>
+          <label className="text-sm text-gray-600 block mb-1">Date</label>
+          <DatePicker
+            selected={userSelections.availability.date ? new Date(userSelections.availability.date) : null}
+            onChange={handleDateChange}
+            minDate={new Date()}
+            customInput={<CustomInput />}
+            dateFormat="MMMM d, yyyy"
+            isClearable={true}
+            placeholderText="Select a date"
+            className="w-full"
+            calendarClassName="custom-datepicker"
+            wrapperClassName="w-full relative"
+            popperClassName="custom-popper"
+            popperPlacement="bottom-start"
+            showPopperArrow={false}
+            excludeDates={[]}  // You can add excluded dates here
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
@@ -320,15 +387,7 @@ const handleLanguageChange = (event, languageLabel) => {
               </div>
 
               {/* Availability Filter */}
-              <div className="filter-section pb-6">
-                <h2 className="text-lg font-semibold mb-4">Availability</h2>
-                <div className="space-y-4 bg-white/50 p-4 rounded-lg">
-                  <div>
-                    <label className="text-sm text-gray-600 block mb-1">Date</label>
-                    <input type="date" value={userSelections.availability.date || ""} onChange={(e) => handleDateChange(e.target.value)} className="w-full rounded-md border border-gray-300 text-sm pl-10 p-2 focus:border-primary focus:ring-primary" />
-                  </div>
-                </div>
-              </div>
+              {renderAvailabilityFilter()}
 
               {/* Rating Filter */}
               <div className="flex flex-col justify-start items-start m-auto filter-section pb-6">

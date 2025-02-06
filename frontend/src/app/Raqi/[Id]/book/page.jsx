@@ -241,7 +241,7 @@ const BookSessionPage = () => {
           {bookingData ? (
             <>
               <BookingCard Booking={bookingData} selectedDate={selectedDate} selectedTime={selectedTime} />
-              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl mt-4 w-full" onClick={handleButtonClick} />
+              <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl py-3 mt-4 w-full" onClick={handleButtonClick} />
             </>
           ) : (
             <p>No booking data available.</p>
