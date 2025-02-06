@@ -20,6 +20,7 @@ import {formatDateTimeWithOffset, getNameById} from "@/lib/utils";
 import {useChat} from "@/components/getStream/chat/ChatContextProvider";
 import {ChatWidgetWrapper} from "@/components/getStream/chat/ChatWidgetWrapper";
 import {toast} from "@/components/ui/use-toast";
+import withAuth from "@/hoc/withAuth";
 
 interface Session {
     meetingId: string;
@@ -31,7 +32,7 @@ interface Session {
 }
 
 
-export default function AdminDashboard() {
+const AdminDashboard =()=> {
     const { setUserId } = useChat();
     const { user :currentUser} = useAuth()
     const [revenueData, setRevenueData] = useState({
@@ -248,4 +249,6 @@ export default function AdminDashboard() {
         </div>
     )
 }
+
+export default withAuth(AdminDashboard, ["admin", "super-admin"]);
 

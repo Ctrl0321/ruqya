@@ -18,6 +18,7 @@ import {
 } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContexts";
 import { motion } from "framer-motion";
+import withAuth from "@/hoc/withAuth";
 
 export interface TimeSlot {
   startTime: string;
@@ -30,7 +31,7 @@ export interface DayAvailability {
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-export default function AvailabilityPage() {
+const AvailabilityPage=()=> {
   const { user: currentUser } = useAuth();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availability, setAvailability] = useState<DayAvailability | null>(null);
@@ -225,3 +226,6 @@ export default function AvailabilityPage() {
       </div>
   );
 }
+
+export default withAuth(AvailabilityPage, ["admin"]);
+

@@ -33,6 +33,7 @@ import { toast } from "@/components/ui/toast";
 import { useAuth } from "@/contexts/AuthContexts";
 import {getCountryLabel} from "@/lib/utils";
 import {IMeeting} from "@/components/SessionList";
+import withAuth from "@/hoc/withAuth";
 
 interface User {
   _id: string;
@@ -45,7 +46,7 @@ interface User {
 
 const roleOptions = ["super-admin", "admin", "user"];
 
-export default function UsersPage() {
+const UsersPage=()=> {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [session, setSession] = useState<IMeeting[]>([]);
@@ -329,3 +330,5 @@ export default function UsersPage() {
     </div>
   );
 }
+export default withAuth(UsersPage, ["admin", "super-admin"]);
+

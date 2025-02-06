@@ -51,7 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (token: string) => {
         try {
-            // Assume the API sets the HTTP-only cookie for us
             const userData = await getOwnProfile()
             setUser(userData)
             router.push('/admin')
@@ -63,7 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         try {
-            // Call logout API endpoint to clear the server-side session and HTTP-only cookie
             await fetch('/api/logout', { method: 'POST' })
             setUser(null)
             router.push('/signin')

@@ -5,8 +5,9 @@ import { MeetingRoom } from "@/components/getStream/MeetingRoom";
 import { motion } from "framer-motion";
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import withAuth from "@/hoc/withAuth";
 
-export default function MeetingPage() {
+const MeetingPage=()=> {
     const params = useParams();
     const [data, setData] = useState<{ name: string; meetingId: string } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -61,3 +62,5 @@ export default function MeetingPage() {
 
     );
 }
+
+export default withAuth(MeetingPage, ["admin"]);

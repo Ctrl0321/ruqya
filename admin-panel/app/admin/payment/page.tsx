@@ -2,8 +2,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, Calendar, Clock, Filter, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContexts";
-import { getMeetings, getMeetingsByRakiId, getOwnProfile } from "@/lib/api";
+import { getMeetings, getMeetingsByRakiId } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
+import withAuth from "@/hoc/withAuth";
 
 interface Meeting {
   _id: string;
@@ -330,4 +331,4 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
   );
 };
 
-export default PaymentManagementPage;
+export default withAuth(PaymentManagementPage, ["admin","super-admin"]);

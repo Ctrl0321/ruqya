@@ -32,8 +32,8 @@ import {
   getReviews, getRakis,
 } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContexts";
-import {languages} from "@/lib/constance";
 import {getCountryLabel} from "@/lib/utils";
+import withAuth from "@/hoc/withAuth";
 
 interface Raki {
   _id: string;
@@ -59,7 +59,7 @@ interface Review {
   comment: string;
 }
 
-export default function TutorsPage() {
+const RakiPage=()=> {
   const [tutors, setTutors] = useState<Raki[]>([]);
   const [filteredTutors, setFilteredTutors] = useState<Raki[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -340,3 +340,5 @@ export default function TutorsPage() {
     </div>
   );
 }
+export default withAuth(RakiPage, ["super-admin"]);
+
