@@ -21,7 +21,9 @@ const Header = () => {
   const handleLinkClick = () => {
     setTimeout(() => {
       setIsOpen(false);
-    }, 1000);
+      setMobileProfileDropdownOpen(false);
+      setProfileDropdownOpen(false);
+    }, 500);
   };
 
   const handleLogout = () => {
@@ -117,11 +119,11 @@ const Header = () => {
               </button>
               {profileDropdownOpen && localStorage.getItem("fe-token") && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <Link href="/MyProfile" className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                  <Link href="/MyProfile" className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center" onClick={handleLinkClick}>
                     <FaEdit className="w-4 h-4 mr-2" />
                     My Profile
                   </Link>
-                  <Link href="/MyBookings" className=" px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                  <Link href="/MyBookings" className=" px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center" onClick={handleLinkClick}>
                     <FaBookBookmark className="w-5 -ml-1 h-4 mr-2" />
                     My Bookings
                   </Link>
