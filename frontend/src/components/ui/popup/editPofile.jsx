@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CustomSelect from "@/components/ui/input/select";
+import { BorderInput } from "@/components/ui/input/input";
 
 const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, languages }) => {
   const defaultValues = {
@@ -161,7 +162,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               <button onClick={onClose} className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-full py-3 mt-5 transition duration-300">
                 Cancel
               </button>
-              <button onClick={handleSaveButtonClick} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5 transition duration-300">
+              <button onClick={handleSaveButtonClick} className="w-full bg-RuqyaGreen hover:bg-teal-700 text-white rounded-full py-3 mt-5 transition duration-300">
                 Save
               </button>
             </div>
