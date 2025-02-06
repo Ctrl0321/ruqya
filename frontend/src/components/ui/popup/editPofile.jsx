@@ -31,10 +31,9 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
   };
 
   const handleSelectChange = (selectedOption, selectName) => {
-    if (!selectedOption) return;
     setPopupData(prev => ({
       ...prev,
-      [selectName]: selectedOption.value,
+      [selectName]: selectedOption ? selectedOption.value : null,
     }));
   };
 

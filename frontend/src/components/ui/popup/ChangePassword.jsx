@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-
+import { BorderInput } from "@/components/ui/input/input";
 const ChangePassword = ({ onClose, onSubmit }) => {
   const MIN_PASSWORD_LENGTH = 8; // Add this constant
   const [passwordData, setPasswordData] = useState({
@@ -60,40 +60,31 @@ const ChangePassword = ({ onClose, onSubmit }) => {
           {error && <ErrorMessage message={error} />}
           <div className="flex flex-col gap-6">
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Current Password</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordChange}
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                label="Current Password"
+                type="password"
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+              />
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">New Password</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                label="New Password"
+                type="password"
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+              />
             </div>
             <div className="relative mb-6">
-              <label className="text-sm text-gray-600 absolute -top-3 left-4 bg-white px-1 w-auto">Confirm New Password</label>
-              <div className="flex justify-center items-center rounded-full border px-4 py-1 border-teal-500 focus:ring-teal-500">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  className="text-sm w-full outline-none"
-                />
-              </div>
+              <BorderInput
+                label="Confirm New Password"
+                type="password"
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+              />
             </div>
             <div className="grid grid-cols-2 gap-6">
               <button onClick={handleClose} className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-full py-3 transition duration-300">

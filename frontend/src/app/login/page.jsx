@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Input from "@/components/ui/input/input";
+import { BorderInput } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -126,19 +126,25 @@ function Login() {
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {error.message && <ErrorMessage message={error.message} type={error.type} />}
-              <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" name="email" placeholder="Enter your Email Address here" className="text-sm" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-              </div>
+              <BorderInput
+                label="Email Address"
+                type="email"
+                name="email"
+                placeholder="Enter your Email Address here"
+                className="text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-              <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" name="password" placeholder="Enter your password" className="text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-              </div>
+              <BorderInput
+                label="Password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                className="text-sm"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
               <div className="mt-5">
                 <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3" onClick={handleSubmit}>

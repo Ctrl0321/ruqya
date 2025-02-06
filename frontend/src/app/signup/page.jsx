@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Input from "@/components/ui/input/input";
+import {BorderInput} from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { signup, googleSignup } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
@@ -146,7 +146,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Full Name</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="text"
                     name="name"
                     value={formData.name}
@@ -160,7 +160,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="email"
                     name="email"
                     value={formData.email}
@@ -174,7 +174,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="password"
                     name="password"
                     value={formData.password}
@@ -188,7 +188,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Confirm Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
