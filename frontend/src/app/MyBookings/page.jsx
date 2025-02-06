@@ -80,12 +80,26 @@ function MyBookings() {
         </ol>
       </nav>
       <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
-      <div className="flex justify-start mb-6">
+      <div className="flex justify-center mb-6">
         <div className="bg-gray-200 p-2 rounded-lg flex">
-          <button className={`px-4 py-2 mr-2 transition-colors duration-300 rounded-lg ${showUpcoming ? "bg-white text-black" : "bg-gray-200 text-black"}`} onClick={() => setShowUpcoming(true)}>
+          <button 
+            className={`px-4 py-2 mr-2 transition-colors duration-300 rounded-lg ${
+              showUpcoming 
+                ? "bg-white text-black shadow-inner" 
+                : "bg-gray-200 text-black hover:shadow-lg shadow-inner"
+            }`} 
+            onClick={() => setShowUpcoming(true)}
+          >
             Upcoming Sessions
           </button>
-          <button className={`px-4 py-2 transition-colors duration-300 rounded-lg ${!showUpcoming ? "bg-white text-black" : "bg-gray-200 text-black"}`} onClick={() => setShowUpcoming(false)}>
+          <button 
+            className={`px-4 py-2 transition-colors duration-300 rounded-lg ${
+              !showUpcoming 
+                ? "bg-white text-black shadow-inner" 
+                : "bg-gray-200 text-black hover:shadow-lg shadow-inner"
+            }`} 
+            onClick={() => setShowUpcoming(false)}
+          >
             Completed Sessions
           </button>
         </div>
