@@ -67,7 +67,6 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
 
         if (!chatClientRef.current) {
             chatClientRef.current = StreamChat.getInstance(apiKey);
-            console.log("funnn",chatClientRef.current)
         }
 
         let isMounted = true;

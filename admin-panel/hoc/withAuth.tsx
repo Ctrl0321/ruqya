@@ -10,11 +10,9 @@ const withAuth = (WrappedComponent: React.FC, allowedRoles: string[]) => {
         const [loading, setLoading] = useState(true);
 
         useEffect(() => {
-            console.log("Testing")
            if (currentUser){
                const token = localStorage.getItem("token");
                const role = currentUser?.role;
-               console.log("lol",token,role)
 
                if (!token) {
                    console.log("No token")
