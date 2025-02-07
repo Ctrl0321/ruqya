@@ -15,7 +15,7 @@ function Third(props) {
   }
 
   return (
-    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">
+    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg mx-[7%]">
       <div className="grid grid-cols-1 m-2">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">My Bookings</h1>

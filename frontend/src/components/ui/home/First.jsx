@@ -10,7 +10,7 @@ function First() {
         {/* SVG Background - Hidden on mobile, visible on large screens */}
         <div className="hidden lg:block absolute right-[-130px] bottom-[-90px] pointer-events-none">
           <svg
-              className="w-[570px] h-[570px]"
+              className="w-[600px] h-[570px]"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="8.19 7.39 16.4 18"
           >
@@ -32,10 +32,10 @@ function First() {
                   Spirit with Ruqyah
                 </span>
                 </h1>
-                <p className="text-sm md:text-base lg:text-lg max-w-xl">
+                <p className="text-sm md:text-base lg:text-lg max-w-xl font-[800]">
                   Connect with expert Raqis for personalized spiritual healing and guidance.
                 </p>
-                <div className="flex flex-wrap gap-4 mt-6">
+                <div className="flex flex-wrap gap-4 mt-10">
                   <Button
                       text="Book a Session"
                       link="/BookRaqis"
@@ -46,14 +46,14 @@ function First() {
                   <Button
                       text="Learn Ruqyah"
                       link="/SelfRuqyah"
-                      className="px-6 md:px-8 py-3  border-[#0D766E] text-[#0D766E] bg-[rgba(0,204,204,0.1)] rounded-lg whitespace-nowrap font-[800]"
+                      className="px-6 md:px-8 py-3  border-[#0d766e] text-[#0d766e] bg-[rgba(0,204,204,0.1)] rounded-lg whitespace-nowrap font-[800]"
                   />
                 </div>
               </div>
 
               {/* Image Container */}
-              <div className="w-full md:w-6/12">
-                <div className="relative w-full aspect-[5/3] rounded-[3.2rem]">
+              <div className="w-full md:w-3/6">
+                <div className="relative w-full aspect-[8/4] rounded-[3.2rem]">
                   <img
                       src="https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg"
                       alt="men-meditation"

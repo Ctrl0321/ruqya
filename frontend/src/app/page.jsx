@@ -50,7 +50,7 @@ export default function Home() {
       <Search />
       <Second />
       {myBookings && myBookings.length !== 0 && <Third raqiData={myBookings} />}
-      <Forth raqiData={raqiData} title="Meet Our Expert Raqis" />
+      <Forth  raqiData={raqiData} title="Meet Our Expert Raqis" />
     </div>
   );
 }
