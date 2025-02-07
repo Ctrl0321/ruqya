@@ -18,6 +18,8 @@ export interface IUser extends Document {
     password: string;
     status:string;
     matchPassword: (enteredPassword: string) => Promise<boolean>;
+    isEmailVerified: boolean;
+    profileImage: string;
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -30,11 +32,13 @@ const userSchema: Schema<IUser> = new Schema({
     languages: { type: [String] },
     status:{type:String},
     mobileNumber: { type: String },
-    googleId:{type:String},
+    googleId:{type:String, sparse: true},
     age: { type: Number },
     firstTimeLogin:{type:Boolean},
     yearOfExperience: { type: Number },
     description: { type: String },
+    isEmailVerified: { type: Boolean, default: false },
+    profileImage: { type: String },
 });
 
 userSchema.pre('save', async function (next) {

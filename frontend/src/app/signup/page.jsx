@@ -3,10 +3,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Input from "@/components/ui/input/input";
+import {BorderInput} from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
-import { signup } from "@/lib/api";
+import { signup, googleSignup } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
@@ -53,12 +55,52 @@ function SignUp() {
       setLoading(true);
       await signup(formData.email, formData.name, formData.password);
       setSuccess(true);
-      setError("Registration successful!");
+      setError({message: "Registration successful!", type:"success"});
       setTimeout(() => {
         router.push("/");
       }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create account");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = await signInWithPopup(auth, googleProvider);
+
+      if (!result?.user?.email) {
+        setError("Failed to sign up with Google");
+        return;
+      }
+
+      const userData = {
+        tokenId: result._tokenResponse.idToken,
+        email: result.user.email,
+        name: result.user.displayName || "",
+        photoURL: result.user.photoURL || "",
+        uid: result.user.uid,
+        idToken: result._tokenResponse.idToken,
+      };
+
+      const response = await googleSignup(userData.idToken);
+
+      if (response && response.token) {
+        localStorage.setItem("fe-token", response.token);
+        setError({ message: "Registration successful!", type: "success" });
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (error) {
+      console.error("Firebase Error:", error);
+      setError(error.response?.data?.message || "Failed to sign up with Google");
     } finally {
       setLoading(false);
     }
@@ -104,7 +146,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Full Name</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="text"
                     name="name"
                     value={formData.name}
@@ -118,7 +160,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="email"
                     name="email"
                     value={formData.email}
@@ -132,7 +174,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="password"
                     name="password"
                     value={formData.password}
@@ -146,7 +188,7 @@ function SignUp() {
               <div className="relative mb-4">
                 <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Confirm Password</label>
                 <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input
+                  <BorderInput
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
@@ -176,7 +218,13 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-5">
-                <Button type="button" variant="outline" bg={true} text="Sign Up with Google" color={"RuqyaGreen"} className="w-full rounded-full py-3 border-2" />
+                <button
+                  type="button"
+                  className="login-with-google-btn w-full rounded-lg"
+                  onClick={handleGoogleSignUp}
+                >
+                  Sign Up with Google
+                </button>
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Already have an Account?{" "}

@@ -34,11 +34,11 @@ const CustomSelect = ({ options, value, onChange, name, placeholder }) => (
       placeholder: (base) => ({
         ...base,
         color: '#a0aec0', 
-        paddingLeft: '8px'
+        paddingLeft: '10px'
       }),
       singleValue: (base) => ({
         ...base,
-        paddingLeft: '8px'
+        paddingLeft: '10px'
       }),
       menu: (base) => ({
         ...base,

@@ -9,6 +9,7 @@ import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 import { getMyBookings } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import { parseBookingDate } from "@/lib/utils";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -56,9 +57,13 @@ function MyBookings() {
     return <ErrorMessage message={error} />;
   }
 
-  if (bookings.length === 0) {
-    return <p className="min-h-screen text-black">No bookings found.</p>;
+  if(!bookings){
+    return <LoadingSpinner />;
   }
+  
+  // if (bookings.length === 0) {
+  //   return <p className="min-h-screen flex justify-center items-center text-black">No bookings found.</p>;
+  // }
 
   return (
     <div className="min-h-screen text-black mx-5 md:mx-10 mt-10 text-xs md:text-base">
@@ -80,17 +85,31 @@ function MyBookings() {
         </ol>
       </nav>
       <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
-      <div className="flex justify-start mb-6">
+      <div className="flex justify-center mb-6">
         <div className="bg-gray-200 p-2 rounded-lg flex">
-          <button className={`px-4 py-2 mr-2 transition-colors duration-300 rounded-lg ${showUpcoming ? "bg-white text-black" : "bg-gray-200 text-black"}`} onClick={() => setShowUpcoming(true)}>
+          <button 
+            className={`px-4 py-2 mr-2 transition-colors duration-300 rounded-lg ${
+              showUpcoming 
+                ? "bg-white text-black shadow-inner" 
+                : "bg-gray-200 text-black hover:shadow-lg shadow-inner"
+            }`} 
+            onClick={() => setShowUpcoming(true)}
+          >
             Upcoming Sessions
           </button>
-          <button className={`px-4 py-2 transition-colors duration-300 rounded-lg ${!showUpcoming ? "bg-white text-black" : "bg-gray-200 text-black"}`} onClick={() => setShowUpcoming(false)}>
+          <button 
+            className={`px-4 py-2 transition-colors duration-300 rounded-lg ${
+              !showUpcoming 
+                ? "bg-white text-black shadow-inner" 
+                : "bg-gray-200 text-black hover:shadow-lg shadow-inner"
+            }`} 
+            onClick={() => setShowUpcoming(false)}
+          >
             Completed Sessions
           </button>
         </div>
       </div>
-      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-screen items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
+      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
       <div className="min-h-screen">
       {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
       </div>

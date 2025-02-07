@@ -13,7 +13,6 @@ import Second from "@/components/ui/home/Second";
 import Third from "@/components/ui/home/Third";
 import Forth from "@/components/ui/home/Forth";
 
-import sampledata from "@/data/sampledata";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 
@@ -50,7 +49,7 @@ export default function Home() {
       </div>
       <Search />
       <Second />
-      <Third raqiData={myBookings} />
+      {myBookings && myBookings.length !== 0 && <Third raqiData={myBookings} />}
       <Forth raqiData={raqiData} title="Meet Our Expert Raqis" />
     </div>
   );

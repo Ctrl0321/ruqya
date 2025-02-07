@@ -1,6 +1,6 @@
 "use client";
 import { FaSearch, FaGlobe, FaLongArrowAltRight } from "react-icons/fa";
-import Input from "@/components/ui/dump/input";
+import { Input } from "@/components/ui/input/input";
 import { SearchNormal1, Translate } from "iconsax-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

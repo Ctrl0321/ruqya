@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Input from "@/components/ui/input/input";
+import { BorderInput } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { login, googleSignup, googleLogin } from "@/lib/api";
+import { login, googleSignup } from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 
@@ -18,13 +18,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState({ message: "", type: "" });
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError({ message: "", type: "" });
 
     try {
       const response = await login(email, password);
@@ -32,67 +32,67 @@ function Login() {
       if (response && response.role === "user") {
         localStorage.setItem("fe-token", response.token);
         setLoading(false);
-        setError("Login Successful.");
+        setError({ message: "Login Successful", type: "success" });
         const redirectPath = localStorage.getItem("redirectPath") || "/";
-        // console.log(redirectPath);
         localStorage.removeItem("redirectPath");
         router.push(redirectPath);
       } else {
         setLoading(false);
-        setError("Invalid login credentials.");
+        setError({ message: "Invalid login credentials", type: "error" });
       }
     } catch (err) {
       console.error(err);
       setLoading(false);
       if (err.response && err.response.status === 404) {
-        setError("Invalid login credentials.");
+        setError({ message: "Invalid login credentials", type: "error" });
       } else {
-        setError(err.response.message);
+        setError({ message: err.response?.message || "An error occurred", type: "error" });
       }
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
+      setLoading(true);
+      setError({ message: "", type: "" });
+
       const result = await signInWithPopup(auth, googleProvider);
+
+      if (!result?.user?.email) {
+        setError({ message: "Failed to sign in with Google", type: "error" });
+      }
+
+      // Extract required user data
       const userData = {
+        tokenId: result._tokenResponse.idToken,
         email: result.user.email,
-        displayName: result.user.displayName,
-        photoURL: result.user.photoURL,
-        uid: result.user.uid
+        name: result.user.displayName || "",
+        photoURL: result.user.photoURL || "",
+        uid: result.user.uid,
+        idToken: result._tokenResponse.idToken,
       };
 
-      console.log(userData);
-      
-    //   try {
-    //     const response = await googleLogin(userData);
-    //     if (response && response.role === "user") {
-    //       setError("Login Successful.");
-    //       const redirectPath = localStorage.getItem("redirectPath") || "/";
-    //       localStorage.removeItem("redirectPath");
-    //       router.push(redirectPath);
-    //     }
-    //   } catch (backendError) {
-    //     console.error("Backend Error:", backendError);
-    //     // If user doesn't exist, try to sign up
-    //     if (backendError.response?.status === 404) {
-    //       try {
-    //         const signupResponse = await googleSignup(userData);
-    //         if (signupResponse && signupResponse.role === "user") {
-    //           setError("Registration Successful.");
-    //           router.push('/');
-    //         }
-    //       } catch (signupError) {
-    //         console.error("Signup Error:", signupError);
-    //         setError("Failed to create account");
-    //       }
-    //     } else {
-    //       setError("Failed to authenticate");
-    //     }
-    //   }
+      // Send to backend
+      const response = await googleSignup(userData.idToken);
+
+      if (response && response.token) {
+        localStorage.setItem("fe-token", response.token);
+        setError({ message: "Login Successful", type: "success" });
+        setTimeout(() => setError({ message: "Login Successful", type: "success" }), 3000);
+        const redirectPath = localStorage.getItem("redirectPath") || "/";
+        localStorage.removeItem("redirectPath");
+        router.push(redirectPath);
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
-      console.error("Firebase Error:", error);
-      setError("Failed to sign in with Google");
+      console.error("Google Sign-in Error:", error);
+      setError({
+        message: error.response?.data?.message || error.message || "Failed to sign in with Google",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,20 +125,26 @@ function Login() {
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-              {error && <ErrorMessage message={error} />}
-              <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="email" name="email" placeholder="Enter your Email Address here" className="text-sm" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-              </div>
+              {error.message && <ErrorMessage message={error.message} type={error.type} />}
+              <BorderInput
+                label="Email Address"
+                type="email"
+                name="email"
+                placeholder="Enter your Email Address here"
+                className="text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-              <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
-                  <Input type="password" name="password" placeholder="Enter your password" className="text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-              </div>
+              <BorderInput
+                label="Password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                className="text-sm"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
               <div className="mt-5">
                 <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3" onClick={handleSubmit}>
@@ -153,20 +159,14 @@ function Login() {
                   <span className="px-2 bg-white text-gray-500">OR</span>
                 </div>
               </div>
-              <div className="mt-5 rounded-3xl">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  bg={true} 
-                  text="Log In with Google" 
-                  color={"RuqyaGreen"} 
-                  className="w-full rounded-3xl py-3 border-2"
-                  onClick={handleGoogleSignIn}
-                />
+              <div className=" rounded-3xl">
+                {/* <Button type="button" variant="outline" bg={true} text="Log In with Google" color={"RuqyaGreen"} className="w-full rounded-3xl py-3 border-2" onClick={handleGoogleSignIn} /> */}
+                <button type="button" className="login-with-google-btn w-full rounded-lg" onClick={handleGoogleSignIn}>
+                  Sign in with Google
+                </button>
               </div>
               <p className="text-center text-sm text-gray-600 mt-8">
                 Don't have an Account?{" "}
-                
                 <Link href="/signup" className="text-blue-600 hover:underline">
                   Sign Up
                 </Link>

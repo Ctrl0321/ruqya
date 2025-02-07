@@ -1,23 +1,22 @@
 "use client";
 import Link from "next/link";
-import Input from "@/components/ui/dump/input";
+import { Input } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import Triangle from "@/assets/svg/triangle";
 import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"; // Import the proper icons
 
 function Footer() {
   return (
-    <footer className="relative w-full z-100 pt-16 mt-48"> {/* I dont tink z index working */}
+    <footer className="relative w-full z-100 pt-16 mt-48">
       <Triangle />
       <div className="bg-RuqyaLightPurple">
         <div className="px-4 mx-auto text-center md:text-left ">
           <div className="flex justify-center mb-12"></div>
           <div className="flex flex-col md:flex-row justify-between w-full  gap-8 max-w-6xl mx-auto">
-            
             <div className="space-y-4 order-3 md:order-1">
               <div className="border-b border-[#424867] opacity-50 pb-4 md:hidden"></div>
               <h3 className="text-[#424867] text-xl font-medium mb-6 flex items-center justify-center md:justify-start gap-2">
-                <FaMosque className="text-[#424867]" /> 
+                <FaMosque className="text-[#424867]" />
                 Prophetic Ruqyah
               </h3>
               <div className="space-y-3">
@@ -48,7 +47,7 @@ function Footer() {
             <div className="flex items-center justify-center md:justify-start text-lg md:text-sm order-2 md:order-2">
               {/* <h3 className="text-[#424867] text-xl font-medium mb-6">Quick Links</h3> */}
               <nav className="space-y-6">
-              <Link href="/" className="block text-[#424867] hover:text-teal-600">
+                <Link href="/" className="block text-[#424867] hover:text-teal-600">
                   Home
                 </Link>
                 <Link href="/BookRaqis" className="block text-[#424867] hover:text-teal-600">
