@@ -1,3 +1,4 @@
+import RakiAvailability from "../models/rakiAvailability";
 
 require('dotenv').config();
 
@@ -156,6 +157,18 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
                     // }
                 },
             });
+
+            const existingAvailability = await RakiAvailability.findOneAndUpdate(
+                { rakiId,startTime:utcDate },
+                {
+                    isAvailable:false
+                },
+                { new: true }
+            );
+
+            if (!existingAvailability) {
+                return res.status(200).json({ message: 'No availability found', data: null });
+            }
 
             console.log("Stream response:", streamResponse);
         } catch (error: any) {
