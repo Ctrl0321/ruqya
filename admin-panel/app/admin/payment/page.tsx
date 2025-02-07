@@ -117,7 +117,9 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
       const userMatch = isAdmin ? meeting.rakiId === currentUser?._id : true;
 
       return monthMatch && yearMatch && statusMatch && searchMatch && userMatch;
-    });
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   }, [
     meetings,
     selectedMonth,
