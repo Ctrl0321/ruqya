@@ -16,7 +16,7 @@ const Grid = ({
       `md:grid-cols-1`,
       // `ipad-landscape:grid-cols-${Math.min(cols, 2)}`,
       `lg:grid-cols-2`,
-      `xl:grid-cols-3`,
+      `xl:grid-cols-2`,
       `2xl:grid-cols-3`,
       `3xl:grid-cols-5`,
       `gap-${gap}`,

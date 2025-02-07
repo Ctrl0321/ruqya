@@ -73,7 +73,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className={`${isCurrent("/")} px-[7%] py-12 shadow-md font-extrabold color-header`}>
+      <nav className={`${isCurrent("/")} lg:px-[7%] lg:py-12 py-4 shadow-md font-extrabold color-header`}>
         <div className="flex justify-between items-center mx-8 md:mx-8">
           <div className="text-xl min-w-32">
             <Link href="/" className="text-gray-700 w-40 hover:text-gray-900">

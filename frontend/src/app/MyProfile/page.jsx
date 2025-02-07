@@ -368,7 +368,7 @@ const MyProfile = () => {
   }
 
   return (
-    <div className="p-6 mb-10 min-h-screen">
+    <div className="py-6 mb-10 min-h-screen lg:mx-[9%]">
       {/* Show popups before the main content */}
       {isChangePasswordOpen && (
         <ChangePassword 

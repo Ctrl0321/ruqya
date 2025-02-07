@@ -183,7 +183,7 @@ const BookSessionPage = () => {
   };
 
   return (
-    <div className="mx-auto p-4 min-h-screen flex flex-col md:flex-row gap-5 relative">
+    <div className="mx-[9%] py-4 min-h-screen flex flex-col md:flex-row gap-5 relative">
       {showError && <div className="fixed top-0 left-0 right-0 z-50">
         <ErrorMessage message={errorMessage} />
       </div>}

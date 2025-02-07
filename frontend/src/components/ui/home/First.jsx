@@ -8,9 +8,9 @@ function First() {
           className="relative w-full h-[60vh] bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-RuqyaLightPurple md:bg-white overflow-x-clip"
       >
         {/* SVG Background - Hidden on mobile, visible on large screens */}
-        <div className="hidden lg:block absolute right-[-130px] bottom-[-90px] pointer-events-none">
+        <div className="hidden lg:block absolute right-[-5%] bottom-[-90px] pointer-events-none">
           <svg
-              className="w-[600px] h-[570px]"
+              className="md:w-[60vh] lg:w-[70vh] xl:w-[65vh] "
               xmlns="http://www.w3.org/2000/svg"
               viewBox="8.19 7.39 16.4 18"
           >
@@ -22,7 +22,7 @@ function First() {
         {/* Main Content Container */}
         <div className="h-full flex items-center">
           <div className="container mx-[9%] ">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 relative z-10">
+            <div className="flex flex-col-reverse md:flex-row items-start justify-between gap-4 relative z-10">
               {/* Text Content */}
               <div className="w-full h-96 md:w-1/2 space-y-6  ">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-[1000] text-RuqyaGray leading-tight">
@@ -35,7 +35,7 @@ function First() {
                 <p className="text-sm md:text-base lg:text-lg max-w-xl font-[800]">
                   Connect with expert Raqis for personalized spiritual healing and guidance.
                 </p>
-                <div className="flex flex-wrap gap-4 mt-10">
+                <div className="flex gap-4 mt-10">
                   <Button
                       text="Book a Session"
                       link="/BookRaqis"
@@ -52,12 +52,12 @@ function First() {
               </div>
 
               {/* Image Container */}
-              <div className="w-full md:w-3/6">
-                <div className="relative w-full aspect-[8/4] rounded-[3.2rem]">
+              <div className="w-full md:w-3/6  sm-6">
+                <div className="relative w-full aspect-[6/3] lg:rounded-[3.2rem] rounded-xl">
                   <img
                       src="https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg"
                       alt="men-meditation"
-                      className="w-full h-full object-cover object-center scale-x-[-1] rounded-[3.2rem]"
+                      className="w-full h-full object-cover object-center scale-x-[-1] lg:rounded-[3.2rem] rounded-xl"
                   />
                 </div>
               </div>

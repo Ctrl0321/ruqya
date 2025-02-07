@@ -9,7 +9,7 @@ export default function RuqyahPage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <div className="mx-5 md:mx-8 px-4 py-8 mb-72">
+    <div className="mx-5 md:mx-[8%] px-4 py-8 mb-72">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li><Link href="/" className="hover:text-primary">Home</Link></li>
@@ -22,7 +22,7 @@ export default function RuqyahPage() {
         <div className="w-full md:w-64">
           <button
             onClick={() => setIsNavOpen(!isNavOpen)}
-            className="w-full flex items-center justify-between p-4 bg-RuqyaLightPurple rounded-lg md:hidden"
+            className="w-full flex items-center justify-between p-4 bg-RuqyaLightPurple rounded-lg  md:hidden"
           >
             <span className="font-semibold">Content</span>
             <ChevronDownIcon className={`w-5 h-5 transition-transform ${isNavOpen ? 'rotate-180' : ''}`} />
@@ -52,7 +52,7 @@ export default function RuqyahPage() {
           </nav>
         </div>
         {/* Main Content */}
-        <article className="flex-1 space-y-8">
+        <article className="flex-1 space-y-8 lg:ml-8">
           {content.sections.map(section => (
             <section key={section.id} id={section.id}>
               <h2 className="text-2xl font-semibold mb-4">{section.title}</h2>

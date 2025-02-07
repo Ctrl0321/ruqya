@@ -66,7 +66,7 @@ function MyBookings() {
   // }
 
   return (
-    <div className="min-h-screen text-black mx-5 md:mx-10 mt-10 text-xs md:text-base">
+    <div className="min-h-screen text-black mx-5 md:mx-[9%] mt-10 text-xs md:text-base">
       <nav aria-label="Breadcrumb m-10" className="mb-6">
         <ol className="flex items-center space-x-2 mt-5 text-sm text-muted-foreground">
           <li>
