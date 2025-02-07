@@ -21,7 +21,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
+        const token = localStorage.getItem("token");
+        if (error.response && error.response.status === 401 && token) {
             localStorage.removeItem("token");
             window.location.href = "/";
         }
@@ -121,6 +122,17 @@ export const cancelSession = async (meetingId: string, note: string) =>
     (
         await api.post("ruqya-api/meeting/cancel", { meetingId, note })
     ).data;
+
+export const updatePayment = async (meetingId: string, isPaid: boolean) =>
+    (
+        await api.post("ruqya-api/meeting/update-payment", { meetingId, isPaid })
+    ).data;
+
+export const requestPayment = async (meetingId: string) =>
+    (
+        await api.post("ruqya-api/meeting/request-payment", { meetingId })
+    ).data;
+
 
 export const rescheduleSession = async (meetingId: string, newDate: string) =>
     (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate })).data;
