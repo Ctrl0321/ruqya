@@ -39,14 +39,14 @@ export default function Home() {
   return (
     <div className="bg-white color-header min-h-screen text-center md:text-left">
       <First className="" />
-      <div className="hidden lg:flex">
-        <div className="absolute right-0 translate-y-0 translate-x-0">
-          <Flower className="z-100 w-96 h-96 transition-transform duration-500 group-hover:rotate-180" />
-        </div>
-        <div className="absolute left-0 translate-y-0 translate-x-0">
-          <FlowerLeft className="z-100 w-96 h-96 transition-transform duration-500 rotate-90" />
-        </div>
-      </div>
+      {/*<div className="hidden lg:flex">*/}
+      {/*  <div className="absolute right-0 translate-y-0 translate-x-0">*/}
+      {/*    <Flower className="z-100 w-96 h-96 transition-transform duration-500 group-hover:rotate-180" />*/}
+      {/*  </div>*/}
+      {/*  <div className="absolute left-0 translate-y-0 translate-x-0">*/}
+      {/*    <FlowerLeft className="z-100 w-96 h-96 transition-transform duration-500 rotate-90" />*/}
+      {/*  </div>*/}
+      {/*</div>*/}
       <Search />
       <Second />
       {myBookings && myBookings.length !== 0 && <Third raqiData={myBookings} />}
