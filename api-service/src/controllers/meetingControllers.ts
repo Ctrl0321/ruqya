@@ -51,7 +51,6 @@ const convertMeetingDates = (meetings: any[], timeZone: string): any[] => {
     }));
 };
 
-
 export const getAllMeetings = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { timeZone = 'UTC' } = req.query;
@@ -65,7 +64,6 @@ export const getAllMeetings = async (req: AuthenticatedRequest, res: Response): 
         res.status(500).json({ message: 'Server error', error });
     }
 };
-
 
 export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
@@ -104,7 +102,6 @@ export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: 
         res.status(500).json({ message: "Server error", error });
     }
 };
-
 
 export const addMeeting = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
@@ -177,7 +174,6 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
         res.status(500).json({ message: 'Failed to add meeting', error: error?.message || error });
     }
 };
-
 
 export const getMeetingsByUserId = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
@@ -346,7 +342,6 @@ export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): P
     }
 };
 
-
 export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const { filterType, startDate, endDate, timeZone = 'UTC' } = req.query;
@@ -437,7 +432,6 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
     }
 };
 
-
 export const getMeetingsByRakiId = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     try {
         const rakiId = req.user?.id;
@@ -468,6 +462,95 @@ export const getMeetingsByRakiId = async (req: AuthenticatedRequest, res: Respon
         res.status(500).json({ message: 'Failed to fetch meetings', error });
     }
 };
+
+export const updateMeetingPayment=async (req:AuthenticatedRequest,res:Response):Promise<any> =>{
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const { meetingId,isPaid } = req.body;
+
+
+        const meeting = await Meeting.findOne({
+            meetingId
+        });
+
+        if (!meeting) {
+            return res.status(404).json({
+                message: 'Meeting not found or you do not have permission to cancel it'
+            });
+        }
+
+        const updatedMeeting = await Meeting.findOneAndUpdate(
+            { meetingId },
+            {
+              isPaid:isPaid
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: 'Meeting payment update successfully',
+            meeting: updatedMeeting
+        });
+
+    }
+    catch (error){
+        console.error('Error updating payment of  meeting:', error);
+        res.status(500).json({
+            message: 'Failed to update  meeting payment',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+}
+
+export const requestMeetingPayment=async (req:AuthenticatedRequest,res:Response):Promise<any> =>{
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const { meetingId } = req.body;
+
+
+        const meeting = await Meeting.findOne({
+            meetingId
+        });
+
+        if (!meeting) {
+            return res.status(404).json({
+                message: 'Meeting not found or you do not have permission to cancel it'
+            });
+        }
+
+        const requestedAt = new Date().toISOString();
+
+
+        const updatedMeeting = await Meeting.findOneAndUpdate(
+            { meetingId },
+            {
+                requestedAt
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: 'Meeting payment request successfully',
+            meeting: updatedMeeting
+        });
+
+    }
+    catch (error){
+        console.error('Error request payment of  meeting:', error);
+        res.status(500).json({
+            message: 'Failed to request  meeting payment',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+}
 
 
 

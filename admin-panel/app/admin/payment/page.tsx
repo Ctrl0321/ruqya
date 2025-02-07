@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, Calendar, Clock, Filter, X } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContexts";
-import { getMeetings, getMeetingsByRakiId } from "@/lib/api";
+import {useAuth, UserDto} from "@/contexts/AuthContexts";
+import {getMeetings, getMeetingsByRakiId, getRakis, requestPayment, updatePayment} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import withAuth from "@/hoc/withAuth";
 
@@ -16,6 +16,7 @@ interface Meeting {
   notificationSend: boolean;
   isPaid: boolean;
   requestedAt: string | null;
+  rakiName?:string
 }
 
 interface PaymentManagementPageProps {
@@ -38,23 +39,57 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
     const fetchMeeting = async () => {
       try {
         const meetingData =
-          currentUser?.role === "super-admin"
-            ? await getMeetings()
-            : await getMeetingsByRakiId();
+            currentUser?.role === "super-admin"
+                ? await getMeetings()
+                : await getMeetingsByRakiId();
 
-        setMeeting(meetingData);
+        const rakiData = await getRakis();
+
+        // Map Raki names to meetings
+        const mergedMeetings = meetingData.map((meeting:Meeting) => {
+          const raki = rakiData.find((r:UserDto) => r._id === meeting.rakiId);
+          return {
+            ...meeting,
+            rakiName: raki ? raki.name : "Unknown Raki",
+          };
+        });
+
+        setMeeting(mergedMeetings);
       } catch (error) {
-        console.error("Failed to fetch meeting data:", error);
+        console.error("Failed to fetch data:", error);
         toast({
           title: "Error",
-          description: "Failed to fetch meeting data. Please try again.",
+          description: "Failed to fetch meeting or rakis data. Please try again.",
           variant: "destructive",
         });
       }
     };
 
-    if (currentUser) fetchMeeting();
+    if (currentUser) {
+      fetchMeeting();
+    }
   }, [currentUser]);
+
+
+  const handlePaymentRequest = async (meetingId: string) => {
+    try {
+      await requestPayment(meetingId); // Call your actual API function here
+      toast({ title: "Success", description: "Payment request sent successfully." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to request payment.", variant: "destructive" });
+    }
+  };
+
+  const handleMarkAsPaid = async (meetingId: string,isPaid:boolean) => {
+    try {
+      await updatePayment(meetingId,isPaid);
+      toast({ title: "Success", description: "Marked as paid successfully." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to mark as paid.", variant: "destructive" });
+    }
+  };
+
+
 
   const filteredMeetings = useMemo(() => {
     if (!meetings) return [];
@@ -77,12 +112,10 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
           !meeting.isPaid);
       const searchMatch =
         !searchTerm ||
-        meeting.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        meeting.rakiName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         meeting.topic.toLowerCase().includes(searchTerm.toLowerCase());
 
       const userMatch = isAdmin ? meeting.userId === currentUser?._id : true;
-
-      console.log("yarran antha paiyan",monthMatch,yearMatch,searchMatch,userMatch)
 
       return monthMatch && yearMatch && statusMatch && searchMatch && userMatch;
     });
@@ -120,19 +153,19 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header with Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-primary-500 text-primary-25 rounded-lg p-4">
+          <div className="border border-primary-500 text-primary-700 hover:bg-[rgba(0,128,128,0.1)] rounded-lg p-4 transition duration-300">
             <p className="text-sm opacity-80">Total Meetings</p>
             <h3 className="text-2xl font-bold">{stats.total}</h3>
           </div>
-          <div className="bg-primary-400 text-primary-25 rounded-lg p-4">
+          <div className="border border-primary-400 text-primary-700 hover:bg-[rgba(0,128,128,0.1)] rounded-lg p-4 transition duration-300">
             <p className="text-sm opacity-80">Paid</p>
             <h3 className="text-2xl font-bold">{stats.paid}</h3>
           </div>
-          <div className="bg-primary-300 text-primary-700 rounded-lg p-4">
+          <div className="border border-primary-300 text-primary-700 hover:bg-[rgba(0,128,128,0.1)] rounded-lg p-4 transition duration-300">
             <p className="text-sm opacity-80">Pending</p>
             <h3 className="text-2xl font-bold">{stats.pending}</h3>
           </div>
-          <div className="bg-primary-200 text-primary-700 rounded-lg p-4">
+          <div className="border border-primary-200 text-primary-700 hover:bg-[rgba(0,128,128,0.1)] rounded-lg p-4 transition duration-300">
             <p className="text-sm opacity-80">Requested</p>
             <h3 className="text-2xl font-bold">{stats.requested}</h3>
           </div>
@@ -260,15 +293,15 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                     {meeting.topic}
                   </h3>
                   {meeting.isPaid ? (
-                    <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-md text-sm">
+                    <span className="px-2 py-1 bg-[#80EF80] text-primary-700 rounded-md text-sm">
                       Paid
                     </span>
                   ) : meeting.requestedAt ? (
-                    <span className="px-2 py-1 bg-secondary-50 text-primary-700 rounded-md text-sm">
+                    <span className="px-2 py-1 bg-[#FFC067] text-primary-700 rounded-md text-sm">
                       Requested
                     </span>
                   ) : (
-                    <span className="px-2 py-1 bg-primary-50 text-primary-700 rounded-md text-sm">
+                    <span className="px-2 py-1 bg-[#FFEE8C] text-black rounded-md text-sm">
                       Pending
                     </span>
                   )}
@@ -280,8 +313,8 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                     <span>{new Date(meeting.date).toLocaleDateString()}</span>
                   </div>
                   {!isAdmin && (
-                    <div className="text-sm text-muted-foreground">
-                      Employee: {meeting.userId}
+                    <div className="text-sm font-bold text-muted-foreground">
+                      Raki: {meeting.rakiName}
                     </div>
                   )}
                 </div>
@@ -290,19 +323,15 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                   <div className="mt-4">
                     {!isAdmin ? (
                       <button
-                        className="w-full px-4 py-2 bg-primary-500 text-primary-25 rounded-md hover:bg-primary-600 transition"
-                        onClick={() =>
-                          console.log("Mark as paid:", meeting._id)
-                        }
+                        className="w-full px-4 py-2  border border-primary-500 bg-[rgba(0,128,128,0.1)] text-primary-700 rounded-md hover:bg-primary-600 hover:text-white transition"
+                        onClick={() => handleMarkAsPaid(meeting._id,true)}
                       >
                         Mark as Paid
                       </button>
                     ) : canRequestPayment(meeting) ? (
                       <button
                         className="w-full px-4 py-2 bg-primary-500 text-primary-25 rounded-md hover:bg-primary-600 transition"
-                        onClick={() =>
-                          console.log("Request payment:", meeting._id)
-                        }
+                        onClick={() => handlePaymentRequest(meeting._id)}
                       >
                         Request Payment
                       </button>

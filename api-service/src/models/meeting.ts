@@ -29,7 +29,7 @@ const meetingSchema: Schema<IMeeting> = new Schema({
     rakiId: { type: String, required: true },
     userId: { type: String },
     notificationSend:{type:Boolean},
-    status:{type:String},
+    status:{type:String,default:MeetingStatus.SCHEDULED},
     isPaid:{type:Boolean, default: false},
     requestedAt:{type:Date},
     note:{type:String}
