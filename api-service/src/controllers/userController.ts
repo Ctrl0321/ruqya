@@ -11,7 +11,7 @@ import {getStreamAdminRole} from "../utils/getStreamAdminRole";
 
 export const updateUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-        const { name, email, country, languages, mobileNumber, age, yearOfExperience, description } = req.body;
+        const { name, email, country, languages, mobileNumber, age, yearOfExperience, description ,gender} = req.body;
 
         const userId = req.user?.id;
         if (!userId) {
@@ -35,6 +35,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
         if (languages) user.languages = languages;
         if (mobileNumber) user.mobileNumber = mobileNumber;
         if (age) user.age = age;
+        if (gender) user.gender=gender
 
         if (user.role === 'admin') {
             if (yearOfExperience) user.yearOfExperience = yearOfExperience;
@@ -55,6 +56,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
             age: user.age,
             yearOfExperience: user.yearOfExperience,
             description: user.description,
+            gender:user.gender
         });
     } catch (error) {
         console.error("Error updating user:", error);
