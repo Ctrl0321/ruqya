@@ -73,7 +73,7 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
 
   const handlePaymentRequest = async (meetingId: string) => {
     try {
-      await requestPayment(meetingId); // Call your actual API function here
+      await requestPayment(meetingId);
       toast({ title: "Success", description: "Payment request sent successfully." });
     } catch (error) {
       toast({ title: "Error", description: "Failed to request payment.", variant: "destructive" });
@@ -100,7 +100,6 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
         meetingDate
           .toLocaleString("default", { month: "long" })
           .toLowerCase() === selectedMonth.toLowerCase();
-      console.log("Month",monthMatch)
       const yearMatch =
         !selectedYear || meetingDate.getFullYear().toString() === selectedYear;
       const statusMatch =
@@ -115,7 +114,7 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
         meeting.rakiName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         meeting.topic.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const userMatch = isAdmin ? meeting.userId === currentUser?._id : true;
+      const userMatch = isAdmin ? meeting.rakiId === currentUser?._id : true;
 
       return monthMatch && yearMatch && statusMatch && searchMatch && userMatch;
     });
@@ -147,6 +146,7 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
     ).length;
     return { total, paid, pending, requested };
   }, [filteredMeetings]);
+
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -293,11 +293,11 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                     {meeting.topic}
                   </h3>
                   {meeting.isPaid ? (
-                    <span className="px-2 py-1 bg-[#80EF80] text-primary-700 rounded-md text-sm">
+                    <span className="px-2 py-1 bg-[#80EF80] text-black rounded-md text-sm">
                       Paid
                     </span>
                   ) : meeting.requestedAt ? (
-                    <span className="px-2 py-1 bg-[#FFC067] text-primary-700 rounded-md text-sm">
+                    <span className="px-2 py-1 bg-[#FFC067] text-black rounded-md text-sm">
                       Requested
                     </span>
                   ) : (
@@ -314,7 +314,7 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                   </div>
                   {!isAdmin && (
                     <div className="text-sm font-bold text-muted-foreground">
-                      Raki: {meeting.rakiName}
+                      {meeting.rakiName}
                     </div>
                   )}
                 </div>
@@ -336,7 +336,7 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                         Request Payment
                       </button>
                     ) : (
-                      <div className="text-sm text-muted-foreground flex items-center justify-center gap-2">
+                      <div className="text-sm text-muted-foreground flex items-center justify-start gap-2 ">
                         <Clock className="h-4 w-4" />
                         Wait 2 days before requesting again
                       </div>
