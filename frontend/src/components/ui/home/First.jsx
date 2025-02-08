@@ -29,7 +29,7 @@ function First() {
                 </span>
               </h1>
               <p className="text-sm md:text-base lg:text-lg max-w-xl font-[800]">Connect with expert Raqis for personalized spiritual healing and guidance.</p>
-              <div className="flex  gap-4 mt-10">
+              <div className="flex w-full md:w-full items-start justify-start md:items-center md:justify-center gap-4 mt-10">
                 <Button text="Book a Session" link="/BookRaqis" color="RuqyaGreen" bg={true} className="px-6 md:px-8 py-3 rounded-lg whitespace-nowrap font-bold animate-fade-in" style={{ animationDelay: "0.6s" }} />
                 <Button text="Learn Ruqyah" link="/SelfRuqyah" className="px-6 md:px-8 py-3  border-[#0d766e] text-[#0d766e] bg-[rgba(0,204,204,0.1)] rounded-lg whitespace-nowrap font-[800] animate-fade-in" style={{ animationDelay: "0.8s" }} />
               </div>
