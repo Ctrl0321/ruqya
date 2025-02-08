@@ -231,7 +231,7 @@ export default function BookRaqis() {
   }
 
   const renderAvailabilityFilter = () => (
-    <div className="filter-section pb-6">
+    <div className="filter-section pb-6 animate-fade-in" style={{ animationDelay: `1500ms` }}>
       <h2 className="text-lg font-semibold mb-4">Availability</h2>
       <div className="space-y-4 bg-white/50 p-4 rounded-lg font-sans">
         <div>
@@ -301,7 +301,7 @@ export default function BookRaqis() {
               )}
 
               {/* Updated Experience Level Section */}
-              <div className="filter-section border-b border-gray-200 pb-6">
+              <div className="filter-section border-b border-gray-200 pb-6 animate-fade-in" style={{ animationDelay: `0ms` }}>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold">Experience Level</h2>
                   <span className="text-sm text-gray-600 ">
@@ -341,16 +341,16 @@ export default function BookRaqis() {
               </div>
 
               {/* Languages Filter Section */}
-              <div className="filter-section border-b border-gray-200 pb-6">
+              <div className="filter-section border-b border-gray-200 pb-6 animate-fade-in" style={{ animationDelay: `500ms` }}>
                 <h2 className="text-lg  mb-4 flex items-center">
                   <span className="flex-1 font-semibold">Languages</span>
                   <div className="text-xs text-gray-500">{userSelections.languages.length} selected</div>
                 </h2>
                 <div className="space-y-1">
-                  {availableLanguages.map((language) => (
-                    <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
+                  {availableLanguages.map((language, index) => (
+                    <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
                       <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(languages.find((l) => l.label === language)?.value)} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
-                      <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2  cursor-pointer">
+                      <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2 cursor-pointer">
                         {language}
                       </label>
                     </div>
@@ -359,14 +359,14 @@ export default function BookRaqis() {
               </div>
 
               {/* Countries Filter */}
-              <div className="filter-section border-b border-gray-200 pb-6">
+              <div className="filter-section border-b border-gray-200 pb-6 animate-fade-in" style={{ animationDelay: `1000ms` }}>
                 <h2 className="text-lg  mb-4 flex items-center">
                   <span className="flex-1 font-semibold">Countries</span>
                   <div className="text-xs text-gray-500">{userSelections.countries.length} selected</div>
                 </h2>
                 <div className="space-y-1">
-                  {availableCountries.map((country) => (
-                    <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md">
+                  {availableCountries.map((country, index) => (
+                    <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
                       <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(countries.find((c) => c.label === country)?.value)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
                       <label htmlFor={`country-${country}`} className="text-sm pl-2 flex-1 cursor-pointer">
                         {country}
@@ -380,7 +380,7 @@ export default function BookRaqis() {
               {renderAvailabilityFilter()}
 
               {/* Rating Filter */}
-              <div className="flex flex-col justify-start items-start m-auto filter-section pb-6">
+              <div className="flex flex-col justify-start items-start m-auto filter-section pb-6 animate-fade-in" style={{ animationDelay: `2000ms` }}>
                 <div className="flex justify-between items-center text-lg mb-4 w-full">
                   <span className="flex-1 font-semibold">Rating</span>
                   <div className="text-xs text-gray-500 ml-auto">
