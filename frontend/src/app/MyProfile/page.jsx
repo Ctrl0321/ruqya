@@ -33,6 +33,7 @@ const MyProfile = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const [errorMessage, setErrorMessage] = useState({ message: "", type: "" });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -176,9 +177,10 @@ const MyProfile = () => {
         displayChanges[label] = changedValues[key];
       });
 
-      if (Object.keys(displayChanges).length > 0) {
-        alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
-      }
+      // if (Object.keys(displayChanges).length > 0) {
+      //   alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
+      // }
+      setErrorMessage({message: "User profile updated successfully", type: "success"});
     } catch (error) {
       console.error("Error updating user profile:", error);
       alert("Error updating user profile. Please try again later.");
@@ -197,12 +199,13 @@ const MyProfile = () => {
     const { currentPassword, newPassword } = passwordData;
     try {
       const response = await changePassword(currentPassword, newPassword);
-      if (response.response.status === 200) {
+      if (response.status === 200) {
         setIsChangePasswordOpen(false);
-        return <ErrorMessage message="Password changed successfully" />;
+        // setErrorMessage({ message: response.data.message || "Password updated successfully", type: "success" });
       }
+      setErrorMessage({ message: "Password updated successfully", type: "success" });
     } catch (error) {
-      return <ErrorMessage message={error.response?.data?.message || "Failed to change password. Please try again."} />;
+      setErrorMessage({ message: error?.response?.data?.message || "Failed to change password. Please try again.", type: "error" });
     }
   };
 
@@ -222,9 +225,11 @@ const MyProfile = () => {
         displayChanges[label] = updatedData[key];
       });
 
-      if (Object.keys(displayChanges).length > 0) {
-        alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
-      }
+      // if (Object.keys(displayChanges).length > 0) {
+      //   alert(`Updated Values:\n${JSON.stringify(displayChanges, null, 2)}`);
+      // }
+
+      setErrorMessage({message: "User profile updated successfully", type: "success"});
     } catch (error) {
       console.error("Error updating user profile:", error);
       alert("Error updating user profile. Please try again later.");
@@ -376,6 +381,7 @@ const MyProfile = () => {
           onSubmit={handleChangePassword}
         />
       )}
+      {errorMessage.message && <ErrorMessage message={errorMessage.message} type={errorMessage.type} />}
 
       {isEditPopupOpen && (
         <EditProfilePopup 

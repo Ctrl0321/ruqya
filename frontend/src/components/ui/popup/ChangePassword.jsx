@@ -67,6 +67,7 @@ const ChangePassword = ({ onClose, onSubmit }) => {
                 placeholder={"Enter your current password"}
                 value={passwordData.currentPassword}
                 onChange={handlePasswordChange}
+                autoComplete="off"
               />
             </div>
             <div className="relative mb-3">
@@ -77,6 +78,7 @@ const ChangePassword = ({ onClose, onSubmit }) => {
                 placeholder={"Enter your new password"}
                 value={passwordData.newPassword}
                 onChange={handlePasswordChange}
+                autoComplete="off"
               />
             </div>
             <div className="relative mb-3">
@@ -87,6 +89,7 @@ const ChangePassword = ({ onClose, onSubmit }) => {
                 placeholder={"Confirm your new password"}
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordChange}
+                autoComplete="off"
               />
             </div>
             <div className="grid grid-cols-2 gap-6">
