@@ -15,11 +15,11 @@ function Forth(props) {
   }
 
   return (
-    <div id="Forth" className={`flex flex-col mx-7 md:mx-12 lg:mx-14 mt-20 m-5 rounded-lg ${[props.className]} `}>
-      <div className="flex justify-between items-center">
+    <div id="Forth" className={`flex flex-col mx-7 md:mx-12 lg:mx-14 mt-20 m-5 rounded-lg ${[props.className]} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
+      <div className="flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
         <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">{title}</h1>
         {raqiData.length > 3 && (
-          <div className="text-center">
+          <div className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link href="/BookRaqis" className="text-RuqyaGreen font-bold">
               See all <FaLongArrowAltRight className="inline mb-1" />
             </Link>
@@ -33,7 +33,7 @@ function Forth(props) {
         ))}
         </Grid> */}
 
-      <ResponsiveGrid data={raqiData} breakpoints={{mobile:4, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 5, '4xl': 6, '5xl': 6 }}>
+      <ResponsiveGrid data={raqiData} breakpoints={{mobile:4, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 5, '4xl': 6, '5xl': 6 }} className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
           {(data) => <RaqisCard key={`Raqi` + data.id} raqi={data} />}
         </ResponsiveGrid>
     </div>

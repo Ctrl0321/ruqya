@@ -3,18 +3,18 @@ import flower from "@/assets/svg/green-flower.svg";
 
 function Second() {
   return (
-    <div id="second" className="min-h-[20vh] my-20 m-5">
-      <h1 className="text-3xl md:text-5xl font-bold text-RuqyaGray text-center leading-tight">
+    <div id="second" className="min-h-[20vh] my-20 m-5 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+      <h1 className="text-3xl md:text-5xl font-bold text-RuqyaGray text-center leading-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
         Ruqyah is a <span className="text-RuqyaGreen"> spiritual healing</span> practice
         <br />
         involving sacred recitations.
       </h1>
-      <p className="mt-5 text-sm md:text-base text-center leading-relaxed">
+      <p className="mt-5 text-sm md:text-base text-center leading-relaxed animate-fade-in" style={{ animationDelay: '0.3s' }}>
         <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
         Our platform offers access to expert Raqis and self-guided resources
         <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
       </p>
-      <h1 className="mt-5 text-2xl md:text-3xl font-bold text-RuqyaGray text-center leading-relaxed">
+      <h1 className="mt-5 text-2xl md:text-3xl font-bold text-RuqyaGray text-center leading-relaxed animate-fade-in" style={{ animationDelay: '0.4s' }}>
         <span className="text-5xl"> $14.00/</span> booking
       </h1>
     </div>

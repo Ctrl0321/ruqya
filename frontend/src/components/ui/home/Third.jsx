@@ -6,7 +6,6 @@ import MyBookingCard from "@/components/cards/MyBookingCard";
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
-
 function Third(props) {
   const { raqiData } = props;
 
@@ -15,19 +14,19 @@ function Third(props) {
   }
 
   return (
-    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg">
-      <div className="grid grid-cols-1 m-2">
-        <div className="flex justify-between items-center">
+    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg animate-fade-in" style={{ animationDelay: '0.1s' }}>
+      <div className="grid grid-cols-1 m-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">My Bookings</h1>
           {raqiData.length > 3 && (
-            <div className="text-center">
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Link href="/MyBookings" className="text-RuqyaGreen font-bold">
                 See all <FaLongArrowAltRight className="inline mb-1" />
               </Link>
             </div>
           )}
         </div>
-        <ResponsiveGrid data={raqiData} breakpoints={{ mobile:3, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 4, '4xl': 5, '5xl': 6 }}>
+        <ResponsiveGrid data={raqiData} breakpoints={{ mobile:3, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 4, '4xl': 5, '5xl': 6 }} className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
           {(data) => <MyBookingCard key={data._id} booking={data} />}
         </ResponsiveGrid>
       </div>
