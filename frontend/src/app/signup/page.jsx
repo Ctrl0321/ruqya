@@ -125,7 +125,7 @@ function SignUp() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto mt-20">
+        <div className="w-full max-w-md mx-auto mt-20 animate-fade-in" style={{ animationDelay: `500ms` }}>
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -144,59 +144,51 @@ function SignUp() {
 
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Full Name</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
                   <BorderInput
                     type="text"
                     name="name"
+                    label="Full Name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your full name here"
                     className="text-sm"
                   />
-                </div>
               </div>
 
               <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Email Address</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
                   <BorderInput
                     type="email"
                     name="email"
+                    label="Email Address"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your Email Address here"
                     className="text-sm"
                   />
-                </div>
               </div>
 
               <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Password</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
                   <BorderInput
                     type="password"
                     name="password"
+                    label="Password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Create a Password"
                     className="text-sm"
                   />
-                </div>
               </div>
 
               <div className="relative mb-4">
-                <label className="text-sm text-gray-600 absolute -top-3 left-8 bg-white px-1">Confirm Password</label>
-                <div className="flex justify-center items-center rounded-full border px-2 py-1 border-teal-500 focus:ring-teal-500">
                   <BorderInput
                     type="password"
                     name="confirmPassword"
+                    label="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="Re-enter your created password"
                     className="text-sm"
                   />
-                </div>
               </div>
 
               <div className="mt-10">

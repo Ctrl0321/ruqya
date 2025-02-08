@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { login, googleSignup } from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
-
 import bg from "@/assets/images/bg.jpeg";
 import logo from "@/assets/images/logo.png";
 
@@ -115,7 +114,7 @@ function Login() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto -mt-5 md:mt-20">
+        <div className="w-full max-w-md mx-auto -mt-5 md:mt-20 animate-fade-in" style={{ animationDelay: `500ms` }}>
           <div className="bg-white rounded-3xl p-8 shadow-xl">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -126,25 +125,9 @@ function Login() {
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {error.message && <ErrorMessage message={error.message} type={error.type} />}
-              <BorderInput
-                label="Email Address"
-                type="email"
-                name="email"
-                placeholder="Enter your Email Address here"
-                className="text-sm"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <BorderInput label="Email Address" type="email" name="email" placeholder="Enter your Email Address here" className="text-sm" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-              <BorderInput
-                label="Password"
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                className="text-sm"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <BorderInput label="Password" type="password" name="password" placeholder="Enter your password" className="text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />
 
               <div className="mt-5">
                 <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3" onClick={handleSubmit}>

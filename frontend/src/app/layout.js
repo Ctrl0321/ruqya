@@ -1,5 +1,6 @@
 "use client";
 import "../styles/globals.css";
+import "@/styles/animations.css";
 import Header from "@/components/shared/layout/Header";
 import Footer from "@/components/shared/layout/Footer";
 import { use, useEffect, useState } from "react";
