@@ -159,8 +159,8 @@ function Raqis() {
   };
 
   return (
-    <div className="min-h-screen  text-black">
-      <nav aria-label="Breadcrumb m-10" className="mb-6">
+    <div className="min-h-screen text-black">
+      <nav aria-label="Breadcrumb m-10" className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
         <ol className="flex items-center space-x-2 mx-5 mt-5 text-sm text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-primary underline">
@@ -173,12 +173,16 @@ function Raqis() {
           <li>{data.name}</li>
         </ol>
       </nav>
-      {data.bannerImage ? <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600" /> : <div className="w-full h-48 bg-gray-600"></div>}
+      {data.bannerImage ? (
+        <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }} />
+      ) : (
+        <div className="w-full h-48 bg-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}></div>
+      )}
 
-      <div className="flex flex-col md:flex-row items-center mx-4">
-        <div className=" flex flex-col p-2 bg-white rounded-xl -mt-16">
-          <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg" />
-          <div className="justify-center mt-4 hidden md:flex m-auto w-full">
+      <div className="flex flex-col md:flex-row items-center mx-4 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <div className="flex flex-col p-2 bg-white rounded-xl -mt-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg animate-fade-in" style={{ animationDelay: '0.5s' }} />
+          <div className="justify-center mt-4 hidden md:flex m-auto w-full animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen hover:bg-teal-700 text-white w-full rounded-lg py-3 px-3">
               <MdOutlineMessage className="mr-3 " />
               Chat with Raqi
@@ -186,7 +190,7 @@ function Raqis() {
           </div>
         </div>
 
-        <div className="md:flex hidden flex-col items-start gap-2 p-4 group">
+        <div className="md:flex hidden flex-col items-start gap-2 p-4 group animate-fade-in" style={{ animationDelay: '0.7s' }}>
           {data.name && <h1 className="text-2xl font-semibold">{data.name}</h1>}
           {data.country && (
             <div className="flex items-center space-x-1">
@@ -216,7 +220,7 @@ function Raqis() {
           )}
         </div>
 
-        <div className="flex-col items-center justify-center hidden md:flex ml-auto">
+        <div className="flex-col items-center justify-center hidden md:flex ml-auto animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <div className="flex flex-col items-center justify-center w-56 m-5 rounded-lg border border-RuqyaGreen p-4">
             <h3 className="mb-3">Want to have a Session ?</h3>
             <Button onClick={handleBookNow} bg={true} text="Book Now" className="w-full bg-RuqyaGreen text-white rounded-lg p-3" />
@@ -225,7 +229,7 @@ function Raqis() {
       </div>
 
       {/* Mobile view */}
-      <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-3 text-xl group mt-2">
+      <div className="flex md:hidden flex-col items-start mx-4 space-y-1 gap-3 text-xl group mt-2 animate-fade-in" style={{ animationDelay: '0.9s' }}>
         {data.name && (
           <div className="text-4xl flex flex-row gap-3">
             <h1>{data.name}</h1>
@@ -267,7 +271,7 @@ function Raqis() {
         </div>
       </div>
       {data.about && (
-        <div className="mx-4 md:mx-10">
+        <div className="mx-4 md:mx-10 animate-fade-in" style={{ animationDelay: '1.0s' }}>
           <h3 className="font-bold my-5 text-2xl">About</h3>
           <p>
             {showFullAbout ? data.about : `${data.about.substring(0, maxAboutLength)}...`}
@@ -280,7 +284,7 @@ function Raqis() {
         </div>
       )}
 
-      <div className="mx-5 md:mx-7 mt-10">
+      <div className="mx-5 md:mx-7 mt-10 animate-fade-in" style={{ animationDelay: '1.1s' }}>
         <h3 className="font-bold text-2xl mb-5 text-left">Reviews</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 md:gap-4">
           {review && review.averageRating !== undefined && (
@@ -367,7 +371,7 @@ function Raqis() {
           )}
         </div>
       </div>
-      <div className="mx-8 mt-10">
+      <div className="mx-8 mt-10 animate-fade-in" style={{ animationDelay: '1.2s' }}>
         <div className="border-b w-full mb-5">
           <h1 className="font-bold text-xl mb-2">Customer Reviews</h1>
         </div>
@@ -393,8 +397,8 @@ function Raqis() {
           </div>
         )}
       </div>
-      <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9" />
-      <ChatWidgetWrapper />
+      <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9 animate-fade-in" style={{ animationDelay: '1.3s' }} />
+      <ChatWidgetWrapper className="animate-fade-in" style={{ animationDelay: '1.4s' }} />
     </div>
   );
 }

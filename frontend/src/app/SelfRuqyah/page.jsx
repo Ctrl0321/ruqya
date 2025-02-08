@@ -53,8 +53,8 @@ export default function RuqyahPage() {
         </div>
         {/* Main Content */}
         <article className="flex-1 space-y-8">
-          {content.sections.map(section => (
-            <section key={section.id} id={section.id}>
+          {content.sections.map((section, index) => (
+            <section key={section.id} id={section.id} className="animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
               <h2 className="text-2xl font-semibold mb-4">{section.title}</h2>
               {section.content.split('<br/>').map((paragraph, index) => (
                 <p key={index} className="text-gray-700 mb-4">{paragraph}</p>
