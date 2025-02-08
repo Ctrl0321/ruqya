@@ -321,28 +321,44 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                   )}
                 </div>
 
-                {!meeting.isPaid && (
-                  <div className="mt-4">
-                    {!isAdmin ? (
-                      <button
-                        className="w-full px-4 py-2  border border-primary-500 bg-[rgba(0,128,128,0.1)] text-primary-700 rounded-md hover:bg-primary-600 hover:text-white transition"
-                        onClick={() => handleMarkAsPaid(meeting._id,true)}
-                      >
-                        Mark as Paid
-                      </button>
-                    ) : canRequestPayment(meeting) ? (
-                      <button
+                {(!meeting.isPaid && isAdmin) &&
+                canRequestPayment(meeting) ? (
+
+
+
+                    
+                    <button
                         className="w-full px-4 py-2 bg-primary-500 text-primary-25 rounded-md hover:bg-primary-600 transition"
                         onClick={() => handlePaymentRequest(meeting._id)}
+                    >
+                      Request Payment
+                    </button>
+                ) : (
+                    <div className="text-sm text-muted-foreground flex items-center justify-start gap-2 ">
+                      <Clock className="h-4 w-4" />
+                      Wait 2 days before requesting again
+                    </div>
+                )
+                }
+
+                {!isAdmin && (
+                  <div className="mt-4">
+                    {meeting.isPaid ? (
+                      <button
+                        className="w-full px-4 py-2  border border-primary-500 bg-primary-600   rounded-md hover:bg-[rgba(0,128,128,0.1)]  hover:text-primary-700 text-white transition"
+                        onClick={() => handleMarkAsPaid(meeting._id,false)}
                       >
-                        Request Payment
+                        Mark as unpaid
                       </button>
                     ) : (
-                      <div className="text-sm text-muted-foreground flex items-center justify-start gap-2 ">
-                        <Clock className="h-4 w-4" />
-                        Wait 2 days before requesting again
-                      </div>
-                    )}
+                            <button
+                                className="w-full px-4 py-2  border border-primary-500 bg-[rgba(0,128,128,0.1)] text-primary-700 rounded-md hover:bg-primary-600 hover:text-white transition"
+                                onClick={() => handleMarkAsPaid(meeting._id,true)}
+                            >
+                              Mark as paid
+                            </button>
+                        )
+                    }
                   </div>
                 )}
               </div>
