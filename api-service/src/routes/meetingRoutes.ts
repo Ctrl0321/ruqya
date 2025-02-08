@@ -3,7 +3,7 @@ import {
     addMeeting, cancelMeeting,
     getAllMeetings, getMeetingsByRakiId,
     getMeetingsByUserId, getMeetingStatistics,
-    getTodayAndFutureMeetings, rescheduleMeeting
+    getTodayAndFutureMeetings, requestMeetingPayment, rescheduleMeeting, updateMeetingPayment
 } from "../controllers/meetingControllers";
 import {authorizeRoles, protect} from "../middleware/authMiddleware";
 
@@ -17,6 +17,8 @@ router.get('/get-meetings/raki/', protect, authorizeRoles('admin', 'super-admin'
 router.post('/reschedule/', protect, authorizeRoles('admin','super-admin'), rescheduleMeeting);
 router.post('/cancel/', protect, authorizeRoles('admin', 'super-admin'), cancelMeeting);
 router.get('/get-meeting-statistics/', protect, authorizeRoles( 'super-admin'), getMeetingStatistics);
+router.post('/update-payment/', protect, authorizeRoles( 'super-admin'), updateMeetingPayment);
+router.post('/request-payment/', protect, authorizeRoles( 'admin'), requestMeetingPayment);
 
 
 

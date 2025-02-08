@@ -5,8 +5,9 @@ import { useChatClient } from "@/components/getStream/chat/useChatClient";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
+import withAuth from "@/hoc/withAuth";
 
-export default function ChatApp() {
+const ChatApp=()=> {
     const params = useParams();
     const [data, setData] = useState<{ userId: string; otherUserId: string } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -97,3 +98,5 @@ export default function ChatApp() {
         </div>
     );
 }
+
+export default withAuth(ChatApp, ["admin"]);

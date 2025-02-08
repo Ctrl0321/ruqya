@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Eye, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -30,29 +29,24 @@ import {
 } from "@/components/ui/select";
 import {getMeetingsByRakiId, getUsers, updateUserRole} from "@/lib/api";
 import { toast } from "@/components/ui/toast";
-import { useAuth } from "@/contexts/AuthContexts";
+import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import {getCountryLabel} from "@/lib/utils";
 import {IMeeting} from "@/components/SessionList";
+import withAuth from "@/hoc/withAuth";
+import UserDetailsDialog from "@/components/ui/user/UserDetailsDialog";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  country: string;
-  status: "active" | "inactive";
-  role: "super-admin" | "admin" | "user";
-}
+
 
 const roleOptions = ["super-admin", "admin", "user"];
 
-export default function UsersPage() {
+const UsersPage=()=> {
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserDto[]>([]);
   const [session, setSession] = useState<IMeeting[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
   const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState(false);
   const [newRole, setNewRole] = useState<string>("");
 
@@ -118,7 +112,7 @@ export default function UsersPage() {
       setUsers(
         users.map((user) =>
           user._id === selectedUser._id
-            ? { ...user, role: newRole as User["role"] }
+            ? { ...user, role: newRole as UserDto["role"] }
             : user
         )
       );
@@ -236,66 +230,7 @@ export default function UsersPage() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      {/*<Button*/}
-                      {/*    variant="outline"*/}
-                      {/*    size="sm"*/}
-                      {/*    onClick={() => setSelectedUser(user)}*/}
-                      {/*    className="transition-all duration-700 ease-in-out transform hover:scale-105 hover:shadow-md"*/}
-                      {/*>*/}
-                      <Eye
-                        onClick={() => setSelectedUser(user)}
-                        className="h-4 w-4 mr-2 cursor-pointer"
-                      />
-                      {/*</Button>*/}
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>User Details</DialogTitle>
-                      </DialogHeader>
-                      {selectedUser && (
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <span className="font-bold">Name:</span>
-                            <span className="col-span-3">
-                              {selectedUser.name}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <span className="font-bold">Email:</span>
-                            <span className="col-span-3">
-                              {selectedUser.email}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <span className="font-bold">Country:</span>
-                            <span className="col-span-3">
-                              {selectedUser.country}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <span className="font-bold">Status:</span>
-                            <span
-                              className={`col-span-3 px-2 py-1 rounded-full text-xs font-semibold ${
-                                selectedUser.status === "active"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {selectedUser.status}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <span className="font-bold">Role:</span>
-                            <span className="col-span-3">
-                              {selectedUser.role}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </DialogContent>
-                  </Dialog>
+                  <UserDetailsDialog tutor={user} />
                 </TableCell>
               </TableRow>
             ))}
@@ -329,3 +264,5 @@ export default function UsersPage() {
     </div>
   );
 }
+export default withAuth(UsersPage, ["admin", "super-admin"]);
+

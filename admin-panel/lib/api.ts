@@ -12,12 +12,24 @@ const apiSignup = axios.create({
     withCredentials: true,
 });
 
-// Attach token to requests automatically
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const token = localStorage.getItem("token");
+        if (error.response && error.response.status === 401 && token) {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
+        return Promise.reject(error);
+    }
+);
+
 
 interface Session {
     meetingId: string;
@@ -33,6 +45,12 @@ const userTimeZone = getUserTimeZone();
 // Authentication
 export const login = async (email: string, password: string) => {
     const response = await api.post("ruqya-api/auth/login", { email, password });
+    localStorage.setItem("token", response.data.token);
+    return response.data;
+};
+
+export const socialLogin = async (token: string) => {
+    const response = await api.post("ruqya-api/auth/social", { token });
     localStorage.setItem("token", response.data.token);
     return response.data;
 };
@@ -93,7 +111,6 @@ export const addSession = async ( topic: string,date:string,rakiId:string,) =>
         await api.post("ruqya-api/meeting/add-meetings", { topic,date,rakiId,timeZone: userTimeZone })
     ).data;
 
-
 export const getTodaySessions = async (): Promise<Session[]> =>
     (
         await api.get(
@@ -105,6 +122,17 @@ export const cancelSession = async (meetingId: string, note: string) =>
     (
         await api.post("ruqya-api/meeting/cancel", { meetingId, note })
     ).data;
+
+export const updatePayment = async (meetingId: string, isPaid: boolean) =>
+    (
+        await api.post("ruqya-api/meeting/update-payment", { meetingId, isPaid })
+    ).data;
+
+export const requestPayment = async (meetingId: string) =>
+    (
+        await api.post("ruqya-api/meeting/request-payment", { meetingId })
+    ).data;
+
 
 export const rescheduleSession = async (meetingId: string, newDate: string) =>
     (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate })).data;
@@ -180,13 +208,15 @@ export const verifyMeetingAccess = async (callId: string, userId: string) => {
             `ruqya-api/get-stream/getCallDetails/${callId}`
         );
         const members = response.data.callDetails?.members ?? [];
+        console.log("Members",members)
         const user = members.find(
             (member: { user_id: string }) => member.user_id === userId
         );
+        console.log("Why",user)
 
         if (!user) throw new Error("Unauthorized");
 
-        return { role: user.role || "member", authorized: true, name: user.name };
+        return { role: user.user.role || "user", authorized: true, name: user.name };
     } catch (error) {
         throw new Error("Meeting verification failed");
     }

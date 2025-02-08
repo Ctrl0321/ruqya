@@ -248,7 +248,7 @@ export default function BookRaqis() {
   );
 
   return (
-    <div className="mx-6 md:mx-6 lg:mx-4 px-4 py-8 min-h-screen mb-56">
+    <div className="mx-6 md:mx-6 lg:mx-[9%]  py-8 min-h-screen mb-56 ">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li>
@@ -404,7 +404,7 @@ export default function BookRaqis() {
         </aside>
 
         {/* Practitioners Grid */}
-        <main className="flex-1">
+        <main className="flex-1 lg:ml-6">
           {/* Filter button for mobile view */}
           <button className="md:hidden text-primary mb-4 fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-lg shadow-gray-500/50 border-2 border-[#0C8281] z-20" onClick={() => setIsFilterVisible(true)}>
             {isFilterVisible ? <FaTimes size={24} /> : <FaFilter size={24} />}
@@ -416,7 +416,7 @@ export default function BookRaqis() {
           </Grid>
           {filteredData.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              {userSelections.availability.date && availableRakisIds.length === 0 
+              {userSelections.availability.date && availableRakisIds.length === 0
                 ? "No practitioners available for the selected date"
                 : "No practitioners found matching your criteria"}
             </div>

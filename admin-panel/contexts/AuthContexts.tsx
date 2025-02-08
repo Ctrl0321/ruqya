@@ -18,6 +18,7 @@ export interface UserDto {
     googleId?:string
     age:number
     password:string
+    status:string
 }
 
 interface AuthContextType {
@@ -33,6 +34,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<UserDto | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
+    const token = localStorage.getItem("token");
+
 
     useEffect(() => {
         const initializeAuth = async () => {
@@ -40,18 +43,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const userData = await getOwnProfile()
                 setUser(userData)
             } catch (error) {
+
                 console.error('Failed to fetch user profile:', error)
             } finally {
                 setIsLoading(false)
             }
         }
 
-        initializeAuth()
-    }, [])
+        if (token) initializeAuth()
+
+    }, [token])
+
 
     const login = async (token: string) => {
         try {
-            // Assume the API sets the HTTP-only cookie for us
             const userData = await getOwnProfile()
             setUser(userData)
             router.push('/admin')
@@ -63,7 +68,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         try {
-            // Call logout API endpoint to clear the server-side session and HTTP-only cookie
             await fetch('/api/logout', { method: 'POST' })
             setUser(null)
             router.push('/signin')

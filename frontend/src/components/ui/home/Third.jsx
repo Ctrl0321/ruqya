@@ -14,7 +14,7 @@ function Third(props) {
   }
 
   return (
-    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg animate-fade-in" style={{ animationDelay: '0.1s' }}>
+    <div id="third" className="bg-RuqyaLightPurple p-3 md:p-6 m-5 rounded-lg mx-[7%] animate-fade-in" style={{ animationDelay: '0.1s' }}>
       <div className="grid grid-cols-1 m-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
         <div className="flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">My Bookings</h1>

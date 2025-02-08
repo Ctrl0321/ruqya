@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Eye } from "lucide-react";
+import { Search } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -18,53 +18,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import {
   updateUserStatus,
-  updateUserRole,
-  getReviews, getRakis,
+  updateUserRole, getRakis,
 } from "@/lib/api";
-import { useAuth } from "@/contexts/AuthContexts";
-import {languages} from "@/lib/constance";
+import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import {getCountryLabel} from "@/lib/utils";
+import withAuth from "@/hoc/withAuth";
+import RakiDetailsDialog from "@/components/ui/raki/RakiDetailsDialog";
 
-interface Raki {
-  _id: string;
-  name: string;
-  email: string;
-  country: string;
-  status: "active" | "inactive";
-  role: "super-admin" | "admin" | "user";
-  timezone: string;
-  languages: string[];
-  mobileNumber: string;
-  yearOfExperience: number;
-  description: string;
-  firstTimeLogin: boolean;
-  age: number;
-}
 
-interface Review {
-  rakiId: string;
-  meetingId: string;
-  userId: string;
-  points: number;
-  comment: string;
-}
 
-export default function TutorsPage() {
-  const [tutors, setTutors] = useState<Raki[]>([]);
-  const [filteredTutors, setFilteredTutors] = useState<Raki[]>([]);
+
+
+const RakiPage=()=> {
+  const [tutors, setTutors] = useState<UserDto[]>([]);
+  const [filteredTutors, setFilteredTutors] = useState<UserDto[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTutor, setSelectedTutor] = useState<Raki | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
   const [countryFilter, setCountryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
@@ -147,20 +118,6 @@ export default function TutorsPage() {
       toast({
         title: "Error",
         description: "Failed to update tutor role. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const fetchReviews = async (tutorId: string) => {
-    try {
-      const reviewData = await getReviews(tutorId);
-      setReviews(reviewData);
-    } catch (error) {
-      console.error("Failed to fetch reviews:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch reviews. Please try again.",
         variant: "destructive",
       });
     }
@@ -281,56 +238,7 @@ export default function TutorsPage() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      {/*<Button*/}
-                      {/*    variant="outline"*/}
-                      {/*    size="sm"*/}
-                      {/*    onClick={() => {*/}
-                      {/*        setSelectedTutor(tutor)*/}
-                      {/*        fetchReviews(tutor._id)*/}
-                      {/*    }}*/}
-                      {/*>*/}
-                      <Eye
-                        onClick={() => {
-                          setSelectedTutor(tutor);
-                          fetchReviews(tutor._id);
-                        }}
-                        className="h-4 w-4 mr-2 cursor-pointer"
-                      />
-                      {/*    View*/}
-                      {/*</Button>*/}
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Tutor Details</DialogTitle>
-                      </DialogHeader>
-                      {selectedTutor && (
-                        <div className="grid gap-4 py-4">
-                          <div>Name: {selectedTutor.name}</div>
-                          <div>Email: {selectedTutor.email}</div>
-                          <div>Country: {selectedTutor.country}</div>
-                          <div>Timezone: {selectedTutor.timezone}</div>
-                          <div>
-                            Languages: {selectedTutor.languages.join(", ")}
-                          </div>
-                          <div>Mobile: {selectedTutor.mobileNumber}</div>
-                          <div>
-                            Experience: {selectedTutor.yearOfExperience} years
-                          </div>
-                          <div>Age: {selectedTutor.age}</div>
-                          <div>Description: {selectedTutor.description}</div>
-                          <div>Reviews:</div>
-                          {reviews.map((review, index) => (
-                            <div key={index}>
-                              <div>Points: {review.points}</div>
-                              <div>Comment: {review.comment}</div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </DialogContent>
-                  </Dialog>
+                  <RakiDetailsDialog tutor={tutor} />
                 </TableCell>
               </TableRow>
             ))}
@@ -340,3 +248,5 @@ export default function TutorsPage() {
     </div>
   );
 }
+export default withAuth(RakiPage, ["super-admin"]);
+

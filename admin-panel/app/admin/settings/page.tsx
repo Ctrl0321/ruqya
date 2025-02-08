@@ -11,8 +11,9 @@ import { countries, languages } from "@/lib/constance";
 import { UserDto } from "@/contexts/AuthContexts";
 import { changePassword, getOwnProfile, updateUserProfile } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
+import withAuth from "@/hoc/withAuth";
 
-export default function SettingsPage() {
+const SettingsPage=()=> {
     const [user, setUser] = useState<UserDto | null>(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -377,3 +378,6 @@ export default function SettingsPage() {
         </div>
     );
 }
+
+export default withAuth(SettingsPage, ["admin", "super-admin"]);
+

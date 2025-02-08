@@ -159,7 +159,7 @@ function Raqis() {
   };
 
   return (
-    <div className="min-h-screen text-black">
+    <div className="min-h-screen  lg:mx-[9%] text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
         <ol className="flex items-center space-x-2 mx-5 mt-5 text-sm text-muted-foreground">
           <li>

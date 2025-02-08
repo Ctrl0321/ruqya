@@ -67,7 +67,6 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
 
         if (!chatClientRef.current) {
             chatClientRef.current = StreamChat.getInstance(apiKey);
-            console.log("funnn",chatClientRef.current)
         }
 
         let isMounted = true;
@@ -117,7 +116,8 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
                         //     setChannel(null);
                         // }
                     // }
-                } else {
+                }
+                if (currentUser?.role === "user")  {
                     if (otherUserId) {
                         const sortedMembers = [userId, otherUserId].sort();
                         const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]}`;

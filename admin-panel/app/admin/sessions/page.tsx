@@ -6,8 +6,9 @@ import { IMeeting, SessionList } from "@/components/SessionList";
 import {getMeetings, getMeetingsByRakiId, getRakis, getUsers} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
+import withAuth from "@/hoc/withAuth";
 
-export default function SessionsPage() {
+const SessionsPage=()=> {
     const [activeTab, setActiveTab] = useState("all");
     const [meetings, setMeetings] = useState<IMeeting[]>([]);
     const [rakis, setRakis] = useState<UserDto[]>([]);
@@ -103,3 +104,6 @@ export default function SessionsPage() {
         </div>
     );
 }
+
+export default withAuth(SessionsPage, ["admin", "super-admin"]);
+
