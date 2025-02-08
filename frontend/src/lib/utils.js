@@ -48,6 +48,15 @@ export const sortBookingsByDate = (bookings) => {
   return [...bookings].sort((a, b) => {
     const dateA = parseBookingDate(a.date);
     const dateB = parseBookingDate(b.date);
-    return dateB - dateA;
+    return dateA - dateB;
+  });
+};
+
+export const removeOldBookings = (bookings) => {
+  if (!bookings) return [];
+  const now = new Date();
+  return bookings.filter(booking => {
+    const bookingDate = parseBookingDate(booking.date);
+    return bookingDate >= now;
   });
 };
