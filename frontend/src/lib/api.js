@@ -45,6 +45,18 @@ export const googleSignup = async (tokenId) => {
   }
 };
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+      if (error.response && error.response.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          window.location.href = "/";
+      }
+      return Promise.reject(error);
+  }
+);
+
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
 
