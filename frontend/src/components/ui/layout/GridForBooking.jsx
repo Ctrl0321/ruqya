@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils'
+import '@/styles/animations.css';
 
 const Grid = ({ 
   children, 
@@ -7,7 +8,6 @@ const Grid = ({
   gap = 4
 }) => {
   const childCount = React.Children.count(children);
-  const cols = Math.min(childCount, 6);
 
   return (
     <div className={cn(
@@ -23,7 +23,11 @@ const Grid = ({
       'my-4',
       className
     )}>
-      {children}
+      {React.Children.map(children, (child, index) => (
+        <div className="animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
+          {child}
+        </div>
+      ))}
     </div>
   )
 }

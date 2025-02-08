@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils'
+import '@/styles/animations.css'; // Import the animations CSS
 
 const Grid = ({ 
   children, 
@@ -17,7 +18,11 @@ const Grid = ({
     style={{
       gridTemplateColumns: `repeat(auto-fit, minmax(${minWidth}, 1fr))`
     }}>
-      {children}
+      {React.Children.map(children, (child, index) => (
+        <div className="animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
+          {child}
+        </div>
+      ))}
     </div>
   )
 }

@@ -111,10 +111,12 @@ export default function BookRaqis() {
 
   const availableCountries = [
     ...new Set(
-      raqiData.map((raqi) => {
-        const countryObj = countries.find((c) => c.value === raqi.country);
-        return countryObj ? countryObj.label : raqi.country;
-      })
+      raqiData
+        .map((raqi) => {
+          const countryObj = countries.find((c) => c.value === raqi.country);
+          return countryObj ? countryObj.label : null;
+        })
+        .filter((country) => country !== null) // Filter out null values
     ),
   ].sort();
 
@@ -122,10 +124,12 @@ export default function BookRaqis() {
 
   const handleCountryChange = (event, countryLabel) => {
     const countryCode = countries.find((c) => c.label === countryLabel)?.value;
-    setUserSelections((prev) => ({
-      ...prev,
-      countries: event.target.checked ? [...prev.countries, countryCode] : prev.countries.filter((c) => c !== countryCode),
-    }));
+    if (countryCode) {
+      setUserSelections((prev) => ({
+        ...prev,
+        countries: event.target.checked ? [...prev.countries, countryCode] : prev.countries.filter((c) => c !== countryCode),
+      }));
+    }
   };
 
   const fetchAvailableRakis = async (date) => {

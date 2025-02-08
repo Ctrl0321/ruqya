@@ -109,9 +109,34 @@ function MyBookings() {
           </button>
         </div>
       </div>
-      <Grid>{showUpcoming ? upcomingBookings.length > 0 ? upcomingBookings.map((booking, index) => <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No upcoming bookings found.</p> : completedBookings.length > 0 ? completedBookings.map((booking, index) => <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />) : <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">No completed bookings found.</p>}</Grid>
+      {showUpcoming && upcomingBookings.length > 0 && (
+        <Grid>
+          {upcomingBookings.map((booking, index) => (
+            <MyBookingCard key={index} className="border drop-shadow-xl shadow-lg" booking={booking} />
+          ))}
+        </Grid>
+      )}
+      {!showUpcoming && completedBookings.length > 0 && (
+        <Grid>
+          {completedBookings.map((booking, index) => (
+            <CompletedMyBookingCard className="border drop-shadow-xl shadow-lg" key={index} booking={booking} show={true} onValueChange={handleValueChange} />
+          ))}
+        </Grid>
+      )}
+      <div>
+        {showUpcoming && upcomingBookings.length === 0 && (
+          <p className="flex w-full col-span-10 items-center justify-center text-center text-gray-500 font-xl mt-4">
+            No upcoming bookings found.
+          </p>
+        )}
+        {!showUpcoming && completedBookings.length === 0 && (
+          <p className="flex w-full col-span-3 items-center justify-center text-center text-gray-500 font-xl mt-4">
+            No completed bookings found.
+          </p>
+        )}
+      </div>
       <div className="min-h-screen">
-      {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
+        {selectedBooking && <ReviewRaqiPopup raqiData={selectedBooking} onClose={handleClosePopup} />}
       </div>
     </div>
   );
