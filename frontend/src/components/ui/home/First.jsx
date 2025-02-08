@@ -2,7 +2,7 @@ import Button from "@/components/ui/buttons/DefaultButton";
 
 function First() {
   return (
-    <section id="first" className="relative w-full h-80vh md:h-[65vh] bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-RuqyaLightPurple md:bg-white overflow-x-clip">
+    <section id="first" className="relative w-full h-80vh md:h-70vh bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-RuqyaLightPurple md:bg-white overflow-x-clip">
       
       {/* Overlay to prevent background from affecting content */}
       <div className="absolute inset-0 bg-white opacity-50"></div>
@@ -16,7 +16,7 @@ function First() {
       </div>
 
       {/* Main Content Container */}
-      <div className="relative h-full flex items-center">
+      <div className="relative h-full flex items-center md:mx-[8%]">
         <div className="container mx-auto px-4">
           <div className="flex flex-col-reverse md:flex-row items-center md:items-start justify-between gap-4 relative z-10">
             {/* Text Content */}
