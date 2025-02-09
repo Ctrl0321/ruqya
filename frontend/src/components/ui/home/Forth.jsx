@@ -33,7 +33,7 @@ function Forth(props) {
         ))}
         </Grid> */}
 
-      <ResponsiveGrid data={raqiData} breakpoints={{mobile:4, ipad: 3, 'ipad-landscape': 3, lg:3, xl: 3, '2xl': 3, '3xl': 5, '4xl': 6, '5xl': 6 }} className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+      <ResponsiveGrid data={raqiData} breakpoints={{mobile:4, ipad: 4, 'ipad-landscape': 4, lg:3, xl: 3, '2xl': 3, '3xl': 5, '4xl': 6, '5xl': 6 }} className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
           {(data) => <RaqisCard key={`Raqi` + data.id} raqi={data} />}
         </ResponsiveGrid>
     </div>
