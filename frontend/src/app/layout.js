@@ -48,10 +48,6 @@ export default function RootLayout({ children }) {
   if (loading) {
     return (
       <html lang="en">
-        <head>
-          <title>Ruqya</title>
-          <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
-        </head>
         <body className="bg-background text-foreground text-RuqyaGray min-h-screen">
           <Loading className="min-h-screen" />
         </body>
@@ -61,10 +57,6 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <head>
-        <title>Ruqya</title>
-        <meta name="description" content="Ruqya is a web application that helps you to perform Ruqya on yourself or others." />
-      </head>
       <body className={`${pathname === "/Meeting" || meetingRegex.test(pathname) ? "bg-RuqyaLightGreen" : "bg-background"} text-foreground text-RuqyaGray text-[16px]`}>
         {showHeader && <Header />}
         <AuthProvider>

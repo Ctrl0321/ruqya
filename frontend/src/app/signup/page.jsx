@@ -10,8 +10,6 @@ import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 
-import bg from "@/assets/images/bg.jpeg";
-import logo from "@/assets/images/logo.png";
 
 function SignUp() {
   const router = useRouter();
@@ -108,7 +106,7 @@ function SignUp() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 relative">
-      <Image src={bg} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
+      <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
       <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
       <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div>
       <div className="w-full flex items-center justify-center relative z-10 p-4">
@@ -130,7 +128,7 @@ function SignUp() {
             {/* Logo */}
             <div className="flex justify-center mb-6">
               <Image
-                src={logo}
+                src={"/images/logo.png"}
                 alt="Prophetic Ruqyah"
                 width={200}
                 height={50}
