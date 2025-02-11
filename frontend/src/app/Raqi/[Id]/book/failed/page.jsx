@@ -14,7 +14,7 @@ const FailedPage = () => {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-red-50">
+    <div className="min-h-screen flex items-center justify-center ">
       <div className="text-center max-w-md px-4 py-8 bg-white rounded-2xl shadow-lg mx-4">
         <div className="x-circle">
           <div className="x-mark">
@@ -54,7 +54,7 @@ const FailedPage = () => {
           border-radius: 50%;
           border: 3px solid #FF5252;
           animation: circle-fill 0.4s ease-in;
-        //   background: #FF5252;
+          background: #FF5252;
           box-shadow: 0 0 20px rgba(255, 82, 82, 0.2);
         }
         .x-mark {

@@ -14,7 +14,7 @@ const CompletePage = () => {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-green-50">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="text-center max-w-md px-4 py-8 bg-white rounded-2xl shadow-lg mx-4">
         <div className="checkmark-circle">
           <div className="checkmark"></div>
@@ -43,7 +43,7 @@ const CompletePage = () => {
           border-radius: 50%;
           border: 3px solid #4CAF50;
           animation: circle-fill 0.4s ease-in;
-        //   background: #4CAF50;
+          background: #4CAF50;
           box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
         }
         .checkmark {
