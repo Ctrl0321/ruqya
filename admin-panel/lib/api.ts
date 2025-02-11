@@ -67,6 +67,20 @@ export const googleSignup = async (tokenId:string) => {
     return response.data;
 };
 
+export const  forgotPassword=async (email:string)=>{
+    return email
+}
+
+export const  verifyOTP=async (email:string,otp:string)=>{
+  return email + otp
+}
+
+export const  resetPassword=async (email:string,password:string)=>{
+ return email + password
+}
+
+
+
 // User Profile
 export const getUserProfile = async (id: string) =>
     (await api.get(`ruqya-api/user/${id}`)).data;

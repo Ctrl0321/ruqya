@@ -1,4 +1,5 @@
 import emailjs from '@emailjs/browser';
+import {toast} from "@/components/ui/toast";
 
 interface EmailParams {
     name: string;
@@ -19,7 +20,10 @@ export const sendEmail = async ({ name, email, message }: EmailParams): Promise<
             return true;
         }
     } catch (error) {
-        toast.error("Failed to send message. Please try again later.");
+        toast({
+            title: 'Email failed',
+            description: 'Failed to send message. Please try again later.',
+        });
         console.error("EmailJS Error:", error); // Log error for debugging
     }
     return false;
