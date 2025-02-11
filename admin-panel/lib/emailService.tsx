@@ -1,30 +1,79 @@
-import emailjs from '@emailjs/browser';
-import {toast} from "@/components/ui/toast";
+import emailjs from "@emailjs/browser";
+import { toast } from "@/components/ui/toast";
 
 interface EmailParams {
-    name: string;
+    name?: string;
     email: string;
-    message: string;
+    otp?: string;
+    message?: string;
+    classDate?: string;
+    reason?: string;
 }
 
-export const sendEmail = async ({ name, email, message }: EmailParams): Promise<boolean> => {
+export const sendEmail = async (
+    templateID: string,
+    params: EmailParams
+): Promise<boolean> => {
     const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
-    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
     const userID = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
 
     try {
-        const emailParams = { name, email, message };
-        const res = await emailjs.send(serviceID, templateID, emailParams, userID);
+        // Convert EmailParams to Record<string, string>
+        const formattedParams: Record<string, string> = Object.fromEntries(
+            Object.entries(params)
+                .filter(([_, value]) => value !== undefined)
+                .map(([key, value]) => [key, String(value)])
+        );
+
+        const res = await emailjs.send(serviceID, templateID, formattedParams, userID);
 
         if (res.status === 200) {
             return true;
         }
     } catch (error) {
         toast({
-            title: 'Email failed',
-            description: 'Failed to send message. Please try again later.',
+            title: "Email failed",
+            description: "Failed to send message. Please try again later.",
         });
-        console.error("EmailJS Error:", error); // Log error for debugging
+        console.error("EmailJS Error:", error);
     }
     return false;
+};
+
+
+
+// Send OTP Email
+export const sendOtpEmail = async (email: string, otp: string) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp });
+};
+
+// Send Verification Email
+export const sendVerificationEmail = async (email: string, name: string) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_VERIFICATION!, {
+        email,
+        name,
+        message: `Dear ${name}, please verify your email to activate your account.`,
+    });
+};
+
+// Send Class Reschedule Email
+export const sendClassRescheduleEmail = async (
+    email: string,
+    classDate: string,
+    message: string
+) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_RESCHEDULE!, {
+        email,
+        classDate,
+        message,
+    });
+};
+
+// Send Class Cancellation Email
+export const sendClassCancellationEmail = async (email: string, reason: string) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CANCEL!, {
+        email,
+        reason,
+        message: `Your class has been canceled due to ${reason}.`,
+    });
 };
