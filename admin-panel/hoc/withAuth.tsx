@@ -1,36 +1,48 @@
-"use client";
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import {useAuth} from "@/contexts/AuthContexts";
+"use client"
+
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAuth } from "@/contexts/AuthContexts"
+import { motion } from "framer-motion"
 
 const withAuth = (WrappedComponent: React.FC, allowedRoles: string[]) => {
     return (props: any) => {
-        const { user:currentUser } = useAuth();
-        const router = useRouter();
-        const [loading, setLoading] = useState(true);
+        const { user, isLoading } = useAuth()
+        const router = useRouter()
 
         useEffect(() => {
-           if (currentUser){
-               const token = localStorage.getItem("token");
-               const role = currentUser?.role;
+            if (!isLoading) {
+                const token = localStorage.getItem("token")
 
-               if (!token) {
-                   console.log("No token")
-                   router.push("/");
-               }
-               else if (!allowedRoles.includes(role as string)) {
-                   router.push("/unauthorized");
-               } else {
-                   setLoading(false);
-               }
-           }
+                if (!token || !user) {
+                    router.push("/")
+                    return
+                }
 
-        }, [currentUser]);
+                if (!allowedRoles.includes(user.role)) {
+                    router.push("/unauthorized")
+                }
+            }
+        }, [user, isLoading, router])
 
-        if (loading) return <p>Loadinggg...</p>;
+        if (isLoading) {
+            return (
+                <div className="flex items-center justify-center h-96">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                        className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+                    />
+                </div>
+            )
+        }
 
-        return <WrappedComponent {...props} />;
-    };
-};
+        if (!user || !allowedRoles.includes(user.role)) {
+            return null
+        }
 
-export default withAuth;
+        return <WrappedComponent {...props} />
+    }
+}
+
+export default withAuth
