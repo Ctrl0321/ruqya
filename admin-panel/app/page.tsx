@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation'
 import {login} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast"
 import {Loader2} from "lucide-react";
+import {useAuth} from "@/contexts/AuthContexts";
 
 export default function SignIn() {
+    const { login :loginAuth} = useAuth()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setLoading] = useState(false)
@@ -19,32 +22,30 @@ export default function SignIn() {
 
         try {
             const response = await login(email, password)
+            await loginAuth(response.token)
 
-
-            if (response && (response.role === "super-admin" || response.role === "admin")) {
-                setLoading(false)
+            if (response.role === "super-admin" || response.role === "admin") {
                 toast({
                     title: "Login Successful",
                     description: "Welcome, Admin!",
-                });
-                router.push("/admin");
-
+                })
+                router.push("/admin")
             } else {
-                setLoading(false)
                 toast({
                     title: "Unauthorized Access",
                     description: "You do not have permission to access this page.",
-                });
+                })
             }
         } catch (err) {
-            console.error(err);
-            setLoading(false)
+            console.error(err)
             toast({
                 title: "Login Failed",
                 description: "Invalid username or password.",
-            });
+            })
+        } finally {
+            setLoading(false)
         }
-    };
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
