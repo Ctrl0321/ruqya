@@ -278,6 +278,18 @@ export const rescheduleMeeting = async (req: AuthenticatedRequest, res: Response
             { new: true }
         );
 
+        const existingAvailability = await RakiAvailability.findOneAndUpdate(
+            { rakiId:updatedMeeting?.rakiId,startTime:utcNewDate },
+            {
+                isAvailable:false
+            },
+            { new: true }
+        );
+
+        if (!existingAvailability) {
+            return res.status(200).json({ message: 'No availability found', data: null });
+        }
+
         res.status(200).json({
             message: 'Meeting rescheduled successfully',
             meeting: {
@@ -340,6 +352,16 @@ export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): P
             },
             { new: true }
         );
+
+        const deletedAvailability = await RakiAvailability.findOneAndDelete({
+            rakiId: updatedMeeting?.rakiId,
+            startTime: updatedMeeting?.date
+        });
+
+        if (!deletedAvailability) {
+            return res.status(200).json({ message: 'No availability found', data: null });
+        }
+
 
         res.status(200).json({
             message: 'Meeting cancelled successfully',
