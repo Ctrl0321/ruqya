@@ -92,7 +92,7 @@ export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
               </CardDescription>
 
               <CardDescription
-                  className={cn("!mt-auto flex items-center gap-2 pt-3")}
+                  className={cn("!mt-auto flex items-center gap-2 ")}
               >
                 {/*<Calendar size="25" color="#0C8281" variant="Bold"/>*/}
                 {session ? formatSessionDate(session?.date) : ""}

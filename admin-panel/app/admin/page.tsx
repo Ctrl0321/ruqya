@@ -13,6 +13,7 @@ import SessionTable from "@/components/ui/dashboard/SessionTable";
 import {useDashboardData} from "@/components/ui/dashboard/useDashboardData";
 import {useAuth} from "@/contexts/AuthContexts";
 import {DashboardStats} from "@/components/ui/dashboard/DashboardStats";
+import {motion} from "framer-motion";
 
 const AdminDashboard = () => {
     const { setUserId } = useChat();
@@ -46,6 +47,20 @@ const AdminDashboard = () => {
             toast({ title: "Error", description: `Failed to cancel session ${error}`, variant: "destructive" });
         }
     };
+
+
+    if (!currentUser || !revenueData || !todaySessions){
+        return (
+        <div className="flex items-center justify-center">
+            <motion.div
+                animate={{rotate: 360}}
+                transition={{repeat: Infinity, duration: 1, ease: "linear"}}
+                className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281] "
+            />
+            <p>Loading</p>
+        </div>
+        )
+    }
 
     return (
         <div className="container mx-auto px-4 py-8">
