@@ -1,18 +1,12 @@
-version: '3.8'
-
 services:
   frontend:
     build:
       context: .
-      target: builder
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
+      target: runner
     ports:
       - "3000:3000"
     env_file:
       - .env.local
     environment:
       - NODE_ENV=development
-    command: npm run dev
+    command: node server.js

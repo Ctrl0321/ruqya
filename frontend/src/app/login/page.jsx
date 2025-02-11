@@ -2,8 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BorderInput } from "@/components/ui/input/input";
-import Button from "@/components/ui/buttons/DefaultButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login, googleSignup } from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import bookingsData from "@/data/sampledata.json";
 import Grid from "@/components/ui/layout/GridForMyBooking";
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import CompletedMyBookingCard from "@/components/cards/CompletedMyBookingCard";

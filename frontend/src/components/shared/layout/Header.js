@@ -77,7 +77,7 @@ const Header = () => {
         <div className="flex justify-between items-center mx-8 md:mx-8">
           <div className="text-xl min-w-32">
             <Link href="/" className="text-gray-700 w-40 hover:text-gray-900">
-              <img src="/logo.png" alt="Ruqya logo" width="150" height="100" />
+              <img src="/Logo.png" alt="Ruqya logo" width="150" height="100" />
             </Link>
           </div>
           <div className="hidden md:flex flex-grow justify-center items-center mx-5">
@@ -154,7 +154,7 @@ const Header = () => {
                 </svg>
               </button>
               <Link href="/" onClick={handleLinkClick}>
-                <img src="/logo.png" alt="Ruqya logo" width="120" className="mx-auto transform transition-transform duration-300 hover:scale-105" />
+                <img src="/Logo.png" alt="Ruqya logo" width="120" className="mx-auto transform transition-transform duration-300 hover:scale-105" />
               </Link>
             </div>
             <div className="flex flex-col p-4 space-y-3">

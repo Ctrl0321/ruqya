@@ -2,9 +2,7 @@
 import Link from "next/link";
 import RaqisCard from "@/components/cards/RaqisCard";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import Grid from "@/components/ui/layout/Grid"; 
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
-import {isArray} from "node:util";
 
 function Forth(props) {
     const { raqiData = [], title } = props;
