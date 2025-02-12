@@ -14,6 +14,7 @@ import {useDashboardData} from "@/components/ui/dashboard/useDashboardData";
 import {useAuth} from "@/contexts/AuthContexts";
 import {DashboardStats} from "@/components/ui/dashboard/DashboardStats";
 import {motion} from "framer-motion";
+import {sendMeetingEmail} from "@/lib/emailService";
 
 const AdminDashboard = () => {
     const { setUserId } = useChat();
@@ -40,7 +41,8 @@ const AdminDashboard = () => {
 
     const handleRescheduleSession = async (meetingId: string, newDate: Date) => {
         try {
-            await rescheduleSession(meetingId, newDate.toISOString());
+            const results=await rescheduleSession(meetingId, newDate.toISOString());
+            const success = await sendMeetingEmail(results?.userId, results?.date, "New class date: Sept 15th.",`Hello Your class rescheduled`,"Aathiq");
             toast({ title: "Success", description: "Session rescheduled successfully!" });
             setRescheduleSessionId(null);
         } catch (error) {

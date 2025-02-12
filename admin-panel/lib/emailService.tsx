@@ -4,10 +4,12 @@ import { toast } from "@/components/ui/toast";
 interface EmailParams {
     name?: string;
     email: string;
+    rakiName?:string;
     otp?: string;
     message?: string;
     classDate?: string;
     reason?: string;
+    heading:string;
 }
 
 export const sendEmail = async (
@@ -43,37 +45,42 @@ export const sendEmail = async (
 
 
 // Send OTP Email
-export const sendOtpEmail = async (email: string, otp: string) => {
-    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp });
+export const sendOtpEmail = async (email: string, otp: string,heading:string) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp,heading });
 };
 
 // Send Verification Email
-export const sendVerificationEmail = async (email: string, name: string) => {
+export const sendVerificationEmail = async (email: string, name: string,heading:string) => {
     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_VERIFICATION!, {
         email,
         name,
         message: `Dear ${name}, please verify your email to activate your account.`,
+        heading
     });
 };
 
-// Send Class Reschedule Email
-export const sendClassRescheduleEmail = async (
+export const sendMeetingEmail = async (
     email: string,
     classDate: string,
-    message: string
+    message: string,
+    heading:string,
+    rakiName:string
 ) => {
-    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_RESCHEDULE!, {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_MEETING!, {
         email,
         classDate,
         message,
+        heading,
+        rakiName
     });
 };
 
 // Send Class Cancellation Email
-export const sendClassCancellationEmail = async (email: string, reason: string) => {
+export const sendClassCancellationEmail = async (email: string, reason: string,heading:string) => {
     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CANCEL!, {
         email,
         reason,
         message: `Your class has been canceled due to ${reason}.`,
+        heading
     });
 };
