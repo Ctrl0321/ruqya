@@ -38,6 +38,13 @@ interface Session {
     rakiId: string;
     userId: string;
     notificationSend: boolean;
+    status:MeetingStatus
+}
+
+export enum MeetingStatus {
+    SCHEDULED = 'scheduled',
+    RESCHEDULED = 'rescheduled',
+    CANCELLED = 'cancelled'
 }
 
 const userTimeZone = getUserTimeZone();

@@ -2,9 +2,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, Calendar, Clock, Filter, X } from "lucide-react";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
-import {getMeetings, getMeetingsByRakiId, getRakis, requestPayment, updatePayment} from "@/lib/api";
+import {getMeetings, getMeetingsByRakiId, getRakis, MeetingStatus, requestPayment, updatePayment} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import withAuth from "@/hoc/withAuth";
+import {IMeeting} from "@/components/SessionList";
 
 interface Meeting {
   _id: string;
@@ -54,7 +55,8 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
           };
         });
 
-        setMeeting(mergedMeetings);
+        setMeeting(mergedMeetings.filter((meeting:IMeeting) => meeting.status !== MeetingStatus.CANCELLED));
+
       } catch (error) {
         console.error("Failed to fetch data:", error);
         toast({

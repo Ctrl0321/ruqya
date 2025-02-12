@@ -13,10 +13,16 @@ export interface IMeeting {
   rakiId: string;
   userId: string;
   notificationSend: boolean;
-  status: string;
+  status: MeetingStatus;
   rakiName:string;
   userName:string;
   note: string;
+}
+
+export enum MeetingStatus {
+  SCHEDULED = 'scheduled',
+  RESCHEDULED = 'rescheduled',
+  CANCELLED = 'cancelled'
 }
 
 export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {

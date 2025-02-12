@@ -3,11 +3,12 @@ import { toast } from "@/components/ui/toast";
 
 interface EmailParams {
     name?: string;
-    email: string;
-    rakiName?:string;
+    user_email: string;
+    raki_email:string;
+    raki_name?:string;
     otp?: string;
     message?: string;
-    classDate?: string;
+    date?: string;
     reason?: string;
     heading:string;
 }
@@ -45,42 +46,46 @@ export const sendEmail = async (
 
 
 // Send OTP Email
-export const sendOtpEmail = async (email: string, otp: string,heading:string) => {
-    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp,heading });
-};
+// export const sendOtpEmail = async (email: string, otp: string,heading:string) => {
+//     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp,heading });
+// };
 
 // Send Verification Email
-export const sendVerificationEmail = async (email: string, name: string,heading:string) => {
-    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_VERIFICATION!, {
-        email,
-        name,
-        message: `Dear ${name}, please verify your email to activate your account.`,
-        heading
-    });
-};
+// export const sendVerificationEmail = async (email: string, name: string,heading:string) => {
+//     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_VERIFICATION!, {
+//         email,
+//         name,
+//         message: `Dear ${name}, please verify your email to activate your account.`,
+//         heading
+//     });
+// };
 
 export const sendMeetingEmail = async (
-    email: string,
-    classDate: string,
+    user_email: string,
+    raki_email: string,
+    name:string,
+    raki_name:string,
+    date: string,
     message: string,
     heading:string,
-    rakiName:string
 ) => {
     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_MEETING!, {
-        email,
-        classDate,
+        user_email,
+        raki_email,
+        name,
+        raki_name,
+        date,
         message,
-        heading,
-        rakiName
+        heading
     });
 };
 
 // Send Class Cancellation Email
-export const sendClassCancellationEmail = async (email: string, reason: string,heading:string) => {
-    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CANCEL!, {
-        email,
-        reason,
-        message: `Your class has been canceled due to ${reason}.`,
-        heading
-    });
-};
+// export const sendClassCancellationEmail = async (email: string, reason: string,heading:string) => {
+//     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CANCEL!, {
+//         email,
+//         reason,
+//         message: `Your class has been canceled due to ${reason}.`,
+//         heading
+//     });
+// };

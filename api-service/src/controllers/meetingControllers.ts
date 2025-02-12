@@ -8,8 +8,7 @@ import moment from "moment-timezone";
 import { validateAndConvertTimezone } from "../utils/timezone";
 import Meeting, {MeetingStatus} from "../models/meeting";
 import {client} from "../config/streamConfig";
-
-
+import User from "../models/user";
 
 
 const MEETING_COST = Number(process.env.SESSION_COST) || 50;
@@ -40,14 +39,14 @@ interface StatisticsResponse {
 }
 
 interface DateRange {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
 }
 
 const convertMeetingDates = (meetings: any[], timeZone: string): any[] => {
     return meetings.map(meeting => ({
         ...meeting.toObject(),
-        date: moment(meeting.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss'),
+        date: moment(meeting.date).tz(timeZone).format('YYYY-MM-DD HH:mm'),
         originalTimezone: timeZone
     }));
 };
@@ -72,26 +71,19 @@ export const getTodayAndFutureMeetings = async (req: AuthenticatedRequest, res: 
         const user = req.user;
         const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
-        // Convert `now` and `endOfToday` to UTC before querying MongoDB
-        const nowLocal = moment.tz(validatedTimeZone);
-        const endOfTodayLocal = moment.tz(validatedTimeZone).endOf('day');
+        const nowUTC = moment().utc().startOf("minute").toDate(); // Current UTC time
+        const endOfTodayUTC = moment().utc().add(24, "hours").toDate(); // 24 hours from now
 
-        const nowUTC = nowLocal.utc().toDate();
-        const endOfTodayUTC = endOfTodayLocal.utc().toDate();
-
-        console.log("Local Now:", nowLocal.format(), "UTC Now:", nowUTC);
-        console.log("Local End of Day:", endOfTodayLocal.format(), "UTC End of Day:", endOfTodayUTC);
-        console.log("User Role:", user?.role);
 
         let meetings;
 
         if (user?.role === "super-admin") {
             meetings = await Meeting.find({
-                date: { $gte: nowUTC, $lte: endOfTodayUTC }
+                date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toISOString() }
             });
         } else {
             meetings = await Meeting.find({
-                date: { $gte: nowUTC, $lte: endOfTodayUTC },
+                date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toString() },
                 rakiId: user?.id
             });
         }
@@ -116,8 +108,7 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
 
         const validatedTimeZone = validateAndConvertTimezone(timeZone);
 
-        const utcDate = moment.tz(date, "YYYY-MM-DD HH:mm:ss", validatedTimeZone).utc().toISOString();
-
+        const utcDate = moment.tz(date, "YYYY-MM-DD HH:mm", validatedTimeZone).utc().toISOString();
 
         const existingMeetings = await Meeting.find({
             $or: [{ rakiId }, { userId }],
@@ -170,7 +161,6 @@ export const addMeeting = async (req: AuthenticatedRequest, res: Response): Prom
                 return res.status(200).json({ message: 'No availability found', data: null });
             }
 
-            console.log("Stream response:", streamResponse);
         } catch (error: any) {
             console.error("Stream API Error:", error?.message || error);
             await Meeting.findByIdAndDelete(savedMeeting._id);
@@ -210,50 +200,50 @@ export const rescheduleMeeting = async (req: AuthenticatedRequest, res: Response
             return res.status(401).json({ message: 'User not authenticated' });
         }
 
-        const {meetingId, newDate, timeZone = 'UTC' } = req.body;
-
-        if (!newDate) {
-            return res.status(400).json({
-                message: 'New date is required for rescheduling'
-            });
+        const { meetingId, newDate, timeZone = 'UTC' } = req.body;
+        if (!meetingId || !newDate) {
+            return res.status(400).json({ message: 'Meeting ID and new date are required for rescheduling' });
         }
 
         let validatedTimeZone: string;
         try {
             validatedTimeZone = validateAndConvertTimezone(timeZone);
         } catch (error) {
-            return res.status(400).json({
-                message: error instanceof Error ? error.message : 'Invalid timezone'
-            });
+            return res.status(400).json({ message: error instanceof Error ? error.message : 'Invalid timezone' });
         }
 
-        const utcNewDate = moment.tz(newDate, validatedTimeZone).utc();
+        const utcNewDate = moment.tz(newDate, "YYYY-MM-DD HH:mm",validatedTimeZone).utc().toISOString();
 
-        const meeting = await Meeting.findOne({
-            meetingId
-        });
-
+        // Find the meeting
+        const meeting = await Meeting.findOne({ meetingId });
         if (!meeting) {
-            return res.status(404).json({
-                message: 'Meeting not found or you do not have permission to reschedule it'
-            });
+            return res.status(404).json({ message: 'Meeting not found or you do not have permission to reschedule it' });
         }
 
         if (meeting.status === MeetingStatus.CANCELLED) {
-            return res.status(400).json({
-                message: 'Cannot reschedule a cancelled meeting'
-            });
+            return res.status(400).json({ message: 'Cannot reschedule a cancelled meeting' });
         }
 
+        // Check if the new date is available
+        const isAvailabilityForRaki = await RakiAvailability.findOne({
+            rakiId: meeting?.rakiId,
+            startTime: utcNewDate
+        });
+
+        if (!isAvailabilityForRaki) {
+            return res.status(409).json({ message: 'No availability found for raki', data: null });
+        }
+        if (!isAvailabilityForRaki.isAvailable) {
+            return res.status(409).json({ message: 'Raki already scheduled for another meeting', data: null });
+        }
+
+        // Check for scheduling conflicts
         const dayStart = moment(utcNewDate).startOf('day');
         const dayEnd = moment(utcNewDate).endOf('day');
 
         const existingMeetings = await Meeting.find({
             _id: { $ne: meeting._id },
-            date: {
-                $gte: dayStart.toDate(),
-                $lte: dayEnd.toDate()
-            },
+            date: { $gte: dayStart.toDate(), $lte: dayEnd.toDate() },
             status: { $ne: MeetingStatus.CANCELLED }
         });
 
@@ -262,39 +252,50 @@ export const rescheduleMeeting = async (req: AuthenticatedRequest, res: Response
                 message: 'Scheduling conflict on the new date',
                 conflictingMeetings: existingMeetings.map(m => ({
                     ...m.toObject(),
-                    date: moment(m.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
+                    date: moment(m.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm')
                 }))
             });
         }
 
+        // Update the meeting
         const updatedMeeting = await Meeting.findOneAndUpdate(
             { meetingId },
             {
-                date: utcNewDate.toDate(),
+                date: utcNewDate,
                 status: MeetingStatus.RESCHEDULED,
-                note:'Meeting rescheduled',
+                note: 'Meeting rescheduled',
                 notificationSend: false
             },
             { new: true }
         );
 
-        const existingAvailability = await RakiAvailability.findOneAndUpdate(
-            { rakiId:updatedMeeting?.rakiId,startTime:utcNewDate },
-            {
-                isAvailable:false
-            },
-            { new: true }
+        if (!updatedMeeting) {
+            return res.status(500).json({ message: 'Failed to reschedule meeting' });
+        }
+
+        // Mark old availability as unavailable
+        await RakiAvailability.findOneAndUpdate(
+            { rakiId: meeting?.rakiId, startTime: meeting.date },
+            { isAvailable: true }
         );
 
-        if (!existingAvailability) {
-            return res.status(200).json({ message: 'No availability found', data: null });
-        }
+        await RakiAvailability.findOneAndUpdate(
+            { rakiId: meeting?.rakiId, startTime: utcNewDate },
+            { isAvailable: false }
+        );
+
+
+        // Fetch user and raki details
+        const getRakiDetails = await User.findOne({ _id: updatedMeeting.rakiId });
+        const getUserDetails = await User.findOne({ _id: updatedMeeting.userId });
 
         res.status(200).json({
             message: 'Meeting rescheduled successfully',
             meeting: {
-                ...updatedMeeting?.toObject(),
-                date: moment(updatedMeeting?.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss')
+                ...updatedMeeting.toObject(),
+                date: moment(updatedMeeting.date).tz(validatedTimeZone).format('YYYY-MM-DD HH:mm:ss'),
+                raki: getRakiDetails,
+                user: getUserDetails
             }
         });
 
@@ -313,11 +314,9 @@ export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): P
         if (!userId) {
             return res.status(401).json({ message: 'User not authenticated' });
         }
+        const {meetingId, note } = req.body;
 
-        const { meetingId } = req.params;
-        const { note } = req.body;
-
-        if (!note) {
+        if (!note || !meetingId) {
             return res.status(400).json({
                 message: 'Cancellation note is required'
             });
@@ -325,10 +324,6 @@ export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): P
 
         const meeting = await Meeting.findOne({
             meetingId,
-            $or: [
-                { userId: userId },
-                { rakiId: userId }
-            ]
         });
 
         if (!meeting) {
@@ -353,19 +348,31 @@ export const cancelMeeting = async (req: AuthenticatedRequest, res: Response): P
             { new: true }
         );
 
-        const deletedAvailability = await RakiAvailability.findOneAndDelete({
-            rakiId: updatedMeeting?.rakiId,
-            startTime: updatedMeeting?.date
-        });
+        if (!updatedMeeting) {
+            return res.status(200).json({ message: 'No meeting  found', data: null });
+        }
+
+        const deletedAvailability =await RakiAvailability.findOneAndUpdate(
+                        { rakiId: meeting?.rakiId, startTime: updatedMeeting?.date },
+                        { isAvailable: false }
+                    );
 
         if (!deletedAvailability) {
             return res.status(200).json({ message: 'No availability found', data: null });
         }
 
 
+        const getRakiDetails = await User.findOne({ _id: updatedMeeting.rakiId });
+        const getUserDetails = await User.findOne({ _id: updatedMeeting.userId });
+
+
         res.status(200).json({
             message: 'Meeting cancelled successfully',
-            meeting: updatedMeeting
+            meeting: {
+                ...updatedMeeting.toObject(),
+                raki: getRakiDetails,
+                user: getUserDetails
+            }
         });
 
     } catch (error) {
@@ -403,7 +410,7 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
             case 'last_week':
                 const end = moment().tz(validatedTimeZone).endOf('day');
                 const start = moment().tz(validatedTimeZone).subtract(7, 'days').startOf('day');
-                dateRange = { start: start.toDate(), end: end.toDate() };
+                dateRange = { start: start.toDate().toISOString(), end: end.toDate().toISOString() };
                 break;
 
             case 'range':
@@ -413,8 +420,8 @@ export const getMeetingStatistics = async (req: AuthenticatedRequest, res: Respo
                     });
                 }
                 dateRange = {
-                    start: moment.tz(startDate.toString(), validatedTimeZone).startOf('day').toDate(),
-                    end: moment.tz(endDate.toString(), validatedTimeZone).endOf('day').toDate()
+                    start: moment.tz(startDate.toString(), validatedTimeZone).startOf('day').toDate().toISOString(),
+                    end: moment.tz(endDate.toString(), validatedTimeZone).endOf('day').toDate().toISOString()
                 };
                 break;
 

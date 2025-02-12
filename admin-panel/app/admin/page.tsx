@@ -31,7 +31,23 @@ const AdminDashboard = () => {
 
     const handleCancelSession = async (meetingId: string, reason: string) => {
         try {
-            await cancelSession(meetingId, reason);
+            const results =await cancelSession(meetingId, reason);
+
+            if (!results) throw new Error("Failed to reschedule session");
+
+            const { user, raki, date,note } = results.meeting;
+
+            if (!user || !raki) throw new Error("Invalid response from rescheduleSession");
+
+            await sendMeetingEmail(
+                user.email,
+                raki.email,
+                user.name,
+                raki.name,
+                date,
+                `Unfortunately, your meeting has been canceled. Reason: ${note} A refund will be issued to ${user.name}.`,
+                "Meeting Cancellation Notice"
+            );
             toast({ title: "Success", description: "Session cancelled successfully!" });
             setCancelSessionId(null);
         } catch (error) {
@@ -41,14 +57,36 @@ const AdminDashboard = () => {
 
     const handleRescheduleSession = async (meetingId: string, newDate: Date) => {
         try {
-            const results=await rescheduleSession(meetingId, newDate.toISOString());
-            const success = await sendMeetingEmail(results?.userId, results?.date, "New class date: Sept 15th.",`Hello Your class rescheduled`,"Aathiq");
+            const results = await rescheduleSession(meetingId, newDate.toISOString());
+
+            if (!results) throw new Error("Failed to reschedule session");
+
+            const { user, raki, date } = results.meeting;
+            if (!user || !raki) throw new Error("Invalid response from rescheduleSession");
+
+            await sendMeetingEmail(
+                user.email,
+                raki.email,
+                user.name,
+                raki.name,
+                date,
+                "Due to unforeseen circumstances, your upcoming meeting has been rescheduled. We appreciate your understanding and look forward to seeing you at the new time",
+                "Meeting Rescheduled"
+            );
+
             toast({ title: "Success", description: "Session rescheduled successfully!" });
+
             setRescheduleSessionId(null);
         } catch (error) {
-            toast({ title: "Error", description: `Failed to cancel session ${error}`, variant: "destructive" });
+            console.error("Error rescheduling session:", error);
+            toast({
+                title: "Error",
+                description: `Failed to reschedule session: Please check availability with Raki`,
+                variant: "destructive"
+            });
         }
     };
+
 
 
     if (!currentUser || !revenueData || !todaySessions){
@@ -73,7 +111,7 @@ const AdminDashboard = () => {
 
             {isSuperAdmin && <DashboardStats revenueData={revenueData} />}
 
-            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} />
+            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} isSuperAdmin={isSuperAdmin} />
 
             <CancelSessionDialog isOpen={!!cancelSessionId} onClose={() => setCancelSessionId(null)} onConfirm={(reason) => cancelSessionId && handleCancelSession(cancelSessionId, reason)} />
             <RescheduleSessionDialog isOpen={!!rescheduleSessionId} onClose={() => setRescheduleSessionId(null)} onConfirm={(newDate) => rescheduleSessionId && handleRescheduleSession(rescheduleSessionId, newDate)} />

@@ -9,7 +9,7 @@ export const DashboardStats = ({ revenueData }:{revenueData:IRevenueData}) => (
             { title: "Cancelled Sessions", value: revenueData.cancelledMeetings, bg: "#FF6961" },
             { title: "Total Revenue", value: `$${revenueData.revenue.toFixed(2)}`, bg: "#A1D6B2" }
         ].map(({ title, value, bg }) => (
-            <Card key={title} style={{ background: bg }}>
+            <Card key={title} style={{ border: `2px solid ${bg}` }}>
                 <CardHeader><CardTitle>{title}</CardTitle></CardHeader>
                 <CardContent><p className="text-3xl font-bold">{value}</p></CardContent>
             </Card>
