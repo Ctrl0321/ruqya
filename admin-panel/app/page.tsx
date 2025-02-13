@@ -1,93 +1,103 @@
 'use client'
 
-import { useState} from 'react'
-import { useRouter } from 'next/navigation'
-import {login} from "@/lib/api";
-import { toast } from "@/components/ui/use-toast"
-import {Loader2} from "lucide-react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { login } from '@/lib/api';
+import { toast } from '@/components/ui/use-toast';
+import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContexts';
+
+interface LoginForm {
+    email: string;
+    password: string;
+}
 
 export default function SignIn() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [isLoading, setLoading] = useState(false)
-    const router = useRouter()
+    const { login: loginAuth } = useAuth();
+    const [formData, setFormData] = useState<LoginForm>({ email: '', password: '' });
+    const [isLoading, setLoading] = useState(false);
+    const router = useRouter();
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setLoading(true)
+        e.preventDefault();
+        setLoading(true);
 
         try {
-            const response = await login(email, password)
+            const response = await login(formData.email, formData.password);
+            await loginAuth(response.token);
 
-
-            if (response && (response.role === "super-admin" || response.role === "admin")) {
-                setLoading(false)
+            if (response.role === 'super-admin' || response.role === 'admin') {
                 toast({
-                    title: "Login Successful",
-                    description: "Welcome, Admin!",
+                    title: 'Login Successful',
+                    description: 'Welcome, Admin!',
                 });
-                router.push("/admin");
-
+                router.push('/admin');
             } else {
-                setLoading(false)
                 toast({
-                    title: "Unauthorized Access",
-                    description: "You do not have permission to access this page.",
+                    title: 'Unauthorized Access',
+                    description: 'You do not have permission to access this page.',
                 });
             }
         } catch (err) {
             console.error(err);
-            setLoading(false)
             toast({
-                title: "Login Failed",
-                description: "Invalid username or password.",
+                title: 'Login Failed',
+                description: 'Invalid username or password.',
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h1 className="text-2xl font-bold mb-6 text-center text-secondary-50">Sign In</h1>
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div
+            className="min-h-screen flex items-center justify-center bg-gray-100"
+            style={{
+                backgroundImage: 'url("/images/loginBg.svg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+        >
+            <div className="flex flex-col justify-center items-center bg-opacity-30 shadow-xl backdrop-blur-lg max-w-full sm:max-w-3xl w-full bg-white sm:shadow-box sm:rounded-3xl py-10 sm:py-16 sm:mx-5 sm:my-auto px-4 sm:px-0">
+                <img alt={'logo'} loading={'lazy'} width={85} height={85} data-nimg="1" src="/images/logo.png" />
+                <h1 className="text-2xl font-extrabold my-6 text-center text-secondary-50">Welcome to Ruqya Admin</h1>
+                <form onSubmit={handleSubmit} className="w-3/5">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
-                        </label>
                         <input
                             type="email"
                             id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            name="email"
+                            placeholder="Email address"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="mt-1 block w-full h-12 px-3 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:bg-primary-50 focus:border-primary-400"
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                            Password
-                        </label>
                         <input
                             type="password"
                             id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="mt-5 block w-full h-12 px-3 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:bg-primary-50 focus:border-primary-400"
                         />
                     </div>
                     <button
                         disabled={isLoading}
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="w-full flex justify-center mt-10 py-2 px-6 h-10 border border-transparent rounded-2xl shadow-sm text-m font-bold text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:to-primary-400"
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isLoading ? " Sign In..." : "  Sign In"}
-
-
+                        {isLoading ? 'Continue with email ...' : 'Continue with email'}
                     </button>
                 </form>
             </div>
         </div>
-    )
+    );
 }
-

@@ -13,10 +13,16 @@ export interface IMeeting {
   rakiId: string;
   userId: string;
   notificationSend: boolean;
-  status: string;
+  status: MeetingStatus;
   rakiName:string;
   userName:string;
   note: string;
+}
+
+export enum MeetingStatus {
+  SCHEDULED = 'scheduled',
+  RESCHEDULED = 'rescheduled',
+  CANCELLED = 'cancelled'
 }
 
 export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
@@ -92,7 +98,7 @@ export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
               </CardDescription>
 
               <CardDescription
-                  className={cn("!mt-auto flex items-center gap-2 pt-3")}
+                  className={cn("!mt-auto flex items-center gap-2 ")}
               >
                 {/*<Calendar size="25" color="#0C8281" variant="Bold"/>*/}
                 {session ? formatSessionDate(session?.date) : ""}

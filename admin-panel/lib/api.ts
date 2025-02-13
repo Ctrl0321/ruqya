@@ -38,6 +38,13 @@ interface Session {
     rakiId: string;
     userId: string;
     notificationSend: boolean;
+    status:MeetingStatus
+}
+
+export enum MeetingStatus {
+    SCHEDULED = 'scheduled',
+    RESCHEDULED = 'rescheduled',
+    CANCELLED = 'cancelled'
 }
 
 const userTimeZone = getUserTimeZone();
@@ -66,6 +73,20 @@ export const googleSignup = async (tokenId:string) => {
     localStorage.setItem("token", response.data.token);
     return response.data;
 };
+
+export const  forgotPassword=async (email:string)=>{
+    return email
+}
+
+export const  verifyOTP=async (email:string,otp:string)=>{
+  return email + otp
+}
+
+export const  resetPassword=async (email:string,password:string)=>{
+ return email + password
+}
+
+
 
 // User Profile
 export const getUserProfile = async (id: string) =>

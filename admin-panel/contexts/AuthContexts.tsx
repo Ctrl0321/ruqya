@@ -2,23 +2,23 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import {getOwnProfile} from "@/lib/api";
+import { getOwnProfile } from "@/lib/api"
 
 export interface UserDto {
     _id: string
     name: string
     email: string
     role: 'super-admin' | 'admin' | 'user'
-    country:string
-    languages:string[]
-    mobileNumber:string
-    yearOfExperience?:number
-    description?:string
-    firstTimeLogin?:boolean
-    googleId?:string
-    age:number
-    password:string
-    status:string
+    country: string
+    languages: string[]
+    mobileNumber: string
+    yearOfExperience?: number
+    description?: string
+    firstTimeLogin?: boolean
+    googleId?: string
+    age: number
+    password: string
+    status: string
 }
 
 interface AuthContextType {
@@ -34,46 +34,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<UserDto | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
-    const token = localStorage.getItem("token");
 
-
+    // Initialize auth state on mount
     useEffect(() => {
         const initializeAuth = async () => {
             try {
+                const token = localStorage.getItem("token")
+                if (!token) {
+                    setIsLoading(false)
+                    return
+                }
+
                 const userData = await getOwnProfile()
                 setUser(userData)
             } catch (error) {
-
-                console.error('Failed to fetch user profile:', error)
+                console.error("Failed to fetch user profile:", error)
+                localStorage.removeItem("token") // Clear invalid token
             } finally {
                 setIsLoading(false)
             }
         }
 
-        if (token) initializeAuth()
-
-    }, [token])
-
+        initializeAuth()
+    }, [])
 
     const login = async (token: string) => {
         try {
+            localStorage.setItem("token", token)
             const userData = await getOwnProfile()
             setUser(userData)
-            router.push('/admin')
         } catch (error) {
             console.error('Login failed:', error)
+            localStorage.removeItem("token")
             throw error
         }
     }
 
     const logout = async () => {
-        try {
-            await fetch('/api/logout', { method: 'POST' })
-            setUser(null)
-            router.push('/signin')
-        } catch (error) {
-            console.error('Logout failed:', error)
-        }
+        localStorage.removeItem("token")
+        setUser(null)
+        router.push('/')
     }
 
     return (
@@ -90,4 +90,3 @@ export const useAuth = () => {
     }
     return context
 }
-

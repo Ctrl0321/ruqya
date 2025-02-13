@@ -15,7 +15,7 @@ router.post('/add-meetings', protect, authorizeRoles('admin', 'user'), addMeetin
 router.get('/get-meetings/user/', protect, authorizeRoles('user'), getMeetingsByUserId);
 router.get('/get-meetings/raki/', protect, authorizeRoles('admin', 'super-admin'), getMeetingsByRakiId);
 router.post('/reschedule/', protect, authorizeRoles('admin','super-admin'), rescheduleMeeting);
-router.post('/cancel/', protect, authorizeRoles('admin', 'super-admin'), cancelMeeting);
+router.post('/cancel/', protect, authorizeRoles( 'super-admin'), cancelMeeting);
 router.get('/get-meeting-statistics/', protect, authorizeRoles( 'super-admin'), getMeetingStatistics);
 router.post('/update-payment/', protect, authorizeRoles( 'super-admin'), updateMeetingPayment);
 router.post('/request-payment/', protect, authorizeRoles( 'admin'), requestMeetingPayment);

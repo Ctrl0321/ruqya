@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IMeeting, SessionList } from "@/components/SessionList";
-import {getMeetings, getMeetingsByRakiId, getRakis, getUsers} from "@/lib/api";
+import {getMeetings, getMeetingsByRakiId, getRakis, getUsers, MeetingStatus} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import withAuth from "@/hoc/withAuth";
@@ -25,7 +25,7 @@ const SessionsPage=()=> {
                     getRakis(),
                     getUsers(),
                 ]);
-                setMeetings(meetingData || []);
+                setMeetings(meetingData.filter((meeting:IMeeting) => meeting.status !== MeetingStatus.CANCELLED));
                 setRakis(rakiData || []);
                 setUsers(userData || []);
             } catch (error) {

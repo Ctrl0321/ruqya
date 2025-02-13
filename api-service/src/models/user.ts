@@ -20,6 +20,7 @@ export interface IUser extends Document {
     matchPassword: (enteredPassword: string) => Promise<boolean>;
     isEmailVerified: boolean;
     profileImage: string;
+    gender:string
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -39,6 +40,8 @@ const userSchema: Schema<IUser> = new Schema({
     description: { type: String },
     isEmailVerified: { type: Boolean, default: false },
     profileImage: { type: String },
+    gender: { type: String ,default:"Male"},
+
 });
 
 userSchema.pre('save', async function (next) {
