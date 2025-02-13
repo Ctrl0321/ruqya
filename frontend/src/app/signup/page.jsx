@@ -105,11 +105,11 @@ function SignUp() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 relative">
-      <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover blur-sm" />
+    <main className="min-h-screen flex items-center justify-center  relative">
+      <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover" />
       <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
-      <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div>
-      <div className="w-full flex items-center justify-center relative z-10 p-4">
+      {/* <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div> */}
+      <div className="w-full flex items-center justify-center relative z-10 ">
         {/* Left side - Image */}
         <div className="hidden lg:block">
           {/* <Image
@@ -123,8 +123,8 @@ function SignUp() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto mt-20 animate-fade-in" style={{ animationDelay: `500ms` }}>
-          <div className="bg-white rounded-3xl p-8 shadow-xl">
+        <div className="w-full max-w-md mx-auto -mt-5 md:mt-10 animate-fade-in" style={{ animationDelay: `500ms` }}>
+          <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
             {/* Logo */}
             <div className="flex justify-center mb-6">
               <Image

@@ -1,5 +1,6 @@
 services:
   frontend:
+    image: frontend:0.0.1
     build:
       context: .
       target: runner
