@@ -31,7 +31,7 @@ function First() {
               <p className="text-sm lg:text-lg max-w-xl font-[800] mx-auto xl:mx-0">Connect with expert Raqis for personalized spiritual healing and guidance.</p>
               <div className="flex w-full xl:w-auto text-center items-center justify-center lg:items-start lg:justify-start gap-4 mt-10">
                 <Button text="Book a Session" link="/BookRaqis" color="RuqyaGreen" bg={true} className="px-6 py-3 rounded-lg whitespace-nowrap font-bold animate-fade-in" style={{ animationDelay: "0.6s" }} />
-                <Button text="Learn Ruqyah" link="/SelfRuqyah" className="px-6 py-3 border-[#0d766e] text-[#0d766e] bg-[rgba(0,204,204,0.1)] rounded-lg whitespace-nowrap font-[800] animate-fade-in" style={{ animationDelay: "0.8s" }} />
+                <Button text="Learn Ruqyah" link="/SelfRuqyah" className="px-6 py-3 border-RuqyaGreen border text-[#0d766e] bg-[rgba(0,204,204,0.1)] rounded-lg whitespace-nowrap font-[800] animate-fade-in" style={{ animationDelay: "0.8s" }} />
               </div>
             </div>
 
