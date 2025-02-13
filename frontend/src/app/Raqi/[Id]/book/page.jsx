@@ -145,14 +145,11 @@ const BookSessionPage = () => {
         const response = await setRakiAvailability(formattedDate, [timeSlot]);
         
         if (response) {
-          console.log("Booking successful:", response);
-          alert({message: "Session booked successfully!", type:"success"});
-          // Optionally redirect or update UI
+          router.push(`/Raqi/${Id}/book/complete`);
         }
       } catch (error) {
         console.error("Error booking session:", error);
-        setErrorMessage("Failed to book session. Please try again.");
-        setShowError(true);
+        router.push(`/Raqi/${Id}/book/failed`);
       }
     }
   };

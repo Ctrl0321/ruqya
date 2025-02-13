@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import MyBookingCard from "@/components/cards/MyBookingCard";
 import ResponsiveGrid from "@/components/ui/layout/ResponsiveGrid";
-import LoadingSpinner from "@/components/shared/common/LoadingSpinner";
 
 function Third(props) {
   const { raqiData } = props;

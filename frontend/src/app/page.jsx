@@ -4,8 +4,8 @@ import '@/styles/globals.css';
 import {getRakis,getMyBookings} from "@/lib/api"
 import { sortBookingsByDate , removeOldBookings } from "@/lib/utils";
 
-import Flower from "@/assets/svg/flower-right";
-import FlowerLeft from "@/assets/svg/flower-left";
+// import Flower from "../../public/svg/flower-right";
+// import FlowerLeft from "../../public/svg/flower-left";
 
 import First from "@/components/ui/home/First";
 import Search from "@/components/ui/home/Search";
