@@ -278,19 +278,34 @@ export const removeAvailability = async (
       .utc()
       .toISOString();
 
+    const availability = await RakiAvailability.findOne({
+      rakiId,
+      startTime: startDateTimeUTC,
+    });
+
+    if (!availability) {
+      return res.status(404).json({ message: "Availability not found" });
+    }
+
+    if (!availability.isAvailable) {
+      return res
+          .status(400)
+          .json({
+            message: "Cannot remove this booking because a meeting is scheduled for this slot.",
+          });
+    }
+
+    // Proceed with deletion
     const deletedAvailability = await RakiAvailability.findOneAndDelete({
       rakiId,
       startTime: startDateTimeUTC,
     });
 
-    if (!deletedAvailability) {
-      return res.status(404).json({ message: "Availability not found" });
-    }
-
     res.status(200).json({
       message: "Availability removed successfully",
       deletedAvailability,
     });
+
   } catch (error) {
     console.error("Error removing availability:", error);
     res
