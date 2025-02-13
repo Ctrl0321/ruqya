@@ -336,6 +336,10 @@ animation-play-state: paused;
 }
 
 .custom-popper {
+  z-index: 1050 !important; /* Ensure the popper has a higher z-index */
+}
+
+.custom-popper {
   z-index: 9999 !important;
 }
 

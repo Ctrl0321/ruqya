@@ -9,7 +9,7 @@ const RatingInput = ({ rating, setRating, className }) => {
   };
 
   return (
-      <div className="flex items-center justify-center space-x-1">
+      <div className="flex items-center justify-center space-x-1 z-0">
         {[...Array(5)].map((_, index) => {
           const ratingValue = index + 1;
           return (

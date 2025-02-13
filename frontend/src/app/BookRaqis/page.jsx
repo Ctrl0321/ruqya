@@ -234,21 +234,40 @@ export default function BookRaqis() {
     <div className="filter-section pb-6 animate-fade-in" style={{ animationDelay: `1500ms` }}>
       <h2 className="text-lg font-semibold mb-4">Availability</h2>
       <div className="space-y-4 bg-white/50 p-4 rounded-lg font-sans">
-        <div>
+        <div className="relative z-50"> {/* Adjusted z-index */}
           <label className="text-sm text-gray-600 block mb-1">Date</label>
           <DateInput
             selected={userSelections.availability.date ? new Date(userSelections.availability.date) : null}
             onChange={handleDateChange}
             placeholderText="Select a date"
             min={new Date()}
+            popperClassName="custom-popper" // Ensure the popper has a higher z-index
+            popperPlacement="top" // Ensure the popper is always displayed on top
           />
         </div>
       </div>
     </div>
   );
 
+  const clearAllFilters = () => {
+    setUserSelections((prev) => ({
+      ...prev,
+      experience: [0, Math.max(...raqiData.map((raqi) => raqi.yearOfExperience || 0))],
+      languages: [],
+      availability: {
+        date: null,
+        time: null,
+        duration: null,
+      },
+      countries: [],
+    }));
+    setRating(0);
+    setAvailableRakisIds([]);
+    router.push('/BookRaqis');
+  };
+
   return (
-    <div className="mx-6 md:mx-6 lg:mx-[9%]  py-8 min-h-screen mb-56 ">
+    <div className="mx-6 md:mx-6 lg:mx-[9%] py-8 min-h-screen mb-56">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
           <li>
@@ -279,6 +298,14 @@ export default function BookRaqis() {
               <button className="md:hidden absolute top-4 right-4 text-primary z-50" onClick={() => setIsFilterVisible(false)}>
                 <FaTimes size={24} />
               </button>
+
+              {(searchQuery || language || userSelections.experience[0] > 0 || userSelections.languages.length > 0 || userSelections.countries.length > 0 || userSelections.availability.date || rating > 0) && (
+                <div className="mb-4 p-2 bg-white rounded-md flex items-center justify-between">
+                  <button onClick={clearAllFilters} className="text-red-500 text-center w-full">
+                    Clear All
+                  </button>
+                </div>
+              )}
 
               {/* Search Query Display */}
               {searchQuery && (
@@ -376,10 +403,6 @@ export default function BookRaqis() {
                 </div>
               </div>
 
-              {/* Availability Filter */}
-              {renderAvailabilityFilter()}
-
-              {/* Rating Filter */}
               <div className="flex flex-col justify-start items-start m-auto filter-section pb-6 animate-fade-in" style={{ animationDelay: `2000ms` }}>
                 <div className="flex justify-between items-center text-lg mb-4 w-full">
                   <span className="flex-1 font-semibold">Rating</span>
@@ -387,8 +410,14 @@ export default function BookRaqis() {
                     {rating == 5 ? "Minimun" : "Minimun"} {rating} stars{" "}
                   </div>
                 </div>
-                <RatingInput rating={rating} setRating={setRating} />
+                <RatingInput rating={rating} setRating={setRating} className={"z-0"} />
               </div>
+
+              {/* Availability Filter */}
+              {renderAvailabilityFilter()}
+
+              {/* Rating Filter */}
+              
 
               {/* Debug section */}
               {/* <div className="filter-section bg-white rounded-md">
