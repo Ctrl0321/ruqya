@@ -154,8 +154,7 @@ export const addMeeting = async (
       status,
     });
 
-    // @ts-ignore
-    newMeeting.meetingId = newMeeting._id.toString();
+    newMeeting.meetingId = newMeeting?.id.toString();
 
     const savedMeeting = await newMeeting.save();
 

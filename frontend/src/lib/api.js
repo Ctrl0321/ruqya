@@ -57,6 +57,17 @@ export const googleSignup = async (tokenId) => {
 //   }
 // );
 
+// Stripe
+
+export const checkoutSession = async (topic,date,rakiId) => {
+    try {
+        const response = await apiSignup.post("ruqya-api/stripe/create-checkout-session", { topic,date,rakiId,timeZone:userTimeZone });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
 
