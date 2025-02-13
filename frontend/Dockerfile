@@ -1,23 +1,38 @@
-# Use the official Node.js image as the base image
-FROM node:14
+# Build stage
+FROM node:20-alpine AS builder
 
-# Set the working directory
+# Install system dependencies for Next.js and sharp
+RUN apk add --no-cache libc6-compat vips vips-dev fftw-dev
+
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files and install dependencies
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+RUN npm install --include=optional
 
-# Copy the rest of the application code
+# Copy everything and build Next.js
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Expose the port the app runs on
+# Production stage
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Copy necessary files from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/node_modules ./node_modules
+
+# Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+# Start Next.js
+CMD ["node", "server.js"]
