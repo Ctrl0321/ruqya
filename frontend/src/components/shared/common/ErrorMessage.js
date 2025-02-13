@@ -9,7 +9,7 @@ export const ErrorMessage = ({ message = "Something went wrong", type = "error" 
     if (type === "success") {
       toast.success(typeof message === "object" ? message.message : message, {
         position: "top-center",
-        autoClose: 1000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -21,7 +21,7 @@ export const ErrorMessage = ({ message = "Something went wrong", type = "error" 
     } else {
       toast.error(typeof message === "object" ? message.message : message, {
         position: "top-center",
-        autoClose: 1000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -37,5 +37,5 @@ export const ErrorMessage = ({ message = "Something went wrong", type = "error" 
     notify();
   }, [message]);
 
-  return <ToastContainer position="top-center" autoClose={1000} hideProgressBar={true} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />;
+  return <ToastContainer position="top-center" autoClose={3000} hideProgressBar={true} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />;
 };
