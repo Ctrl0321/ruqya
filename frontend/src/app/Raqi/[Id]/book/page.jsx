@@ -28,6 +28,7 @@ const BookSessionPage = () => {
       const fetchUserProfile = async () => {
         try {
           const userProfile = await getUserProfile(Id);
+          console.log("User profile:", userProfile);
           setBookingData(userProfile);
         } catch (error) {
           showError("Error fetching user profile:", error);
@@ -140,17 +141,22 @@ const BookSessionPage = () => {
     if (!validateForm()) return;
 
     try {
-      const formattedDate = selectedDate.toISOString().split('T')[0];
-      const formattedTime = formatTime(selectedTime);
-      const finalDateTime = `${formattedDate} ${formattedTime}`;
+      if (bookingData) {
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        const formattedTime = formatTime(selectedTime);
+        const finalDateTime = `${formattedDate} ${formattedTime}`;
 
-      const meetingResponse = await addSession(`session-${finalDateTime}`, finalDateTime, Id);
-      const sessionResponse = await checkoutSession(`session-${finalDateTime}`, finalDateTime, Id);
+        const currentDateTime = new Date().toISOString();
+        const sessionIdentifier = `${bookingData.name}-Session-${finalDateTime}-Booked-at-${currentDateTime}`;
 
-      if (sessionResponse?.url) {
-        window.location.href = sessionResponse.url;
-      } else {
-        console.error("Invalid session response:", sessionResponse);
+        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, bookingData.name);
+        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData.name);
+
+        if (sessionResponse?.url) {
+          window.location.href = sessionResponse.url;
+        } else {
+          console.error("Invalid session response:", sessionResponse);
+        }
       }
     } catch (error) {
       console.error("Error booking session:", error);
