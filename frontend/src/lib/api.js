@@ -61,7 +61,7 @@ export const googleSignup = async (tokenId) => {
 
 export const checkoutSession = async (topic,date,rakiId) => {
     try {
-        const response = await apiSignup.post("ruqya-api/stripe/create-checkout-session", { topic,date,rakiId,timeZone:userTimeZone });
+        const response = await api.post("ruqya-api/stripe/create-checkout-session", { topic,date,rakiId,timeZone:userTimeZone });
         return response.data;
     } catch (error) {
         throw error;
@@ -108,6 +108,8 @@ export const getTodaySessions = async () => (await api.get(`ruqya-api/meeting/ge
 export const cancelSession = async (meetingId, note) => (await api.post("ruqya-api/meeting/cancel", { meetingId, note })).data;
 
 export const rescheduleSession = async (meetingId, newDate) => (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate })).data;
+
+export const addSession = async (topic,date,rakiId) => (await api.post("ruqya-api/meeting/add-meetings", {topic,date,rakiId,timeZone:userTimeZone })).data;
 
 // Reviews
 export const getReviews = async (rakiId) => (await api.get(`ruqya-api/review/get-review/${rakiId}`)).data;
