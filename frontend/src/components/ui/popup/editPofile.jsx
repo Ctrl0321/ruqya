@@ -140,6 +140,7 @@ const EditProfilePopup = ({ data, onClose, onSave, genderOptions, countries, lan
               <BorderInput
                 type="tel"
                 name="mobile"
+                label={"Mobile Number"}
                 value={popupData.mobile}
                 onChange={handleChange}
                 placeholder="(XXX) XXX-XXXX"
