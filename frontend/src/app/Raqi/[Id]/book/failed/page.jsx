@@ -6,7 +6,7 @@ const FailedPage = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen flex items-center justify-center my-10">
+    <div className="min-h-80vh flex items-center justify-center my-10">
       <div className="text-center max-w-md px-4 py-8 bg-white rounded-2xl shadow-lg drop-shadow-md mx-4">
         <div className="x-circle">
           <div className="x-mark">
