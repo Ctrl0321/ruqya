@@ -83,8 +83,11 @@ export const getTodayAndFutureMeetings = async (
 
     if (user?.role === "super-admin") {
       meetings = await Meeting.find({
-        date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toISOString(),status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
+        date: {
+          $gte: nowUTC.toISOString(),
+          $lte: endOfTodayUTC.toISOString()
         },
+        status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
       });
     } else {
       meetings = await Meeting.find({
