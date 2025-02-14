@@ -17,7 +17,8 @@ interface Session {
 export enum MeetingStatus {
     SCHEDULED = 'scheduled',
     RESCHEDULED = 'rescheduled',
-    CANCELLED = 'cancelled'
+    CANCELLED = 'cancelled',
+    PENDING='pending'
 }
 
 export  interface IRevenueData {

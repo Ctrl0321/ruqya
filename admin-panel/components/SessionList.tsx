@@ -22,7 +22,8 @@ export interface IMeeting {
 export enum MeetingStatus {
   SCHEDULED = 'scheduled',
   RESCHEDULED = 'rescheduled',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  PENDING='pending'
 }
 
 export const SessionList = ({ sessions }: { sessions: IMeeting[] }) => {
