@@ -48,17 +48,13 @@ app.post(
             if (event.type === 'checkout.session.completed') {
                 const session = event.data.object;
 
-                console.log("------------",session.metadata?.rakiId,session.metadata?.date)
-
                 const updatedMeeting = await Meeting.findOneAndUpdate(
-                    {rakiId: session.metadata?.rakiId, date: session.metadata?.date},
+                    {rakiId: session.metadata?.rakiId, topic: session.metadata?.topic},
                     {
                         status: MeetingStatus.SCHEDULED,
                     },
                     {new: true}
                 );
-
-                console.log(updatedMeeting)
 
             }
 
