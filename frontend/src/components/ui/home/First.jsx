@@ -7,8 +7,8 @@ function First() {
       <div className="absolute inset-0 bg-RuqyaLightPurple opacity-50"></div>
 
       {/* SVG Background - Hidden on mobile, visible on large screens */}
-      <div className="hidden lg:block absolute lg:-bottom-20 xl:-bottom-24 3xl:-bottom-28 -right-80 pointer-events-none animate-fade-in animate-spin-slow">
-        <svg className="h-auto lg:max-h-[450px] xl:lg:max-h-[500px] 2xl:lg:max-h-[600px] 3xl:lg:max-h-[700px] min-h-[420px] w-[90vh]" xmlns="http://www.w3.org/2000/svg" viewBox="8.19 7.39 16.4 18">
+      <div className="hidden lg:block absolute right-[-5%] bottom-[-22%] pointer-events-none animate-fade-in w-full max-w-[300px] xl:max-w-[600px] 2xl:max-w-[800px]" style={{ animationDelay: "0.2s" }}>
+        <svg className=" md:max-w-[75vh]  md:max-h-[75vh] lg:max-h-[75vh] lg:max-w-[75vh] sm:max-w-[75vh]  sm:max-h-[75vh]   ml-auto" xmlns="http://www.w3.org/2000/svg" viewBox="8.19 7.39 16.4 18">
           <path d="M13.794 8.89258C14.9487 6.89258 17.8355 6.89258 18.9902 8.89258L24.1863 17.8926C25.341 19.8926 23.8976 22.3926 21.5882 22.3926H11.1959C8.88654 22.3926 7.44316 19.8926 8.59786 17.8926L13.794 8.89258Z" fill="#008080" />
           <path d="M21.5885 10.3923C23.8979 10.3923 25.3413 12.8923 24.1866 14.8923L18.9904 23.8923C17.8357 25.8923 14.949 25.8923 13.7943 23.8923L8.59813 14.8923C7.44343 12.8923 8.88681 10.3923 11.1962 10.3923L21.5885 10.3923Z" fill="#008080" />
         </svg>

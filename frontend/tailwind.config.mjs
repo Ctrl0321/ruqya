@@ -12,8 +12,7 @@ export default {
       screens: {
         'ipad': '768px', 
         'ipad-landscape': '1180px',
-        'lg': '1024px',
-        'xl': '1280px',
+        'xl': '1024px',
         '2xl': '1536px',
         '3xl': '2048px',
         '4xl': '2560px',
