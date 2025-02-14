@@ -75,7 +75,7 @@ export const MeetingRoom = () => {
                     {/* Error icon with ripple effect */}
                     <div className="absolute -top-20 left-1/2 transform -translate-x-1/2">
                         <div className="relative">
-                            <div className="animate-ping absolute inset-0 rounded-full bg-[#0C8281] opacity-20"/>
+                            <div className="animate-ping absolute inset-0 rounded-full opacity-20"/>
                             <div
                                 className="animate-ping absolute inset-0 rounded-full bg-red-500 opacity-30 delay-150"/>
                             <div className="relative bg-white rounded-full p-4 shadow-xl">
@@ -175,7 +175,7 @@ export const MeetingRoom = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full p-2 md:p-4 bg-RuqyaLightGreen">
+        <div className="flex flex-col items-center justify-center w-full h-full p-2 md:p-4">
             <StreamVideo client={client}>
                 <StreamCall call={call}>
                     <StreamTheme>

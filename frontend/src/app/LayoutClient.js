@@ -53,7 +53,7 @@ export default function LayoutClient({ children }) {
   }
 
   return (
-    <div className={`${pathname === "/Meeting" || meetingRegex.test(pathname) ? "bg-RuqyaLightGreen" : "bg-background"} text-foreground text-RuqyaGray text-[16px]`}>
+    <div className={`${pathname === "/Meeting" || meetingRegex.test(pathname) ? "max-h-[80vh]" : "bg-background"} text-foreground text-RuqyaGray text-[16px]`}>
       {showHeader && <Header />}
       <AuthProvider>
         <ChatProvider>{children}</ChatProvider>
