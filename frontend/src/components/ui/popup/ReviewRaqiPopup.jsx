@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RaqiCard from "@/components/cards/CompletedMyBookingCard";
 import RatingInput from "@/components/ui/input/rating";
 import { addReviews } from "@/lib/api";
@@ -11,6 +11,15 @@ function ReviewRaqiPopup(props) {
   const [comment, setComment] = useState("");
   const [error, setError] = useState(null);
   const [existingReview, setExistingReview] = useState(null);
+
+  useEffect(() => {
+    // Prevent scrolling when the popup is open
+    document.body.style.overflow = "hidden";
+    return () => {
+      // Re-enable scrolling when the popup is closed
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleClosePopup = () => {
     if (onClose) {
