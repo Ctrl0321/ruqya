@@ -1,11 +1,11 @@
 import { AuthenticatedRequest } from "../@types/express";
 import { Response,Request } from "express";
-import Stripe from "stripe";
 import dotenv from "dotenv";
+import Meeting, {MeetingStatus} from "../models/meeting";
+import {stripeClient} from "../config/stripeConfig";
 
 dotenv.config();
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const price = Math.round(parseFloat(process.env.SESSION_COST as string));
 
 
@@ -20,7 +20,7 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
             return;
         }
 
-        const session = await stripe.checkout.sessions.create({
+        const session = await stripeClient.checkout.sessions.create({
             line_items: [
                 {
                     price_data: {
@@ -56,33 +56,32 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
         res.status(500).json({ message: "Stripe session creation failed" });
     }
 };
-export const handleStripeWebhook = async (req: AuthenticatedRequest, res: Response) => {
-    const sig = req.headers['stripe-signature'];
-
-    try {
-        const event = stripe.webhooks.constructEvent(
-            req.body,
-            sig!,
-            process.env.STRIPE_WEBHOOK_SECRET!
-        );
-
-        if (event.type === 'checkout.session.completed') {
-            const session = event.data.object;
-
-            // Create booking in database
-            // await createBooking({
-            //     rakiId: session.metadata.rakiId,
-            //     date: session.metadata.date,
-            //     topic: session.metadata.topic,
-            //     customerEmail: session.customer_email,
-            //     paymentStatus: 'completed',
-            //     stripeSessionId: session.id
-            // });
-        }
-
-        res.json({ received: true });
-    } catch (error) {
-        console.error('Webhook Error:', error);
-        res.status(400).send(`Webhook Error: ${error}`);
-    }
-};
+// export const handleStripeWebhook = async (req: AuthenticatedRequest, res: Response) => {
+//     const sig = req.headers['stripe-signature'];
+//
+//     try {
+//         const event = stripeClient.webhooks.constructEvent(
+//             req.body,
+//             sig!,
+//             process.env.STRIPE_WEBHOOK_SECRET!
+//         );
+//
+//         if (event.type === 'checkout.session.completed') {
+//             const session = event.data.object;
+//
+//             const updatedMeeting = await Meeting.findOneAndUpdate(
+//                 { rakiId:session.metadata?.rakiId,date: session.metadata?.date },
+//                 {
+//                     status: MeetingStatus.SCHEDULED,
+//                 },
+//                 { new: true }
+//             );
+//
+//         }
+//
+//         res.json({ received: true });
+//     } catch (error) {
+//         console.error('Webhook Error:', error);
+//         res.status(400).send(`Webhook Error: ${error}`);
+//     }
+// };

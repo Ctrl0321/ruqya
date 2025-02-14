@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import Button from "@/components/ui/buttons/DefaultButton";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-import {checkoutSession, getRakiAvailability, getUserProfile, setRakiAvailability} from "@/lib/api";
+import {addSession, checkoutSession, getRakiAvailability, getUserProfile, setRakiAvailability} from "@/lib/api";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -123,37 +123,38 @@ const BookSessionPage = () => {
     return true;
   };
 
+  const formatTime = (selectedTime) => {
+    let [time, modifier] = selectedTime.split(' ');
+    let [hours, minutes] = time.split(':');
+
+    if (modifier === 'PM' && hours !== '12') {
+      hours = String(Number(hours) + 12);
+    } else if (modifier === 'AM' && hours === '12') {
+      hours = '00';
+    }
+
+    return `${hours.padStart(2, '0')}:${minutes}:00`;
+  };
+
   const handleButtonClick = async () => {
-    if (validateForm()) {
-      try {
-        const formattedDate = selectedDate.toISOString().split('T')[0];
+    if (!validateForm()) return;
 
-        let [time, modifier] = selectedTime.split(' ');
-        let [hours, minutes] = time.split(':');
+    try {
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      const formattedTime = formatTime(selectedTime);
+      const finalDateTime = `${formattedDate} ${formattedTime}`;
 
-        if (modifier === 'PM' && hours !== '12') {
-          hours = String(Number(hours) + 12);
-        } else if (modifier === 'AM' && hours === '12') {
-          hours = '00';
-        }
+      const meetingResponse = await addSession("Test session", finalDateTime, Id);
+      const sessionResponse = await checkoutSession("Test session", finalDateTime, Id);
 
-        const formattedTime = `${hours.padStart(2, '0')}:${minutes}:00`;
-        const finalDateTime = `${formattedDate} ${formattedTime}`;
-
-        console.log("Final DateTime:", finalDateTime);
-
-        const sessionResponse = await checkoutSession("Test session",finalDateTime,Id);
-
-        const { url } = sessionResponse;
-
-        window.location.href = url;
-
-        // Navigate to Stripe UI here
-
-      } catch (error) {
-        console.error("Error booking session:", error);
-        // router.push(`/Raqi/${Id}/book/failed`);
+      if (sessionResponse?.url) {
+        window.location.href = sessionResponse.url;
+      } else {
+        console.error("Invalid session response:", sessionResponse);
       }
+    } catch (error) {
+      console.error("Error booking session:", error);
+      // router.push(`/Raqi/${Id}/book/failed`);
     }
   };
 

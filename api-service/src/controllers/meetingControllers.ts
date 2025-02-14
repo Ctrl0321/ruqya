@@ -115,7 +115,7 @@ export const addMeeting = async (
       notificationSend = false,
       timeZone = "UTC",
       duration = 60,
-      status = MeetingStatus.SCHEDULED,
+      status = MeetingStatus.PENDING,
     } = req.body as MeetingRequest;
     if (!topic || !date || !rakiId) {
       return res
