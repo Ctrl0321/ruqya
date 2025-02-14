@@ -123,7 +123,7 @@ function SignUp() {
         </div>
 
         {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto -mt-5 md:mt-10 animate-fade-in" style={{ animationDelay: `500ms` }}>
+        <div className="w-full max-w-md mx-auto md:mt-10 animate-fade-in" style={{ animationDelay: `500ms` }}>
           <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
             {/* Logo */}
             <div className="flex justify-center mb-6">
