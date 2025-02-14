@@ -144,8 +144,8 @@ const BookSessionPage = () => {
       const formattedTime = formatTime(selectedTime);
       const finalDateTime = `${formattedDate} ${formattedTime}`;
 
-      const meetingResponse = await addSession("Test session3", finalDateTime, Id);
-      const sessionResponse = await checkoutSession("Test session3", finalDateTime, Id);
+      const meetingResponse = await addSession(`session-${finalDateTime}`, finalDateTime, Id);
+      const sessionResponse = await checkoutSession(`session-${finalDateTime}`, finalDateTime, Id);
 
       if (sessionResponse?.url) {
         window.location.href = sessionResponse.url;
