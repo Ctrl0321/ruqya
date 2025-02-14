@@ -1,11 +1,21 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import Triangle from "../../../../public/svg/triangle";
-import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"; // Import the proper icons
+import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 
 function Footer() {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubscribe = () => {
+    setError("Subscribers email temporarily unavailable");
+    setEmail("");
+  };
+
   return (
     <footer className="relative w-full z-100 pt-16 mt-48">
       <Triangle />
@@ -67,9 +77,16 @@ function Footer() {
               <h3 className="text-[#424867] text-2xl font-bold mb-2">Be Our Subscribers</h3>
               <p className="text-[#424867] mb-6">to get the latest news about health from our experts</p>
               <div className="flex justify-between items-center gap-2 p-2 bg-white rounded-lg">
-                <Input type="email" placeholder="example@gmail.com" className="border-none bg-transparent w-full" />
-                <Button color="RuqyaGreen" bg={true} text="Subscribe" className="rounded-lg" />
+                <Input
+                  type="email"
+                  placeholder="example@gmail.com"
+                  className="border-none bg-transparent w-full"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Button color="RuqyaGreen" bg={true} text="Subscribe" className="rounded-lg" onClick={handleSubscribe} />
               </div>
+              {error && <ErrorMessage message={error} />}
             </div>
           </div>
         </div>

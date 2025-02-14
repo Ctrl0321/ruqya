@@ -12,7 +12,7 @@ export default function RuqyahPage() {
     <div className="mx-5 md:mx-[8%] px-4 py-8 mb-72">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
-          <li><Link href="/" className="hover:text-primary">Home</Link></li>
+          <li><Link href="/" className="hover:text-primary underline">Home</Link></li>
           <li>/</li>
           <li>Self-Ruqyah</li>
         </ol>

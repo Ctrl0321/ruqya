@@ -184,7 +184,7 @@ const BookSessionPage = () => {
   };
 
   return (
-    <div className="mx-[9%] py-4 min-h-screen flex flex-col md:flex-row gap-5 relative">
+    <div className="mx-[9%] py-4 min-h-screen flex flex-col md:flex-row relative">
       {showError && <div className="fixed top-0 left-0 right-0 z-50">
         <ErrorMessage message={errorMessage} />
       </div>}
@@ -213,8 +213,8 @@ const BookSessionPage = () => {
             </div>
             {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
           </div>
-          <div ref={timeRef} className="mt-10">
-            <label className="block text-gray-700">Select Time:</label>
+          <div ref={timeRef}>
+            <label className="block text-gray-700 mt-14">Select Time:</label>
             <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 place-items-center">
               {getAvailableTimes().map((time, index) => (
                 <div 
