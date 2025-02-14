@@ -16,7 +16,7 @@ const Header = () => {
   const profileDropdownRef = useRef(null);
 
   const isActive = (path) => (pathname === path ? "text-RuqyaGreen" : "text-gray-700");
-  const isCurrent = (path) => (pathname === path ? " bg-gradient-to-l from-[rgba(230,230,250,0.2)] to-RuqyaLightPurple bg-RuqyaLightPurple md:bg-white" : "bg-white");
+  const isCurrent = (path) => (pathname === path ? " bg-RuqyaLightPurple" : "bg-white");
 
   const handleLinkClick = () => {
     setTimeout(() => {
