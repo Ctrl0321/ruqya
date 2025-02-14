@@ -11,6 +11,14 @@ interface Session {
     rakiId: string;
     userId: string;
     notificationSend: boolean;
+    status:MeetingStatus
+}
+
+export enum MeetingStatus {
+    SCHEDULED = 'scheduled',
+    RESCHEDULED = 'rescheduled',
+    CANCELLED = 'cancelled',
+    PENDING='pending'
 }
 
 export  interface IRevenueData {
@@ -63,6 +71,7 @@ export const useDashboardData = () => {
 
     useEffect(() => {
         const fetchSessions = async () => {
+
             try {
                 if (isSuperAdmin) {
                     const revenue = await getRevenueData({
@@ -79,7 +88,7 @@ export const useDashboardData = () => {
             }
         };
         fetchSessions();
-    }, [currentUser, dateFilter]);
+    }, [currentUser, dateFilter,isSuperAdmin]);
 
     return { isSuperAdmin, revenueData, todaySessions, dateFilter, setDateFilter, userData, rakiData, loading };
 };

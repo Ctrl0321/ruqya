@@ -4,8 +4,6 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid 
 import { FaStar } from "react-icons/fa";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
-import { motion } from "framer-motion";
-import Loading from "@/components/shared/common/LoadingSpinner";
 
 const ReviewsSection = () => {
   const [data, setData] = useState({

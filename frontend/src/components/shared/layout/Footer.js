@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Input } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
-import Triangle from "@/assets/svg/triangle";
+import Triangle from "../../../../public/svg/triangle";
 import { FaMosque, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"; // Import the proper icons
 
 function Footer() {

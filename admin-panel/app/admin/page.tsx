@@ -13,6 +13,8 @@ import SessionTable from "@/components/ui/dashboard/SessionTable";
 import {useDashboardData} from "@/components/ui/dashboard/useDashboardData";
 import {useAuth} from "@/contexts/AuthContexts";
 import {DashboardStats} from "@/components/ui/dashboard/DashboardStats";
+import {motion} from "framer-motion";
+import {sendMeetingEmail} from "@/lib/emailService";
 
 const AdminDashboard = () => {
     const { setUserId } = useChat();
@@ -29,7 +31,23 @@ const AdminDashboard = () => {
 
     const handleCancelSession = async (meetingId: string, reason: string) => {
         try {
-            await cancelSession(meetingId, reason);
+            const results =await cancelSession(meetingId, reason);
+
+            if (!results) throw new Error("Failed to reschedule session");
+
+            const { user, raki, date,note } = results.meeting;
+
+            if (!user || !raki) throw new Error("Invalid response from rescheduleSession");
+
+            await sendMeetingEmail(
+                user.email,
+                raki.email,
+                user.name,
+                raki.name,
+                date,
+                `Unfortunately, your meeting has been canceled. Reason: ${note} A refund will be issued to ${user.name}.`,
+                "Meeting Cancellation Notice"
+            );
             toast({ title: "Success", description: "Session cancelled successfully!" });
             setCancelSessionId(null);
         } catch (error) {
@@ -39,13 +57,50 @@ const AdminDashboard = () => {
 
     const handleRescheduleSession = async (meetingId: string, newDate: Date) => {
         try {
-            await rescheduleSession(meetingId, newDate.toISOString());
+            const results = await rescheduleSession(meetingId, newDate.toISOString());
+
+            if (!results) throw new Error("Failed to reschedule session");
+
+            const { user, raki, date } = results.meeting;
+            if (!user || !raki) throw new Error("Invalid response from rescheduleSession");
+
+            await sendMeetingEmail(
+                user.email,
+                raki.email,
+                user.name,
+                raki.name,
+                date,
+                "Due to unforeseen circumstances, your upcoming meeting has been rescheduled. We appreciate your understanding and look forward to seeing you at the new time",
+                "Meeting Rescheduled"
+            );
+
             toast({ title: "Success", description: "Session rescheduled successfully!" });
+
             setRescheduleSessionId(null);
         } catch (error) {
-            toast({ title: "Error", description: `Failed to cancel session ${error}`, variant: "destructive" });
+            console.error("Error rescheduling session:", error);
+            toast({
+                title: "Error",
+                description: `Failed to reschedule session: Please check availability with Raki`,
+                variant: "destructive"
+            });
         }
     };
+
+
+
+    if (!currentUser || !revenueData || !todaySessions){
+        return (
+        <div className="flex items-center justify-center">
+            <motion.div
+                animate={{rotate: 360}}
+                transition={{repeat: Infinity, duration: 1, ease: "linear"}}
+                className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281] "
+            />
+            <p>Loading</p>
+        </div>
+        )
+    }
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -56,7 +111,7 @@ const AdminDashboard = () => {
 
             {isSuperAdmin && <DashboardStats revenueData={revenueData} />}
 
-            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} />
+            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} isSuperAdmin={isSuperAdmin} />
 
             <CancelSessionDialog isOpen={!!cancelSessionId} onClose={() => setCancelSessionId(null)} onConfirm={(reason) => cancelSessionId && handleCancelSession(cancelSessionId, reason)} />
             <RescheduleSessionDialog isOpen={!!rescheduleSessionId} onClose={() => setRescheduleSessionId(null)} onConfirm={(newDate) => rescheduleSessionId && handleRescheduleSession(rescheduleSessionId, newDate)} />

@@ -2,9 +2,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, Calendar, Clock, Filter, X } from "lucide-react";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
-import {getMeetings, getMeetingsByRakiId, getRakis, requestPayment, updatePayment} from "@/lib/api";
+import {getMeetings, getMeetingsByRakiId, getRakis, MeetingStatus, requestPayment, updatePayment} from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import withAuth from "@/hoc/withAuth";
+import {IMeeting} from "@/components/SessionList";
 
 interface Meeting {
   _id: string;
@@ -54,7 +55,8 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
           };
         });
 
-        setMeeting(mergedMeetings);
+        setMeeting(mergedMeetings.filter((meeting:IMeeting) => meeting.status !== MeetingStatus.CANCELLED));
+
       } catch (error) {
         console.error("Failed to fetch data:", error);
         toast({
@@ -74,6 +76,13 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
   const handlePaymentRequest = async (meetingId: string) => {
     try {
       await requestPayment(meetingId);
+
+      setMeeting((prevMeetings) =>
+          prevMeetings?.map((meeting) =>
+              meeting._id === meetingId ? { ...meeting, requestedAt: new Date().toISOString() } : meeting
+          )
+      );
+
       toast({ title: "Success", description: "Payment request sent successfully." });
     } catch (error) {
       toast({ title: "Error", description: "Failed to request payment.", variant: "destructive" });
@@ -83,6 +92,13 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
   const handleMarkAsPaid = async (meetingId: string,isPaid:boolean) => {
     try {
       await updatePayment(meetingId,isPaid);
+
+      setMeeting((prevMeetings) =>
+          prevMeetings?.map((meeting) =>
+              meeting._id === meetingId ? { ...meeting, isPaid } : meeting
+          )
+      );
+
       toast({ title: "Success", description: "Marked as paid successfully." });
     } catch (error) {
       toast({ title: "Error", description: "Failed to mark as paid.", variant: "destructive" });
@@ -321,28 +337,42 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
                   )}
                 </div>
 
-                {!meeting.isPaid && (
+                {isAdmin && !meeting.isPaid ? (
+                    canRequestPayment(meeting) ? (
+                        <button
+                            className="w-full px-4 py-2 mt-3 bg-primary-500 text-primary-25 rounded-md hover:bg-primary-300 transition"
+                            onClick={() => handlePaymentRequest(meeting._id)}
+                        >
+                          Request Payment
+                        </button>
+                    ) : (
+                        <div className="text-sm text-muted-foreground mt-2 flex items-center justify-start gap-2">
+                          <Clock className="h-4 w-4" />
+                          <p className="mt-1"> Wait 2 days before requesting again</p>
+                        </div>
+                    )
+                ) : null}
+
+
+
+                {!isAdmin && (
                   <div className="mt-4">
-                    {!isAdmin ? (
+                    {meeting.isPaid ? (
                       <button
-                        className="w-full px-4 py-2  border border-primary-500 bg-[rgba(0,128,128,0.1)] text-primary-700 rounded-md hover:bg-primary-600 hover:text-white transition"
-                        onClick={() => handleMarkAsPaid(meeting._id,true)}
+                        className="w-full px-4 py-2  border border-primary-500 bg-primary-600   rounded-md hover:bg-300 hover:text-white text-white transition"
+                        onClick={() => handleMarkAsPaid(meeting._id,false)}
                       >
-                        Mark as Paid
-                      </button>
-                    ) : canRequestPayment(meeting) ? (
-                      <button
-                        className="w-full px-4 py-2 bg-primary-500 text-primary-25 rounded-md hover:bg-primary-600 transition"
-                        onClick={() => handlePaymentRequest(meeting._id)}
-                      >
-                        Request Payment
+                        Mark as unpaid
                       </button>
                     ) : (
-                      <div className="text-sm text-muted-foreground flex items-center justify-start gap-2 ">
-                        <Clock className="h-4 w-4" />
-                        Wait 2 days before requesting again
-                      </div>
-                    )}
+                            <button
+                                className="w-full px-4 py-2  border border-primary-500 bg-[rgba(0,128,128,0.1)] text-primary-700 rounded-md hover:bg-primary-300 hover:text-white transition"
+                                onClick={() => handleMarkAsPaid(meeting._id,true)}
+                            >
+                              Mark as paid
+                            </button>
+                        )
+                    }
                   </div>
                 )}
               </div>

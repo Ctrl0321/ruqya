@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import Button from "@/components/ui/buttons/DefaultButton";
 import BookingCard from "@/components/cards/BookingCard";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
-import { getRakiAvailability, getUserProfile, setRakiAvailability } from "@/lib/api";
+import {addSession, checkoutSession, getRakiAvailability, getUserProfile, setRakiAvailability} from "@/lib/api";
 
 const BookSessionPage = () => {
   const router = useRouter();
@@ -123,37 +123,38 @@ const BookSessionPage = () => {
     return true;
   };
 
-  const handleButtonClick = async () => {
-    if (validateForm()) {
-      try {
-        const formattedDate = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-        
-        // Convert 12-hour format to 24-hour format
-        let timeSlot = selectedTime;
-        if (selectedTime.includes('PM')) {
-          const [hours, minutesWithPM] = selectedTime.replace(' PM', '').split(':');
-          const hour24 = hours === '12' ? '12' : String(Number(hours) + 12);
-          timeSlot = `${hour24}:${minutesWithPM}`;
-        } else {
-          const [hours, minutesWithAM] = selectedTime.replace(' AM', '').split(':');
-          const hour24 = hours === '12' ? '00' : hours.padStart(2, '0');
-          timeSlot = `${hour24}:${minutesWithAM}`;
-        }
+  const formatTime = (selectedTime) => {
+    let [time, modifier] = selectedTime.split(' ');
+    let [hours, minutes] = time.split(':');
 
-        console.log("Formatted Date:", formattedDate);
-        console.log("Time Slot:", timeSlot);
-        const response = await setRakiAvailability(formattedDate, [timeSlot]);
-        
-        if (response) {
-          console.log("Booking successful:", response);
-          alert({message: "Session booked successfully!", type:"success"});
-          // Optionally redirect or update UI
-        }
-      } catch (error) {
-        console.error("Error booking session:", error);
-        setErrorMessage("Failed to book session. Please try again.");
-        setShowError(true);
+    if (modifier === 'PM' && hours !== '12') {
+      hours = String(Number(hours) + 12);
+    } else if (modifier === 'AM' && hours === '12') {
+      hours = '00';
+    }
+
+    return `${hours.padStart(2, '0')}:${minutes}:00`;
+  };
+
+  const handleButtonClick = async () => {
+    if (!validateForm()) return;
+
+    try {
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      const formattedTime = formatTime(selectedTime);
+      const finalDateTime = `${formattedDate} ${formattedTime}`;
+
+      const meetingResponse = await addSession("Test session", finalDateTime, Id);
+      const sessionResponse = await checkoutSession("Test session", finalDateTime, Id);
+
+      if (sessionResponse?.url) {
+        window.location.href = sessionResponse.url;
+      } else {
+        console.error("Invalid session response:", sessionResponse);
       }
+    } catch (error) {
+      console.error("Error booking session:", error);
+      // router.push(`/Raqi/${Id}/book/failed`);
     }
   };
 

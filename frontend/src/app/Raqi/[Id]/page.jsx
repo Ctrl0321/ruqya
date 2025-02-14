@@ -7,7 +7,6 @@ import { MdOutlineMessage, MdTrendingDown, MdOutlineTrendingUp } from "react-ico
 import Button from "@/components/ui/buttons/DefaultButton";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList, CartesianGrid } from "recharts";
-// import review from "@/data/review.json";
 import ReviewCard from "@/components/cards/ReviewCard";
 import Forth from "@/components/ui/home/Forth";
 import Loading from "@/components/shared/common/LoadingSpinner";

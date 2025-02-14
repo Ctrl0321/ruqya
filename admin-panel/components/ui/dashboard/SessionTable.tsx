@@ -12,6 +12,14 @@ interface Session {
     rakiId: string;
     userId: string;
     notificationSend: boolean;
+    status:MeetingStatus
+}
+
+export enum MeetingStatus {
+    SCHEDULED = 'scheduled',
+    RESCHEDULED = 'rescheduled',
+    CANCELLED = 'cancelled',
+    PENDING='pending'
 }
 
 interface SessionTableProps {
@@ -20,9 +28,10 @@ interface SessionTableProps {
     rakiData: UserDto[];
     setCancelSessionId: (id: string | null) => void;
     setRescheduleSessionId: (id: string | null) => void;
+    isSuperAdmin:boolean
 }
 
-const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRescheduleSessionId }: SessionTableProps) => {
+const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRescheduleSessionId,isSuperAdmin }: SessionTableProps) => {
     return (
         <Card>
             <CardHeader>
@@ -48,12 +57,31 @@ const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRes
                                     <TableCell>{getNameById(session.userId, userData, '_id', 'name')}</TableCell>
                                     <TableCell>{format(new Date(session.date), 'hh:mm a')}</TableCell>
                                     <TableCell>
-                                        <Button variant="destructive" size="sm" className="mr-2" onClick={() => setCancelSessionId(session.meetingId)}>
-                                            Cancel
-                                        </Button>
-                                        <Button variant="outline" size="sm" onClick={() => setRescheduleSessionId(session.meetingId)}>
-                                            Reschedule
-                                        </Button>
+                                        {session.status !== MeetingStatus.CANCELLED ? (
+                                            <>
+                                                {isSuperAdmin && (
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        className="mr-2"
+                                                        onClick={() => setCancelSessionId(session.meetingId)}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                )}
+
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => setRescheduleSessionId(session.meetingId)}
+                                                >
+                                                    Reschedule
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <p>This Meeting is cancelled</p>
+                                        )}
+
                                     </TableCell>
                                 </TableRow>
                             ))}
