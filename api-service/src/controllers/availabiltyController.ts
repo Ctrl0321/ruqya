@@ -8,8 +8,8 @@ import User from "../models/user";
 import { validateAndConvertTimezone } from "../utils/timezone";
 
 export const getAvailability = async (
-  req: AuthenticatedRequest,
-  res: Response
+    req: AuthenticatedRequest,
+    res: Response
 ): Promise<any> => {
   try {
     const { rakiId, date, timeZone = "UTC" } = req.query;
@@ -36,27 +36,27 @@ export const getAvailability = async (
 
     const parsedDate = moment(date, "YYYY-MM-DD", true);
 
-    console.log("convert date input:", parsedDate);
+    console.log("Converted date input:", parsedDate);
 
     if (!parsedDate.isValid()) {
       return res
-        .status(400)
-        .json({ message: "Invalid date format. Expected DD/MM/YYYY" });
+          .status(400)
+          .json({ message: "Invalid date format. Expected YYYY-MM-DD" });
     }
 
     const convertedDate = parsedDate.format("YYYY-MM-DD");
     console.log("Converted Date:", convertedDate);
 
     const startOfDayUTC = moment
-      .tz(date, "YYYY-MM-DD", validatedTimeZone)
-      .startOf("day")
-      .utc()
-      .toISOString();
+        .tz(date, "YYYY-MM-DD", validatedTimeZone)
+        .startOf("day")
+        .utc()
+        .toISOString();
     const endOfDayUTC = moment
-      .tz(date, "YYYY-MM-DD", validatedTimeZone)
-      .endOf("day")
-      .utc()
-      .toISOString();
+        .tz(date, "YYYY-MM-DD", validatedTimeZone)
+        .endOf("day")
+        .utc()
+        .toISOString();
 
     console.log("Start to End UTC:", startOfDayUTC, endOfDayUTC);
 
@@ -69,24 +69,28 @@ export const getAvailability = async (
 
     if (!availabilityRecords || availabilityRecords.length === 0) {
       return res
-        .status(200)
-        .json({ message: "No availability found", data: null });
+          .status(200)
+          .json({ message: "No availability found", data: null });
     }
 
     // Extract and convert time slots
     const convertedSlots = availabilityRecords.map((record) => {
       const startTimeInTimeZone = moment
-        .utc(record.startTime)
-        .tz(validatedTimeZone)
-        .format("HH.mm");
-      return { startTime: startTimeInTimeZone };
+          .utc(record.startTime)
+          .tz(validatedTimeZone)
+          .format("HH:mm");
+
+      return {
+        startTime: startTimeInTimeZone,
+        isAvailable: record.isAvailable, // Include isAvailable
+      };
     });
 
     res.status(200).json({
       rakiId,
       date: convertedDate,
       timeZone: validatedTimeZone,
-      timeSlots: convertedSlots,
+      timeSlots: convertedSlots, // Now includes isAvailable
     });
   } catch (error) {
     console.error("Error fetching availability:", error);

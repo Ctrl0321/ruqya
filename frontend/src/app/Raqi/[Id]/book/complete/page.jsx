@@ -1,9 +1,22 @@
 "use client";
-import { useRouter } from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import DefultButton from '@/components/ui/buttons/DefaultButton';
+import {useEffect} from "react";
+import {verifySession} from "@/lib/api";
 
 const CompletePage = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+
+  useEffect(async () => {
+    const sessionId = searchParams.get('session_id');
+
+    if (sessionId) {
+      const response = await verifySession(sessionId)
+      console.log(response)
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
