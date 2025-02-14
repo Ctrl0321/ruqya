@@ -38,7 +38,7 @@ function First() {
             <div className="flex items-center justify-end mb-3 mt-5 md:mt-0 lg:mb-0 order-1 lg:order-2 animate-fade-in" style={{ animationDelay: "1s" }}>
               <div className="relative w-full lg:w-[90vh]">
                 <img src="https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg" alt="men-meditation" className="w-full max-h-[50vh] object-cover md:my-5 object-center scale-x-[-1] lg:rounded-[2.2rem] rounded-[2.2rem]" />
-                <div className="h-5 hidden lg:flex"></div>
+                <div className="m-5 md:h-16 hidden lg:flex"></div>
               </div>
             </div>
           </div>
