@@ -83,12 +83,14 @@ export const getTodayAndFutureMeetings = async (
 
     if (user?.role === "super-admin") {
       meetings = await Meeting.find({
-        date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toISOString() },
+        date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toISOString(),status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
+        },
       });
     } else {
       meetings = await Meeting.find({
         date: { $gte: nowUTC.toISOString(), $lte: endOfTodayUTC.toString() },
         rakiId: user?.id,
+        status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
       });
     }
 
@@ -228,7 +230,8 @@ export const getMeetingsByUserId = async (
     const { timeZone = "UTC" } = req.query;
     const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
-    const meetings = await Meeting.find({ userId });
+    const meetings = await Meeting.find({ userId,status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
+    });
     res.status(200).json(convertMeetingDates(meetings, validatedTimeZone));
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch meetings", error });
@@ -285,6 +288,12 @@ export const rescheduleMeeting = async (
       return res
         .status(400)
         .json({ message: "Cannot reschedule a cancelled meeting" });
+    }
+
+    if (meeting.status === MeetingStatus.PENDING) {
+      return res
+          .status(400)
+          .json({ message: "Cannot reschedule a pending meeting" });
     }
 
     // Check if the new date is available
@@ -538,12 +547,17 @@ export const getMeetingStatistics = async (
 
     // Calculate statistics
     const completedMeetings = meetings.filter(
-      (m) => m.status !== "cancelled"
+      (m) => m.status !== MeetingStatus.CANCELLED
     ).length;
     const cancelledMeetings = meetings.filter(
-      (m) => m.status === "cancelled"
+      (m) => m.status === MeetingStatus.CANCELLED
     ).length;
-    const revenue = completedMeetings * MEETING_COST;
+
+    const validMeetings = meetings.filter(
+        (m) => m.status !== MeetingStatus.PENDING && m.status !== MeetingStatus.CANCELLED
+    ).length;
+
+    const revenue = validMeetings * MEETING_COST;
 
     let response: StatisticsResponse = {
       totalMeetings: meetings.length,
@@ -591,7 +605,10 @@ export const getMeetingsByRakiId = async (
       });
     }
 
-    const meetings = await Meeting.find({ rakiId });
+    const meetings = await Meeting.find({
+      rakiId,
+      status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
+    });
 
     if (!meetings || meetings.length === 0) {
       return res
@@ -620,11 +637,12 @@ export const updateMeetingPayment = async (
 
     const meeting = await Meeting.findOne({
       meetingId,
+      status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
     });
 
     if (!meeting) {
       return res.status(404).json({
-        message: "Meeting not found or you do not have permission to cancel it",
+        message: "Meeting not found or you do not have permission to update it",
       });
     }
 
@@ -663,6 +681,7 @@ export const requestMeetingPayment = async (
 
     const meeting = await Meeting.findOne({
       meetingId,
+      status: { $in: [MeetingStatus.SCHEDULED, MeetingStatus.RESCHEDULED] }
     });
 
     if (!meeting) {
