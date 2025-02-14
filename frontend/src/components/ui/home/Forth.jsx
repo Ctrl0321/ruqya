@@ -15,7 +15,7 @@ function Forth(props) {
   return (
     <div id="Forth" className={`flex flex-col  md:mx-[7%] lg:mx-[7%] mt-20 m-5 rounded-lg ${[props.className]}  animate-fade-in`} style={{ animationDelay: '0.1s' }}>
       <div className="flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
-        <h1 className="text-2xl md:text-3xl font-bold text-RuqyaGray">{title}</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-RuqyaGray">{title}</h1>
         {raqiData.length > 3 && (
           <div className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link href="/BookRaqis" className="text-RuqyaGreen font-bold">

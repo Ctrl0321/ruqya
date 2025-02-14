@@ -34,15 +34,16 @@ function Login() {
         router.push(redirectPath);
       } else {
         setLoading(false);
-        setError({ message: "Invalid login credentials", type: "error" });
+        setError({ message: response.message || "Invalid login credentials", type: "error" });
       }
+      console.error("Invalid response from server", response);
     } catch (err) {
       console.error(err);
       setLoading(false);
       if (err.response && err.response.status === 404) {
         setError({ message: "Invalid login credentials", type: "error" });
       } else {
-        setError({ message: err.response?.message || "An error occurred", type: "error" });
+        setError({ message: err.response?.message || "Invalid login credentials", type: "error" });
       }
     }
   };
@@ -79,7 +80,7 @@ function Login() {
         localStorage.removeItem("redirectPath");
         router.push(redirectPath);
       } else {
-        throw new Error("Invalid response from server");
+        throw new Error(response.message || "Invalid response from server");
       }
     } catch (error) {
       console.error("Google Sign-in Error:", error);
@@ -109,7 +110,7 @@ function Login() {
             priority
           /> */}
         </div>
-
+        {error.message && <ErrorMessage message={error.message} type={error.type} />}
         {/* Center side - Form */}
         <div className="w-full max-w-md mx-auto -mt-5 md:mt-10 animate-fade-in " style={{ animationDelay: `500ms` }}>
           <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
@@ -121,7 +122,6 @@ function Login() {
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-              {error.message && <ErrorMessage message={error.message} type={error.type} />}
               <BorderInput label="Email Address" type="email" name="email" placeholder="Enter your Email Address here" className="text-sm" value={email} onChange={(e) => setEmail(e.target.value)} />
 
               <BorderInput label="Password" type="password" name="password" placeholder="Enter your password" className="text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />

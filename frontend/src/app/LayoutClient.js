@@ -26,7 +26,7 @@ export default function LayoutClient({ children }) {
   }, [pathname]);
 
   useEffect(() => {
-    if (pathname === "/Meeting" || meetingRegex.test(pathname)) {
+    if (pathname === "/Meeting" || pathname === "/login"  || pathname === "/signup" || meetingRegex.test(pathname)) {
       setShowHeader(false);
     } else {
       setShowHeader(true);
