@@ -1,13 +1,14 @@
 import { AuthenticatedRequest } from "../@types/express";
-import { Response,Request } from "express";
+import { Response , Request } from "express";
 import dotenv from "dotenv";
-import Meeting, {MeetingStatus} from "../models/meeting";
 import {stripeClient} from "../config/stripeConfig";
+import Stripe from "stripe";
+import { Query } from 'express-serve-static-core';
+
 
 dotenv.config();
 
 const price = Math.round(parseFloat(process.env.SESSION_COST as string));
-
 
 
 export const createCheckoutSession = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -35,8 +36,8 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+            success_url: `${process.env.FRONTEND_URL}/Raqi/${rakiId}/book/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.FRONTEND_URL}/Raqi/${rakiId}/book/failed`,
             customer_email: req.user?.email || undefined,
             metadata: {
                 rakiId: rakiId.toString(),
@@ -56,32 +57,53 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
         res.status(500).json({ message: "Stripe session creation failed" });
     }
 };
-// export const handleStripeWebhook = async (req: AuthenticatedRequest, res: Response) => {
-//     const sig = req.headers['stripe-signature'];
-//
-//     try {
-//         const event = stripeClient.webhooks.constructEvent(
-//             req.body,
-//             sig!,
-//             process.env.STRIPE_WEBHOOK_SECRET!
-//         );
-//
-//         if (event.type === 'checkout.session.completed') {
-//             const session = event.data.object;
-//
-//             const updatedMeeting = await Meeting.findOneAndUpdate(
-//                 { rakiId:session.metadata?.rakiId,date: session.metadata?.date },
-//                 {
-//                     status: MeetingStatus.SCHEDULED,
-//                 },
-//                 { new: true }
-//             );
-//
-//         }
-//
-//         res.json({ received: true });
-//     } catch (error) {
-//         console.error('Webhook Error:', error);
-//         res.status(400).send(`Webhook Error: ${error}`);
-//     }
-// };
+
+
+export const verifySession=async (req: Request<{}, {}, {}, Query & { session_id?: string }>, res: Response):Promise<any> =>{
+
+    try {
+        const { session_id } = req.query;
+
+        if (!session_id) {
+            return res.status(400).json({
+                error: 'Missing session_id parameter'
+            });
+        }
+
+        const session = await stripeClient.checkout.sessions.retrieve(session_id);
+
+        const isValid = session.payment_status === 'paid';
+
+        const isExpired = new Date(session.expires_at * 1000) < new Date();
+        const hasValidCustomer = !!session.customer;
+
+        if (isExpired) {
+            return res.status(400).json({
+                error: 'Session has expired'
+            });
+        }
+
+        return res.json({
+            isValid,
+            paymentStatus: session.payment_status,
+            customerId: session.customer,
+            amount: session.amount_total,
+            currency: session.currency,
+            paymentIntent: session.payment_intent,
+            metadata: session.metadata
+        });
+
+    } catch (error) {
+        if (error instanceof Stripe.errors.StripeError) {
+            return res.status(400).json({
+                error: error.message
+            });
+        }
+
+        console.error('Stripe session verification error:', error);
+        return res.status(500).json({
+            error: 'Failed to verify session'
+        });
+    }
+
+}

@@ -68,6 +68,15 @@ export const checkoutSession = async (topic,date,rakiId) => {
     }
 };
 
+export const verifySession = async (sessionId) => {
+    try {
+        const response = await api.post(`ruqya-api/stripe/verify-session?session_id=${sessionId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
 
