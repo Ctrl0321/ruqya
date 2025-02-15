@@ -22,6 +22,7 @@ import withAuth from "@/hoc/withAuth";
 
 export interface TimeSlot {
   startTime: string;
+  isAvailable:boolean
 }
 
 export interface DayAvailability {
@@ -72,6 +73,7 @@ const AvailabilityPage=()=> {
     try {
       const newTimeSlot: TimeSlot = {
         startTime: `${hour.toString().padStart(2, "0")}:00`,
+        isAvailable:true
       };
       const newAvailability: DayAvailability = {
         date: dateKey,
@@ -188,6 +190,13 @@ const AvailabilityPage=()=> {
                       (slot) => slot.startTime.replace(".", ":") === timeSlot
                   );
 
+                  const isBooked = availability?.timeSlots.some(
+                      (slot) => slot.startTime.replace(".", ":") === timeSlot && !slot.isAvailable
+                  );
+
+
+
+
                   const isPastTime = isToday && hour < currentHour;
 
                   return (
@@ -208,7 +217,7 @@ const AvailabilityPage=()=> {
                                     ? handleRemoveTimeSlot(timeSlot)
                                     : handleAddTimeSlot(hour)
                             }
-                            disabled={isLoading || isPastTime}
+                            disabled={isLoading || isPastTime || isBooked}
                         >
                           {timeSlot}
                           {isAvailable ? (

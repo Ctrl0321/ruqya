@@ -59,8 +59,10 @@ const BookSessionPage = () => {
             setAvailableTimes([]); 
           } else {
             // Only map if response is an array
-            setAvailableTimes(response.map(slot => slot.startTime));
-          }
+            setAvailableTimes(response
+                .filter(slot => slot.isAvailable)
+                .map(slot => slot.startTime)
+            );          }
         } catch (error) {
           console.error("Error fetching availability:", error);
           setAvailableTimes([]);  
@@ -140,17 +142,22 @@ const BookSessionPage = () => {
     if (!validateForm()) return;
 
     try {
-      const formattedDate = selectedDate.toISOString().split('T')[0];
-      const formattedTime = formatTime(selectedTime);
-      const finalDateTime = `${formattedDate} ${formattedTime}`;
+      if (bookingData) {
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        const formattedTime = formatTime(selectedTime);
+        const finalDateTime = `${formattedDate} ${formattedTime}`;
 
-      const meetingResponse = await addSession("Test session5", finalDateTime, Id);
-      const sessionResponse = await checkoutSession("Test session5", finalDateTime, Id);
+        const currentDateTime = new Date().toISOString();
+        const sessionIdentifier = `${bookingData.name}-Session-${finalDateTime}-Booked-at-${currentDateTime}`;
 
-      if (sessionResponse?.url) {
-        window.location.href = sessionResponse.url;
-      } else {
-        console.error("Invalid session response:", sessionResponse);
+        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, bookingData.name);
+        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData.name);
+
+        if (sessionResponse?.url) {
+          window.location.href = sessionResponse.url;
+        } else {
+          console.error("Invalid session response:", sessionResponse);
+        }
       }
     } catch (error) {
       console.error("Error booking session:", error);
