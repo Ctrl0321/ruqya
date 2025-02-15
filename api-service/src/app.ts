@@ -18,7 +18,7 @@ connectDB();
 
 const app:Application = express();
 
-const allowedOrigins = ['http://192.168.1.8:3000','http://localhost:3000', 'http://localhost:3001','https://your-production-domain.com'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001','http://localhost:3002'];
 
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
