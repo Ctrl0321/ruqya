@@ -59,9 +59,9 @@ export const googleSignup = async (tokenId) => {
 
 // Stripe
 
-export const checkoutSession = async (topic,date,rakiId) => {
+export const checkoutSession = async (topic,date,rakiId,rakiEmail,rakiName,userEmail,userName) => {
     try {
-        const response = await api.post("ruqya-api/stripe/create-checkout-session", { topic,date,rakiId,timeZone:userTimeZone });
+        const response = await api.post("ruqya-api/stripe/create-checkout-session", { topic,date,rakiId,timeZone:userTimeZone,rakiEmail,rakiName,userEmail,userName });
         return response.data;
     } catch (error) {
         throw error;

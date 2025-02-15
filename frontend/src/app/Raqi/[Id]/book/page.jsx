@@ -150,8 +150,12 @@ const BookSessionPage = () => {
         const currentDateTime = new Date().toISOString();
         const sessionIdentifier = `${bookingData.name}-Session-${finalDateTime}-Booked-at-${currentDateTime}`;
 
-        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, bookingData.name);
-        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData.name);
+        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, bookingData._id);
+
+        const {rakiEmail,rakiName}=meetingResponse.raki
+        const {userEmail,userName}=meetingResponse.user
+
+        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData._id,rakiEmail,rakiName,userEmail,userName);
 
         if (sessionResponse?.url) {
           window.location.href = sessionResponse.url;

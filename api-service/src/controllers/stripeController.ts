@@ -14,7 +14,7 @@ const price = Math.round(parseFloat(process.env.SESSION_COST as string));
 export const createCheckoutSession = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user?.id ?? "";
-        const { topic, date, rakiId } = req.body;
+        const { topic, date, rakiId,rakiEmail,rakiName,userEmail,userName } = req.body;
 
         if (!topic || !date || !rakiId ) {
             res.status(400).json({ message: "Missing required fields" });
@@ -43,7 +43,11 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
                 rakiId: rakiId.toString(),
                 date: date.toString(),
                 topic: topic.toString(),
-                userId: userId?.toString()
+                userId: userId?.toString(),
+                rakiEmail:rakiEmail?.toString(),
+                rakiName:rakiName?.toString(),
+                userEmail:userEmail?.toString(),
+                userName:userName?.toString()
             }
         });
 

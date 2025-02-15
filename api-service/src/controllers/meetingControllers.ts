@@ -163,6 +163,9 @@ export const addMeeting = async (
 
     const savedMeeting = await newMeeting.save();
 
+    const getRakiDetails = await User.findOne({ _id: savedMeeting.rakiId });
+    const getUserDetails = await User.findOne({ _id: savedMeeting.userId });
+
     try {
       console.log(
         `Creating Stream video call for meetingId: ${newMeeting.meetingId}`
@@ -209,6 +212,8 @@ export const addMeeting = async (
       date: moment(savedMeeting.date)
         .tz(validatedTimeZone)
         .format("YYYY-MM-DD HH:mm:ss"),
+      raki: getRakiDetails,
+      user: getUserDetails,
     });
   } catch (error: any) {
     console.error("General Error:", error?.message || error);
