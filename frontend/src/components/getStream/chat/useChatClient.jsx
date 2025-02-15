@@ -41,13 +41,12 @@ export const useChatClient = (userId, otherUserId="") => {
         }
     }
 
-    const createChannelName = (currentUser, otherUser) => {
+    const createChannelName = async (currentUser, otherUser) => {
         if (!currentUser || !otherUser) return "";
 
-        const currentUserName=getUserName(currentUser)
-        const otherUserName=getUserName(otherUser)
-        // return `${otherUser.firstName || otherUser.name || otherUser.id}'s Chat`;
-        return `${currentUserName.name} & ${otherUserName.name} Chat`;
+        const currentUserName = await getUserName(currentUser)
+        const otherUserName = await getUserName(otherUser)
+        return `${currentUserName} & ${otherUserName} Chat`;
     };
 
 
@@ -115,11 +114,12 @@ export const useChatClient = (userId, otherUserId="") => {
                         //     setChannel(null);
                         // }
                     // }
-                } else {
+                }
+                else {
                     if (otherUserId) {
                         const sortedMembers = [userId, otherUserId].sort();
                         const channelId = `dm_${sortedMembers[0]}_${sortedMembers[1]}`;
-                        const channelName = createChannelName(userId, otherUserId);
+                        const channelName = await createChannelName(userId, otherUserId);
 
                         const channels = await currentClient.queryChannels({
                             id: channelId,
