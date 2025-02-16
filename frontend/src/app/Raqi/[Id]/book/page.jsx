@@ -142,10 +142,9 @@ const BookSessionPage = () => {
     if (!validateForm()) return;
 
     try {
-      if (bookingData) {
-        const formattedDate = selectedDate.toISOString().split('T')[0];
-        const formattedTime = formatTime(selectedTime);
-        const finalDateTime = `${formattedDate} ${formattedTime}`;
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      const formattedTime = formatTime(selectedTime);
+      const finalDateTime = `${formattedDate} ${formattedTime}`;
 
         const currentDateTime = new Date().toISOString();
         const sessionIdentifier = `${bookingData.name}-Session-${finalDateTime}-Booked-at-${currentDateTime}`;
@@ -157,11 +156,10 @@ const BookSessionPage = () => {
 
         const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData._id,rakiEmail,rakiName,userEmail,userName);
 
-        if (sessionResponse?.url) {
-          window.location.href = sessionResponse.url;
-        } else {
-          console.error("Invalid session response:", sessionResponse);
-        }
+      if (sessionResponse?.url) {
+        window.location.href = sessionResponse.url;
+      } else {
+        console.error("Invalid session response:", sessionResponse);
       }
     } catch (error) {
       console.error("Error booking session:", error);

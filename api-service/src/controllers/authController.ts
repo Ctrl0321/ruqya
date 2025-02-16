@@ -103,15 +103,45 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
                 password: uid, // Use uid as a placeholder password
                 role: 'user' // Default role
             });
-        }
 
-        res.json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: generateToken(user.id, user.role),
-        });
+            if (user) {
+                console.log(`Registering user in Stream Video: ${user._id}`);
+
+                await client.upsertUsers([{
+                    id: user.id,
+                    name: user.name,
+                    role: getStreamAdminRole({ role: user.role }),
+                    image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+                }]);
+
+                await serverClientChat.upsertUsers([{
+                    id: user.id,
+                    name: user.name,
+                    role: getStreamAdminRole({ role: user.role }),
+                    image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`
+                }]);
+
+                console.log("User registered successfully in Stream Video.");
+
+                res.status(201).json({
+                    _id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    token: generateToken(user.id, user.role)
+                });
+            } else {
+                res.status(400).json({ message: 'Invalid user data' });
+            }
+        } else {
+            res.json({
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user.id, user.role),
+            });
+        }
     } catch (error: any) {
         console.error("Firebase verification error:", error); // Log the error
         res.status(401).json({ message: 'Invalid token', error: error.message }); // Send the error message

@@ -92,11 +92,11 @@ const ChangePassword = ({ onClose, onSubmit }) => {
                 autoComplete="off"
               />
             </div>
-            <div className="grid grid-cols-2 gap-6">
-              <button onClick={handleClose} className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-full py-3 transition duration-300">
+            <div className="grid grid-cols-2 gap-6 text-xs">
+              <button onClick={handleClose} className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-full py-3 mt-5 transition duration-300">
                 Cancel
               </button>
-              <button onClick={handleSubmit} className="w-full bg-RuqyaGreen hover:bg-teal-700 text-white rounded-full py-3 transition duration-300">
+              <button onClick={handleSubmit} className="w-full bg-RuqyaGreen hover:bg-teal-700 text-white rounded-full py-3 px-5 mt-5 transition duration-300">
                 Change Password
               </button>
             </div>

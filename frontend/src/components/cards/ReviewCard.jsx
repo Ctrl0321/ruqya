@@ -79,7 +79,7 @@ const ReviewCard = ({ review, colorIndex }) => {
   const circleColor = darkColors[colorIndex % darkColors.length];
 
   return (
-    <div className="p-4 rounded-lg shadow-md mb-4 font-sans font-normal" style={{ backgroundColor }}>
+    <div className="p-4 rounded-lg shadow-md mb-4 font-normal" style={{ backgroundColor }}>
       <div className="flex items-center mb-2">
         <div className="flex items-center justify-center w-10 h-10 rounded-full text-white font-bold mr-3" style={{ backgroundColor: circleColor }}>
           {getInitials(user.name)}
