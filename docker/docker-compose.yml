@@ -39,7 +39,7 @@ services:
       context: ../api-service
       platforms:
         - linux/amd64
-        - linux/arm64
+   #     - linux/arm64
     ports:
       - "5050:5050"
     env_file:
