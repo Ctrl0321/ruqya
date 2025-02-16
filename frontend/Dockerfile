@@ -1,32 +1,28 @@
-# Step 1: Set the base image
+# Step 1: Build Stage
 FROM node:22-alpine AS builder
 
-# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --frozen-lockfile
 
-# Copy the rest of the application files
 COPY . .
 
+# Build the Next.js app
+RUN npm run build
 
-# Step 2: Set the runtime image
+# Step 2: Runtime Stage
 FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
-# Copy only the necessary build files from the builder stage
-COPY --from=builder /app/.next /app/.next
-COPY --from=builder /app/public /app/public
-COPY --from=builder /app/package.json /app/package-lock.json /app/
+# Copy necessary build output
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./public/_next/static
+COPY --from=builder /app/public ./public
 
-# Install only the production dependencies
-RUN npm install
+RUN npm install --omit=dev
 
-# Step 6: Expose port (default for Next.js)
 EXPOSE 3000
 
-# Step 7: Start the Next.js app
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
