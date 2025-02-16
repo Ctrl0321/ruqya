@@ -1,9 +1,13 @@
-version: '3.8'
+version: '3.9'
 
 services:
   ruqya-frontend:
     image: ruqya-frontend:1.0.0
-    build: ../frontend
+    build:
+      context: ../frontend
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "3001:3000"
     depends_on:
@@ -15,7 +19,11 @@ services:
 
   ruqya-admin:
     image: ruqya-admin:1.0.0
-    build: ../admin-panel
+    build:
+      context: ../admin-panel
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "3002:3000"
     depends_on:
@@ -27,7 +35,11 @@ services:
 
   ruqya-api:
     image: ruqya-api:1.0.0
-    build: ../api-service
+    build:
+      context: ../api-service
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "5050:5050"
     env_file:
@@ -38,5 +50,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
-
