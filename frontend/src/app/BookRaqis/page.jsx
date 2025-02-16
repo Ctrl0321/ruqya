@@ -34,6 +34,8 @@ export default function BookRaqis() {
   const [rating, setRating] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [availableRakisIds, setAvailableRakisIds] = useState([]);
+  const [showMoreLanguages, setShowMoreLanguages] = useState(false);
+  const [showMoreCountries, setShowMoreCountries] = useState(false);
 
   useEffect(() => {
     async function fetchRakis() {
@@ -93,20 +95,25 @@ export default function BookRaqis() {
   };
 
   const availableLanguages = [
-    ...new Set(
-      raqiData
-        .filter((raqi) => Array.isArray(raqi.languages) && raqi.languages.length > 0)
-        .flatMap((raqi) => raqi.languages)
-        .map((langCode) => {
-          const langObj = languages.find((l) => l.value === langCode);
-          return langObj ? langObj.label : langCode;
-        })
-    ),
+    "English",
+    ...Array.from(
+      new Set(
+        raqiData
+          .filter((raqi) => Array.isArray(raqi.languages) && raqi.languages.length > 0)
+          .flatMap((raqi) => raqi.languages)
+          .map((langCode) => {
+            const langObj = languages.find((l) => l.value === langCode);
+            return langObj ? langObj.label : langCode;
+          })
+      )
+    ).filter((lang) => lang !== "English"),
     ...userSelections.languages.filter((lang) => !languages.some((l) => l.value === lang)),
     ...(language && !languages.some((l) => l.value === language) ? [language] : []),
   ]
     .filter((lang) => lang !== getLanguageLabel(language))
     .sort();
+
+  const displayedLanguages = showMoreLanguages ? availableLanguages : availableLanguages.slice(0, 4);
 
   const availableCountries = [
     ...new Set(
@@ -118,6 +125,8 @@ export default function BookRaqis() {
         .filter((country) => country !== null) // Filter out null values
     ),
   ].sort();
+
+  const displayedCountries = showMoreCountries ? availableCountries : availableCountries.slice(0, 4);
 
   const availableDurations = [...new Set(raqiData.map((raqi) => raqi.bookedDuration))].sort((a, b) => a - b);
 
@@ -373,14 +382,19 @@ export default function BookRaqis() {
                   <div className="text-xs text-gray-500">{userSelections.languages.length} selected</div>
                 </h2>
                 <div className="space-y-1">
-                  {availableLanguages.map((language, index) => (
-                    <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
+                  {displayedLanguages.map((language, index) => (
+                    <div key={language} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${(index % 4) * 500}ms` }}>
                       <input type="checkbox" id={`language-${language}`} checked={userSelections.languages.includes(languages.find((l) => l.label === language)?.value)} onChange={(e) => handleLanguageChange(e, language)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
                       <label htmlFor={`language-${language}`} className="text-sm flex-1 pl-2 cursor-pointer">
                         {language}
                       </label>
                     </div>
                   ))}
+                  {availableLanguages.length > 4 && (
+                    <button onClick={() => setShowMoreLanguages(!showMoreLanguages)} className="text-primary no-underline text-md ml-2 mt-4" style={{ animationDelay: `2000ms` }}>
+                      {showMoreLanguages ? "Show Less" : "Show More ..."}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -391,14 +405,19 @@ export default function BookRaqis() {
                   <div className="text-xs text-gray-500">{userSelections.countries.length} selected</div>
                 </h2>
                 <div className="space-y-1">
-                  {availableCountries.map((country, index) => (
-                    <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${index * 500}ms` }}>
+                  {displayedCountries.map((country, index) => (
+                    <div key={country} className="flex items-center space-x-1 hover:bg-white/50 p-2 rounded-md animate-fade-in" style={{ animationDelay: `${(index % 4) * 500}ms` }}>
                       <input type="checkbox" id={`country-${country}`} checked={userSelections.countries.includes(countries.find((c) => c.label === country)?.value)} onChange={(e) => handleCountryChange(e, country)} className="w-5 h-5 rounded text-primary border-none focus:ring-primary cursor-pointer" style={{ borderColor: "RuqyaLightPurple" }} />
                       <label htmlFor={`country-${country}`} className="text-sm pl-2 flex-1 cursor-pointer">
                         {country}
                       </label>
                     </div>
                   ))}
+                  {availableCountries.length > 4 && (
+                    <button onClick={() => setShowMoreCountries(!showMoreCountries)} className="text-primary no-underline text-md ml-2 mt-4" style={{ animationDelay: `2000ms` }}>
+                      {showMoreCountries ? "Show Less..." : "Show More"}
+                    </button>
+                  )}
                 </div>
               </div>
 
