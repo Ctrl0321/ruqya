@@ -66,7 +66,13 @@ app.post(
 
     })
 
-app.use(cors(corsOptions));
+app.use(
+    cors({
+        origin: "*", // Allow all origins (or specify allowed origins)
+        methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+        allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    })
+);
 app.use(express.json());
 
 app.use('/ruqya-api/auth', authRoutes);
