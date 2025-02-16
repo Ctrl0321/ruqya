@@ -5,8 +5,8 @@ services:
     image: ruqya-frontend:1.0.0
     build:
       context: ../frontend
-      platforms:
-        - linux/amd64
+#      platforms:
+#        - linux/amd64
 #        - linux/arm64
     ports:
       - "3001:3000"
@@ -17,29 +17,29 @@ services:
     networks:
       - app-network
 
-  ruqya-admin:
-    image: ruqya-admin:1.0.0
-    build:
-      context: ../admin-panel
-      platforms:
-        - linux/amd64
-#        - linux/arm64
-    ports:
-      - "3002:3000"
-    depends_on:
-      - ruqya-api
-    env_file:
-      - ../admin-panel/.env.production
-    networks:
-      - app-network
+#  ruqya-admin:
+#    image: ruqya-admin:1.0.0
+#    build:
+#      context: ../admin-panel
+#      platforms:
+#        - linux/amd64
+##        - linux/arm64
+#    ports:
+#      - "3002:3000"
+#    depends_on:
+#      - ruqya-api
+#    env_file:
+#      - ../admin-panel/.env.production
+#    networks:
+#      - app-network
 
   ruqya-api:
     image: ruqya-api:1.0.0
     build:
       context: ../api-service
-      platforms:
-        - linux/amd64
-   #     - linux/arm64
+#      platforms:
+#        - linux/amd64
+#        - linux/arm64
     ports:
       - "5050:5050"
     env_file:
