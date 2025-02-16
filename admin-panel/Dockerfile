@@ -1,21 +1,33 @@
-# Step 1: Set the base image
+# Step 1: Set the base image for building
 FROM node:22-alpine AS builder
 
-# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Step 3: Install dependencies
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
 
-# Step 4: Copy the rest of the application files
+# Copy the rest of the application files
 COPY . .
 
-# Step 5: Build the Next.js app
+# Build the Next.js app
 RUN npm run build
 
-# Step 6: Expose port (default for Next.js)
+# Step 2: Set the runtime image
+FROM node:22-alpine AS runtime
+
+WORKDIR /app
+
+# Copy only the necessary build files from the builder stage
+COPY --from=builder /app/.next /app/.next
+COPY --from=builder /app/public /app/public
+COPY --from=builder /app/package.json /app/package-lock.json /app/
+
+# Install only the production dependencies
+RUN npm install  --legacy-peer-deps
+
+# Expose the default Next.js port
 EXPOSE 3000
 
-# Step 7: Start the Next.js app
+# Start the app
 CMD ["npm", "start"]

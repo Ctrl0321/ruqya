@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   ruqya-frontend:
+    image: ruqya-frontend:1.0.0
     build: ../frontend
     ports:
       - "3001:3000"
@@ -13,6 +14,7 @@ services:
       - app-network
 
   ruqya-admin:
+    image: ruqya-admin:1.0.0
     build: ../admin-panel
     ports:
       - "3002:3000"
@@ -24,6 +26,7 @@ services:
       - app-network
 
   ruqya-api:
+    image: ruqya-api:1.0.0
     build: ../api-service
     ports:
       - "5050:5050"
