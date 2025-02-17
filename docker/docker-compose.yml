@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   ruqya-frontend:
-    image: ruqya-frontend:1.0.0
+    image: ruqya-frontend:1.1.0
     build:
       context: ../frontend
 #      platforms:
@@ -18,7 +18,7 @@ services:
       - app-network
 
   ruqya-admin:
-    image: ruqya-admin:1.0.0
+    image: ruqya-admin:1.1.0
     build:
       context: ../admin-panel
 #      platforms:
@@ -34,7 +34,7 @@ services:
       - app-network
 
   ruqya-api:
-    image: ruqya-api:1.0.0
+    image: ruqya-api:1.1.0
     build:
       context: ../api-service
 #      platforms:
