@@ -11,6 +11,8 @@ import getStreamRouted from "./routes/getStreamRoutes"
 import stripeRoutes from "./routes/stripeRoutes"
 import Meeting, {MeetingStatus} from "./models/meeting";
 import {stripeClient} from "./config/stripeConfig";
+import {validateAndConvertTimezone} from "./utils/timezone";
+import moment from "moment-timezone";
 
 
 dotenv.config();
@@ -61,8 +63,16 @@ app.post(
             if (event.type === 'checkout.session.completed') {
                 const session = event.data.object;
 
+
+                const validatedTimeZone = validateAndConvertTimezone(session.metadata?.timeZone!!);
+
+                const utcDate = moment
+                    .tz(session.metadata?.date!!, "YYYY-MM-DD HH:mm", validatedTimeZone)
+                    .utc()
+                    .toISOString();
+
                 const updatedMeeting = await Meeting.findOneAndUpdate(
-                    {rakiId: session.metadata?.rakiId, topic: session.metadata?.topic},
+                    {rakiId: session.metadata?.rakiId, date: utcDate},
                     {
                         status: MeetingStatus.SCHEDULED,
                     },
