@@ -41,6 +41,9 @@ const corsOptions: cors.CorsOptions = {
     credentials: true,
 };
 
+app.use(cors(corsOptions));
+
+
 
 app.post(
     '/webhook',
@@ -84,7 +87,6 @@ app.post(
 //     next();
 // });
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/ruqya-api/auth', authRoutes);
