@@ -18,7 +18,11 @@ connectDB();
 
 const app:Application = express();
 
-const allowedOrigins = ['https://propheticruqyah.com/','https://admin.propheticruqyah.com/'];
+const allowedOrigins = [
+    'https://propheticruqyah.com/',
+    "https://www.propheticruqyah.com",
+    'https://admin.propheticruqyah.com/'
+];
 
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
