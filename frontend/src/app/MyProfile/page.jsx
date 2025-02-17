@@ -276,7 +276,7 @@ const MyProfile = () => {
   }
 
   return (
-    <div className="py-6 mb-10 min-h-screen lg:mx-[9%]">
+    <div className="py-0 md:py-6 mb-10 min-h-screen lg:mx-[9%]">
       {/* Show popups before the main content */}
       {isChangePasswordOpen && (
         <ChangePassword 
@@ -298,7 +298,7 @@ const MyProfile = () => {
       )}
 
       <div className="w-full">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white md:rounded-xl shadow-lg overflow-hidden">
           <div className="relative h-40 bg-gradient-to-r from-teal-500 to-teal-600">
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
               <div className="w-32 h-32 rounded-full bg-teal-600 border-4 border-white flex items-center justify-center text-white text-4xl font-bold shadow-lg">{formData.name ? formData.name.charAt(0).toUpperCase() : "?"}</div>
