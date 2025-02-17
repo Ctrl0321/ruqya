@@ -104,7 +104,7 @@ export default function RaqisCard({ raqi }) {
                         </span>
                       )}
                     </div>
-                    {CountryCode ? <ReactCountryFlag countryCode={CountryCode} svg className="mr-2 mt-1" /> : <FaGlobe className="mr-2 mt-1 text-RuqyaGreen" />}
+                    {CountryCode ? <ReactCountryFlag countryCode={CountryCode} svg className="mr-2" /> : <FaGlobe className="mr-2 text-RuqyaGreen" />}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
