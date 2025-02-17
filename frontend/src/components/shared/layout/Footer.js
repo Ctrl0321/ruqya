@@ -66,8 +66,8 @@ function Footer() {
                 <Link href="SelfRuqyah" className="block text-[#424867] hover:text-teal-600">
                   Self-Ruqyah
                 </Link>
-                <Link href="MyProfile" className="block text-[#424867] hover:text-teal-600">
-                  My Profile
+                <Link href={localStorage.getItem("fe-token") ? "/MyProfile" : "/login"} className="block text-[#424867] hover:text-teal-600">
+                  {localStorage.getItem("fe-token") ? "My Profile" : "Login"}
                 </Link>
               </nav>
             </div>
