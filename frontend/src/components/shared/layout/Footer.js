@@ -19,7 +19,7 @@ function Footer() {
   return (
     <footer className="relative w-full z-100 pt-16 mt-48">
       <Triangle />
-      <div className="bg-RuqyaLightPurple">
+      <div className="bg-RuqyaLightPurple pt-0.5">
         <div className="px-4 mx-auto text-center md:text-left ">
           <div className="flex justify-center mb-12"></div>
           <div className="flex flex-col md:flex-row justify-between w-full  gap-8 max-w-6xl mx-auto">
@@ -66,8 +66,8 @@ function Footer() {
                 <Link href="SelfRuqyah" className="block text-[#424867] hover:text-teal-600">
                   Self-Ruqyah
                 </Link>
-                <Link href="MyProfile" className="block text-[#424867] hover:text-teal-600">
-                  My Profile
+                <Link href={localStorage.getItem("fe-token") ? "/MyProfile" : "/login"} className="block text-[#424867] hover:text-teal-600">
+                  {localStorage.getItem("fe-token") ? "My Profile" : "Login"}
                 </Link>
               </nav>
             </div>

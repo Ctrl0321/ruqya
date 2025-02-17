@@ -67,18 +67,58 @@ export default function RuqyahPage() {
               <div className="border rounded-lg p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FileIcon className="h-8 w-8 text-red-500" />
-                  <span>PDF Name Goes Here.pdf</span>
+                  <span>Daily Morning & Evening Adhkar.pdf</span>
                 </div>
-                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700 rounded-lg">
-                  
+                <Button 
+                  variant="default" 
+                  bg={true} 
+                  text="Download" 
+                  className="bg-teal-600 hover:bg-teal-700 rounded-lg"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/download/Daily Morning & Evening Adhkar.pdf';
+                    link.download = 'Daily Morning & Evening Adhkar.pdf';
+                    link.click();
+                  }}
+                >
+                </Button>
+              </div>
+              <div className="border rounded-lg p-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileIcon className="h-8 w-8 text-red-500" />
+                  <span>Ruqyah Booklet.pdf</span>
+                </div>
+                <Button 
+                  variant="default" 
+                  bg={true} 
+                  text="Download" 
+                  className="bg-teal-600 hover:bg-teal-700 rounded-lg"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/download/ruqyah booklet.pdf';
+                    link.download = 'ruqyah booklet.pdf';
+                    link.click();
+                  }}
+                >
                 </Button>
               </div>
               <div className="border rounded-lg p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Music2Icon className="h-8 w-8 text-teal-500" />
-                  <span>MP3 name goes here</span>
+                  <span>Ruqyah AUDIO</span>
                 </div>
-                <Button variant="default" bg={true} text="Download" className="bg-teal-600 hover:bg-teal-700 rounded-lg">
+                <Button 
+                  variant="default" 
+                  bg={true} 
+                  text="Download" 
+                  className="bg-teal-600 hover:bg-teal-700 rounded-lg"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/download/Ruqyah_AUDIO.mp3';
+                    link.download = 'Ruqyah_AUDIO.mp3';
+                    link.click();
+                  }}
+                >
                   Download
                 </Button>
               </div>

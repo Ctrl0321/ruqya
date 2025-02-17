@@ -73,16 +73,16 @@ const Header = () => {
 
   return (
     <header>
-      <nav className={`${isCurrent("/")} lg:px-[7%] lg:py-12 py-4 shadow-md font-extrabold color-header`}>
+      <nav className={`${isCurrent("/")} lg:px-[7%] lg:py-12 py-4 shadow-md font-normal color-header`}>
         <div className="flex justify-between items-center mx-8 md:mx-8">
           <div className="text-xl min-w-32">
             <Link href="/" className="text-gray-700 w-40 hover:text-gray-900">
-              <img src="/Logo.png" alt="Ruqya logo" width="150" height="100" />
+              <img src="/images/logo.png" alt="Ruqya logo" width="150" height="100" />
             </Link>
           </div>
           <div className="hidden md:flex flex-grow justify-center items-center mx-5">
             <img src="/nav-flower.svg" alt="Navigation Center" width="33" className="-mr-4" />
-            <img src="/nav-line.svg" alt="Navigation Center" width="1600" />
+            <img src="/nav-line.svg" alt="Navigation Center" width="16000" />
           </div>
           <div className="hidden md:flex space-x-8 gap-5">
             <Link href="/" className={`${isActive("/")} hover:text-gray-900 text-center`}>
@@ -154,7 +154,7 @@ const Header = () => {
                 </svg>
               </button>
               <Link href="/" onClick={handleLinkClick}>
-                <img src="/Logo.png" alt="Ruqya logo" width="120" className="mx-auto transform transition-transform duration-300 hover:scale-105" />
+                <img src="/images/logo.png" alt="Ruqya logo" width="120" className="mx-auto transform transition-transform duration-300 hover:scale-105" />
               </Link>
             </div>
             <div className="flex flex-col p-4 space-y-3">

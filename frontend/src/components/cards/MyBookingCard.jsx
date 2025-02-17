@@ -6,6 +6,7 @@ import Button from "@/components/ui/buttons/DefaultButton";
 import { getUserProfile, getOwnProfile } from "@/lib/api";
 import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinnerForCards";
 
 const MyBookingCard = ({ booking, className }) => {
   const router = useRouter();
@@ -90,6 +91,14 @@ const MyBookingCard = ({ booking, className }) => {
   const handleJoinMeeting = () => {
     router.push(`/Meeting/${booking.meetingId}/${userData._id}`);
   };
+
+  if (!rakiData) {
+    return (
+      <div className={`bg-white rounded-xl mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between  w-full ${className}`}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className={`bg-white rounded-xl w-full mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between ${className}`}>

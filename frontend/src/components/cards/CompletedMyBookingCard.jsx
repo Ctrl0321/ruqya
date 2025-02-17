@@ -4,6 +4,7 @@ import { FaGlobe, FaCalendarAlt } from "react-icons/fa";
 import ReactCountryFlag from "react-country-flag";
 import Button from "@/components/ui/buttons/DefaultButton";
 import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
+import LoadingSpinner from "@/components/shared/common/LoadingSpinnerForCards";
 import { getUserProfile } from "@/lib/api";
 import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
 
@@ -83,6 +84,14 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
     return timeString;
   };
 
+  if (!rakiData) {
+    return (
+      <div className={`bg-white rounded-xl mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between  w-full ${className}`}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <div className={`bg-white rounded-xl  mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between  w-full ${className}`}>
       <div className="flex flex-col gap-4">
@@ -120,9 +129,7 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
           </div>
         </div>
       </div>
-      { show && (
-      <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-3" disabled={!canSetReview(booking.date)} onClick={handleButtonClick} />
-      )}
+      {show && <Button text="Add a Review" color="RuqyaGreen" bg={true} className="rounded-xl mt-3" disabled={!canSetReview(booking.date)} onClick={handleButtonClick} />}
     </div>
   );
 };
