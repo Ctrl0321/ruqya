@@ -21,8 +21,8 @@ services:
     image: ruqya-admin:1.0.0
     build:
       context: ../admin-panel
-      platforms:
-        - linux/amd64
+#      platforms:
+#        - linux/amd64
 #        - linux/arm64
     ports:
       - "3002:3000"
