@@ -19,9 +19,9 @@ connectDB();
 const app:Application = express();
 
 const allowedOrigins = [
-    'https://propheticruqyah.com/',
+    'https://propheticruqyah.com',
     "https://www.propheticruqyah.com",
-    'https://admin.propheticruqyah.com/',
+    'https://admin.propheticruqyah.com',
     "http://localhost:3001"
 ];
 
