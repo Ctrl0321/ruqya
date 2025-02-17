@@ -3,7 +3,7 @@ import flower from "@/assets/svg/green-flower.svg";
 
 function Second() {
   return (
-    <div id="second" className="min-h-[20vh] my-20 m-0 md:m-5 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+    <div id="second" className="min-h-[20vh]  mt-16 md:mt-14  animate-fade-in" style={{ animationDelay: '0.1s' }}>
       <h1 className="text-3xl md:text-5xl font-bold text-RuqyaGray text-center leading-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
         Ruqyah is a <br className="block md:hidden" /> <span className="text-RuqyaGreen">spiritual healing</span> practice
         <br className="hidden md:block" />
