@@ -20,7 +20,7 @@ const AdminDashboard = () => {
     const { setUserId } = useChat();
     const { user :currentUser} = useAuth()
 
-    const { isSuperAdmin, revenueData, todaySessions, setDateFilter, userData, rakiData } = useDashboardData();
+    const { isSuperAdmin, revenueData, todaySessions, setDateFilter, userData, rakiData,loading } = useDashboardData();
 
     const [cancelSessionId, setCancelSessionId] = useState<string | null>(null);
     const [rescheduleSessionId, setRescheduleSessionId] = useState<string | null>(null);
@@ -89,16 +89,16 @@ const AdminDashboard = () => {
 
 
 
-    if (!currentUser || !revenueData || !todaySessions){
+    if (loading ){
         return (
-        <div className="flex items-center justify-center">
-            <motion.div
-                animate={{rotate: 360}}
-                transition={{repeat: Infinity, duration: 1, ease: "linear"}}
-                className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281] "
-            />
-            <p>Loading</p>
-        </div>
+            <div className="w-full h-full  flex flex-col items-center justify-center">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+                />
+            </div>
+
         )
     }
 

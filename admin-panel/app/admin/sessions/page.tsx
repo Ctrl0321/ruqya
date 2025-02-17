@@ -75,7 +75,7 @@ const SessionsPage=()=> {
     });
 
     if (loading) return  (
-        <div className="flex items-center justify-center h-96">
+        <div className="w-full h-full  flex flex-col items-center justify-center">
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 1, ease: "linear" }}

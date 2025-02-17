@@ -50,7 +50,6 @@ export const useDashboardData = () => {
     useEffect(() => {
         if (currentUser) {
             setIsSuperAdmin(currentUser.role === 'super-admin');
-            setLoading(false);
         }
     }, [currentUser]);
 
@@ -73,6 +72,7 @@ export const useDashboardData = () => {
         const fetchSessions = async () => {
 
             try {
+                setLoading(true)
                 if (isSuperAdmin) {
                     const revenue = await getRevenueData({
                         filterType: dateFilter.type,
@@ -86,9 +86,15 @@ export const useDashboardData = () => {
             } catch (error) {
                 console.error("Failed to fetch dashboard data:", error);
             }
+             finally {
+                setLoading(false);
+            }
+
         };
         fetchSessions();
     }, [currentUser, dateFilter,isSuperAdmin]);
+
+
 
     return { isSuperAdmin, revenueData, todaySessions, dateFilter, setDateFilter, userData, rakiData, loading };
 };
