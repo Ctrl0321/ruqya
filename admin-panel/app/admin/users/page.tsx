@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {  Search } from "lucide-react";
 import {
   Table,
@@ -34,6 +34,7 @@ import {getCountryLabel} from "@/lib/utils";
 import {IMeeting} from "@/components/SessionList";
 import withAuth from "@/hoc/withAuth";
 import UserDetailsDialog from "@/components/ui/user/UserDetailsDialog";
+import {motion} from "framer-motion";
 
 
 
@@ -49,6 +50,8 @@ const UsersPage=()=> {
   const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
   const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState(false);
   const [newRole, setNewRole] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
 
   const isSuperAdmin= currentUser?.role==="super-admin"
 
@@ -56,19 +59,27 @@ const UsersPage=()=> {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true)
         const userData = await getUsers();
         setUsers(userData);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
+      finally {
+        setLoading(false);
+      }
     };
 
     const fetchSession = async () => {
       try {
+        setLoading(true)
         const sessionData = await getMeetingsByRakiId();
         setSession(sessionData);
       } catch (error) {
         console.error("Failed to fetch users:", error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -135,6 +146,16 @@ const UsersPage=()=> {
 
   const usersToDisplay = isSuperAdmin ? filteredUsers : meetingFilteredUsers;
 
+
+  if (loading) return  (
+      <div className="flex items-center justify-center h-96">
+        <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+        />
+      </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">

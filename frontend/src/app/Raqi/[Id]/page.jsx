@@ -269,12 +269,12 @@ function Raqis() {
           <Button text="Book Now" link={"/Raqi/" + data._id + "/book"} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3" />
         </div>
       </div>
-      {data.about && (
+      {data.description && (
         <div className="mx-4 md:mx-10 animate-fade-in" style={{ animationDelay: '1.0s' }}>
           <h3 className="font-bold my-5 text-2xl">About</h3>
           <p>
-            {showFullAbout ? data.about : `${data.about.substring(0, maxAboutLength)}...`}
-            {data.about.length > maxAboutLength && (
+            {showFullAbout ? data.description : `${data.description.substring(0, maxAboutLength)}...`}
+            {data.description.length > maxAboutLength && (
               <button onClick={() => setShowFullAbout(!showFullAbout)} className="text-blue-500">
                 {showFullAbout ? " See Less" : " See More"}
               </button>

@@ -7,6 +7,7 @@ import {getMeetings, getMeetingsByRakiId, getRakis, getUsers, MeetingStatus} fro
 import { toast } from "@/components/ui/use-toast";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import withAuth from "@/hoc/withAuth";
+import {motion} from "framer-motion";
 
 const SessionsPage=()=> {
     const [activeTab, setActiveTab] = useState("all");
@@ -73,7 +74,15 @@ const SessionsPage=()=> {
         return true;
     });
 
-    if (loading) return <p className="text-center mt-10">Loading...</p>;
+    if (loading) return  (
+        <div className="flex items-center justify-center h-96">
+            <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+            />
+        </div>
+    );
 
     return (
         <div className="container mx-auto py-10">

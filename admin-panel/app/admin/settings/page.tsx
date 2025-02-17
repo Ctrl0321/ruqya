@@ -12,6 +12,7 @@ import { UserDto } from "@/contexts/AuthContexts";
 import { changePassword, getOwnProfile, updateUserProfile } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import withAuth from "@/hoc/withAuth";
+import {motion} from "framer-motion";
 
 const SettingsPage=()=> {
     const [user, setUser] = useState<UserDto | null>(null);
@@ -25,6 +26,8 @@ const SettingsPage=()=> {
         reenterPassword: false
     });
     const [passwordStrength, setPasswordStrength] = useState(0);
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -38,6 +41,9 @@ const SettingsPage=()=> {
                     description: "Failed to fetch profile. Please try again.",
                     variant: "destructive",
                 });
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -175,6 +181,16 @@ const SettingsPage=()=> {
             </div>
         );
     };
+
+    if (loading) return  (
+        <div className="flex items-center justify-center h-96">
+            <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+            />
+        </div>
+    );
 
         return (
         <div className="p-4 grid gap-8 md:grid-cols-2">

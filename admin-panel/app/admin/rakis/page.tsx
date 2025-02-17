@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import {
   Table,
@@ -27,9 +27,7 @@ import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import {getCountryLabel} from "@/lib/utils";
 import withAuth from "@/hoc/withAuth";
 import RakiDetailsDialog from "@/components/ui/raki/RakiDetailsDialog";
-
-
-
+import {motion} from "framer-motion";
 
 
 const RakiPage=()=> {
@@ -39,6 +37,8 @@ const RakiPage=()=> {
   const [countryFilter, setCountryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const { user: currentUser } = useAuth();
 
   useEffect(() => {
@@ -54,6 +54,9 @@ const RakiPage=()=> {
           description: "Failed to fetch tutors. Please try again.",
           variant: "destructive",
         });
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -124,6 +127,17 @@ const RakiPage=()=> {
   };
 
   const countries = Array.from(new Set(tutors.map((tutor) => tutor.country)));
+
+
+  if (loading) return  (
+      <div className="flex items-center justify-center h-96">
+        <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+        />
+      </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">

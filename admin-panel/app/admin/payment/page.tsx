@@ -6,6 +6,7 @@ import {getMeetings, getMeetingsByRakiId, getRakis, MeetingStatus, requestPaymen
 import { toast } from "@/components/ui/use-toast";
 import withAuth from "@/hoc/withAuth";
 import {IMeeting} from "@/components/SessionList";
+import {motion} from "framer-motion";
 
 interface Meeting {
   _id: string;
@@ -33,6 +34,8 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showFilters, setShowFilters] = useState(false);
   const [meetings, setMeeting] = useState<Meeting[]>();
+  const [loading, setLoading] = useState(true);
+
 
   const isAdmin = currentUser?.role === "admin";
 
@@ -64,6 +67,9 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
           description: "Failed to fetch meeting or rakis data. Please try again.",
           variant: "destructive",
         });
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -164,6 +170,18 @@ const PaymentManagementPage: React.FC<PaymentManagementPageProps> = () => {
     ).length;
     return { total, paid, pending, requested };
   }, [filteredMeetings]);
+
+
+  if (loading) return  (
+      <div className="flex items-center justify-center h-96">
+        <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            className="rounded-full h-16 w-16 border-t-4 border-b-4 border-[#0C8281]"
+        />
+      </div>
+  );
+
 
 
   return (
