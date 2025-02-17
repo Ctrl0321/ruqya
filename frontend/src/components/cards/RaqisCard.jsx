@@ -78,7 +78,7 @@ export default function RaqisCard({ raqi }) {
             mask="url(#path-1-inside-1_283_3862)"
           />
           <foreignObject x="0" y="0" width="292" height="328">
-            <div className="flex flex-col items-center space-y-3 pt-[115px] md:pt-[100px] md:mt-8 m-5">
+            <div className="flex flex-col items-center space-y-3 pt-[125px] md:pt-[100px] mt-16 md:mt-8 m-5">
               <h2 className="text-xl font-semibold">{name}</h2>
               <div className="w-full space-y-3">
                 <div className="flex justify-between items-center">
