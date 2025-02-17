@@ -127,7 +127,6 @@ export const addMeeting = async (
         .status(400)
         .json({ message: "All required fields must be provided" });
     }
-
     const validatedTimeZone = validateAndConvertTimezone(timeZone);
 
     const utcDate = moment
@@ -138,6 +137,7 @@ export const addMeeting = async (
     const existingMeetings = await Meeting.find({
       $or: [{ rakiId }, { userId }],
       date: utcDate,
+      status:MeetingStatus.SCHEDULED
     });
 
     if (existingMeetings.length > 0) {
@@ -183,19 +183,19 @@ export const addMeeting = async (
         },
       });
 
-      const existingAvailability = await RakiAvailability.findOneAndUpdate(
-        { rakiId, startTime: utcDate },
-        {
-          isAvailable: false,
-        },
-        { new: true }
-      );
-
-      if (!existingAvailability) {
-        return res
-          .status(200)
-          .json({ message: "No availability found", data: null });
-      }
+      // const existingAvailability = await RakiAvailability.findOneAndUpdate(
+      //   { rakiId, startTime: utcDate },
+      //   {
+      //     isAvailable: false,
+      //   },
+      //   { new: true }
+      // );
+      //
+      // if (!existingAvailability) {
+      //   return res
+      //     .status(200)
+      //     .json({ message: "No availability found", data: null });
+      // }
     } catch (error: any) {
       console.error("Stream API Error:", error?.message || error);
       await Meeting.findByIdAndDelete(savedMeeting._id);
@@ -716,6 +716,56 @@ export const requestMeetingPayment = async (
     console.error("Error request payment of  meeting:", error);
     res.status(500).json({
       message: "Failed to request  meeting payment",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+
+export const deleteMeeting = async (
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<any> => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+    const { rakiId,date,timeZone } = req.body;
+
+    if ( !rakiId || !date || !timeZone) {
+      return res.status(400).json({
+        message: "meetingId and date  is required",
+      });
+    }
+
+    let validatedTimeZone: string;
+    try {
+      validatedTimeZone = validateAndConvertTimezone(timeZone);
+    } catch (error) {
+      return res
+          .status(400)
+          .json({
+            message: error instanceof Error ? error.message : "Invalid timezone",
+          });
+    }
+
+    const utcNewDate = moment
+        .tz(date, "YYYY-MM-DD HH:mm", validatedTimeZone)
+        .utc()
+        .toISOString();
+
+    const deleteMeeting = await Meeting.findOneAndDelete(
+        { rakiId,date:utcNewDate,status: MeetingStatus.PENDING }
+    );
+
+    res.status(200).json({
+      message: "Meeting deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting meeting:", error);
+    res.status(500).json({
+      message: "Failed to cancel meeting",
       error: error instanceof Error ? error.message : "Unknown error",
     });
   }

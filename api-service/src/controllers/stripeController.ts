@@ -14,9 +14,9 @@ const price = Math.round(parseFloat(process.env.SESSION_COST as string));
 export const createCheckoutSession = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user?.id ?? "";
-        const { topic, date, rakiId,rakiEmail,rakiName,userEmail,userName } = req.body;
+        const { topic, date, rakiId,rakiEmail,rakiName,userEmail,userName,timeZone } = req.body;
 
-        if (!topic || !date || !rakiId ) {
+        if (!topic || !date || !rakiId || !timeZone) {
             res.status(400).json({ message: "Missing required fields" });
             return;
         }
@@ -28,7 +28,7 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
                         currency: 'usd',
                         product_data: {
                             name: `1-on-1 Session: ${topic}`,
-                            description: `Session with Raki ${rakiId} on ${date}`,
+                            description: `Session with Raki ${rakiName} on ${date}`,
                         },
                         unit_amount: Math.round(price * 100),
                     },
@@ -37,7 +37,7 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
             ],
             mode: 'payment',
             success_url: `${process.env.FRONTEND_URL}/Raqi/${rakiId}/book/complete?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL}/Raqi/${rakiId}/book/failed`,
+            cancel_url: `${process.env.FRONTEND_URL}/Raqi/${rakiId}/book/failed?rakiId=${rakiId}&date=${date}`,
             customer_email: req.user?.email || undefined,
             metadata: {
                 rakiId: rakiId.toString(),
@@ -47,7 +47,8 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
                 rakiEmail:rakiEmail?.toString(),
                 rakiName:rakiName?.toString(),
                 userEmail:userEmail?.toString(),
-                userName:userName?.toString()
+                userName:userName?.toString(),
+                timeZone:userName?.toString()
             }
         });
 

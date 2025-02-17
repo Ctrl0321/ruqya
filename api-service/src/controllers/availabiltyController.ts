@@ -321,6 +321,65 @@ export const removeAvailability = async (
   }
 };
 
+export const updateAvailability = async (
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<any> => {
+  try {
+    const { timeZone = "UTC", date, rakiId, isAvailable } = req.body;
+
+    if ( !date || !rakiId || isAvailable === undefined) {
+      return res.status(400).json({
+        message: "Invalid input. Required: date, startTime, rakiId, and isAvailable",
+      });
+    }
+
+    let validatedTimeZone: string;
+    try {
+      validatedTimeZone = validateAndConvertTimezone(timeZone);
+    } catch (error) {
+      return res.status(400).json({
+        message: error instanceof Error ? error.message : "Invalid timezone",
+      });
+    }
+
+    const startDateTimeUTC = moment
+        .tz(date, "YYYY-MM-DD HH:mm", validatedTimeZone)
+        .utc()
+        .toISOString();
+
+
+    const availability = await RakiAvailability.findOne({
+      rakiId,
+      startTime: startDateTimeUTC,
+    });
+
+    if (!availability) {
+      return res.status(404).json({ message: "Availability not found" });
+    }
+
+    // Update isAvailable instead of deleting
+    const updatedAvailability = await RakiAvailability.findOneAndUpdate(
+        { rakiId, startTime: startDateTimeUTC },
+        { isAvailable },
+        { new: true } // Return the updated document
+    );
+
+    res.status(200).json({
+      message: "Availability updated successfully",
+      updatedAvailability,
+    });
+
+  } catch (error) {
+    console.error("Error updating availability:", error);
+    res.status(500).json({
+      message: "Error updating availability",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+
 export const getAllAdmins = async (
   req: Request,
   res: Response

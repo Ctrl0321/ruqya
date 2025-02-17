@@ -2,7 +2,7 @@
 import {useRouter, useSearchParams} from 'next/navigation';
 import DefultButton from '@/components/ui/buttons/DefaultButton';
 import {useEffect} from "react";
-import {verifySession} from "@/lib/api";
+import {updateAvailability, verifySession} from "@/lib/api";
 import {sendMeetingEmail} from "@/lib/EmailService";
 
 const CompletePage = () => {
@@ -15,7 +15,10 @@ const CompletePage = () => {
       if (sessionId) {
         try {
           const response = await verifySession(sessionId);
-          const {date,rakiEmail,userEmail,rakiName,userName}= response.metadata
+          const {date,rakiEmail,userEmail,rakiName,userName,rakiId}= response.metadata
+
+
+          await updateAvailability(date,rakiId,false)
 
           await sendMeetingEmail(
               userEmail,

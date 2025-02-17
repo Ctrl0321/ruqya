@@ -1,10 +1,29 @@
 "use client";
-import { useRouter } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import DefultButton from "@/components/ui/buttons/DefaultButton";
+import {useEffect} from "react";
+import {deleteSession, updateAvailability, verifySession} from "@/lib/api";
+import {sendMeetingEmail} from "@/lib/EmailService";
 
 const FailedPage = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
 
+  useEffect(() => {
+    const  deletingSession = async () => {
+      const rakiId = searchParams.get('rakiId');
+      const date = searchParams.get('date');
+      if (rakiId && date) {
+        try {
+          await deleteSession(rakiId,date)
+        } catch (error) {
+          console.error('Error deleting session:', error);
+        }
+      }
+    };
+
+    deletingSession();
+  }, [searchParams]);
   return (
     <div className="min-h-80vh flex items-center justify-center my-10">
       <div className="text-center max-w-md px-4 py-8 bg-white rounded-2xl shadow-lg drop-shadow-md mx-4">

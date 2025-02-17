@@ -45,19 +45,6 @@ export const googleSignup = async (tokenId) => {
   }
 };
 
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//       if (error.response && error.response.status === 401) {
-//           localStorage.removeItem("token");
-//           localStorage.removeItem("role");
-//           window.location.href = "/";
-//       }
-//       return Promise.reject(error);
-//   }
-// );
-
-// Stripe
 
 export const checkoutSession = async (topic,date,rakiId,rakiEmail,rakiName,userEmail,userName) => {
     try {
@@ -116,6 +103,8 @@ export const getTodaySessions = async () => (await api.get(`ruqya-api/meeting/ge
 
 export const cancelSession = async (meetingId, note) => (await api.post("ruqya-api/meeting/cancel", { meetingId, note })).data;
 
+export const deleteSession = async (rakiId, date) => (await api.post("ruqya-api/meeting/delete", { rakiId, date,timeZone:userTimeZone })).data;
+
 export const rescheduleSession = async (meetingId, newDate) => (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate })).data;
 
 export const addSession = async (topic,date,rakiId) => (await api.post("ruqya-api/meeting/add-meetings", {topic,date,rakiId,timeZone:userTimeZone })).data;
@@ -158,6 +147,16 @@ export const removeRakiAvailability = async (date, startTime) =>
       timeZone: userTimeZone,
     })
   ).data;
+
+export const updateAvailability = async (date,rakiId,isAvailable) =>
+    (
+        await api.post("ruqya-api/raki/update-availability", {
+            date,
+            timeZone: userTimeZone,
+            rakiId,
+            isAvailable
+        })
+    ).data;
 
 // Meeting Verification & Streaming
 export const verifyMeetingAccess = async (callId, userId) => {

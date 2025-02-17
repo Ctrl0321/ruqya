@@ -12,7 +12,7 @@ const BookSessionPage = () => {
   const Id = params.Id;
   const [selectedDate, setSelectedDate] = useState(null); // Changed from new Date() to null
   const [selectedTime, setSelectedTime] = useState("");
-  const [bookingData, setBookingData] = useState(null);
+  const [rakiData, setRakiData] = useState(null);
   // const [sessionType, setSessionType] = useState("Standard");
   const [errors, setErrors] = useState({});
   const dateRef = useRef(null);
@@ -28,7 +28,7 @@ const BookSessionPage = () => {
       const fetchUserProfile = async () => {
         try {
           const userProfile = await getUserProfile(Id);
-          setBookingData(userProfile);
+          setRakiData(userProfile);
         } catch (error) {
           showError("Error fetching user profile:", error);
           console.error("Error fetching user profile:", error);
@@ -52,7 +52,7 @@ const BookSessionPage = () => {
     const fetchAvailability = async () => {
       if (selectedDate) {
         try {
-          const response = await getRakiAvailability(Id, selectedDate.toISOString().split('T')[0]);
+          const response = await getRakiAvailability(Id, getLocalFormattedDate(selectedDate));
           
           // Check if response is valid and has data
           if (!response || response.message === "No availability found" || !Array.isArray(response)) {
@@ -76,6 +76,7 @@ const BookSessionPage = () => {
   }, [selectedDate, Id]);
 
   const handleDateChange = (date) => {
+    console.log(date)
     setSelectedDate(date);
     setSelectedTime("");
     setAvailableTimes([]); 
@@ -138,23 +139,28 @@ const BookSessionPage = () => {
     return `${hours.padStart(2, '0')}:${minutes}:00`;
   };
 
+  const getLocalFormattedDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleButtonClick = async () => {
     if (!validateForm()) return;
-
     try {
-      const formattedDate = selectedDate.toISOString().split('T')[0];
+      const formattedDate = getLocalFormattedDate(selectedDate);
       const formattedTime = formatTime(selectedTime);
       const finalDateTime = `${formattedDate} ${formattedTime}`;
+      const sessionIdentifier = `${rakiData.name}'s Session`;
 
-        const currentDateTime = new Date().toISOString();
-        const sessionIdentifier = `${bookingData.name}-Session-${finalDateTime}-Booked-at-${currentDateTime}`;
 
-        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, bookingData._id);
+        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, rakiData._id);
 
         const {rakiEmail,rakiName}=meetingResponse.raki
         const {userEmail,userName}=meetingResponse.user
 
-        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, bookingData._id,rakiEmail,rakiName,userEmail,userName);
+        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, rakiData._id,rakiEmail,rakiName,userEmail,userName);
 
       if (sessionResponse?.url) {
         window.location.href = sessionResponse.url;
@@ -249,9 +255,9 @@ const BookSessionPage = () => {
       <div className="w-full md:w-1/2 md:mx-5 order-2" ref={bookingRef}>
         <div className="border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
-          {bookingData ? (
+          {rakiData ? (
             <>
-              <BookingCard Booking={bookingData} selectedDate={selectedDate} selectedTime={selectedTime} />
+              <BookingCard Booking={rakiData} selectedDate={selectedDate} selectedTime={selectedTime} />
               <Button text="Book a Session" color="RuqyaGreen" bg={true} className="rounded-xl py-3 mt-4 w-full" onClick={handleButtonClick} />
             </>
           ) : (
