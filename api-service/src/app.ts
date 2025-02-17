@@ -1,6 +1,6 @@
 import express, {Application} from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
+// import cors from 'cors';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import userRoutes from "./routes/userRoutes";
@@ -25,23 +25,23 @@ const allowedOrigins = [
     "http://localhost:3001"
 ];
 
-const corsOptions: cors.CorsOptions = {
-    origin: (origin, callback) => {
-        console.log("CORS Origin received:", origin);
+// const corsOptions: cors.CorsOptions = {
+//     origin: (origin, callback) => {
+//         console.log("CORS Origin received:", origin);
+//
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             console.error(`Blocked CORS request from origin: ${origin}`);
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+// };
 
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.error(`Blocked CORS request from origin: ${origin}`);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-};
-
-app.use(cors(corsOptions));
+// app.use(cors());
 
 
 
