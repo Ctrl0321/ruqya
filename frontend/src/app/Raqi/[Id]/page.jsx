@@ -107,10 +107,10 @@ function Raqis() {
 
   const chartData = [
     { name: "5", real: reviewCounts[4], value: reviewCounts[4], fill: "#4caf50" },
-    { name: "4", real: reviewCounts[3], value: reviewCounts[3], fill: "#9c27b0" },
-    { name: "3", real: reviewCounts[2], value: reviewCounts[2], fill: "#ffeb3b" },
-    { name: "2", real: reviewCounts[1], value: reviewCounts[1], fill: "#03a9f4" },
-    { name: "1", real: reviewCounts[0], value: reviewCounts[0], fill: "#ffeb3b" },
+    { name: "4", real: reviewCounts[3], value: reviewCounts[3], fill: "#4caf50" },
+    { name: "3", real: reviewCounts[2], value: reviewCounts[2], fill: "#4caf50" },
+    { name: "2", real: reviewCounts[1], value: reviewCounts[1], fill: "#4caf50" },
+    { name: "1", real: reviewCounts[0], value: reviewCounts[0], fill: "#4caf50" },
   ];
 
   const renderStars = (rating) => {
@@ -175,7 +175,7 @@ function Raqis() {
       {data.bannerImage ? (
         <img src={data.bannerImage} alt={data.name} className="w-full h-48 object-cover bg-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }} />
       ) : (
-        <div className="w-full h-48 bg-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}></div>
+        <div className="w-full h-48 bg-gray-600 animate-fade-in lg:rounded-lg" style={{ animationDelay: '0.2s' }}></div>
       )}
 
       <div className="flex flex-col md:flex-row items-center mx-4 animate-fade-in" style={{ animationDelay: '0.3s' }}>

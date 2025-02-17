@@ -82,7 +82,7 @@ const Header = () => {
           </div>
           <div className="hidden md:flex flex-grow justify-center items-center mx-5">
             <img src="/nav-flower.svg" alt="Navigation Center" width="33" className="-mr-4" />
-            <img src="/nav-line.svg" alt="Navigation Center" width="1600" />
+            <img src="/nav-line.svg" alt="Navigation Center" width="16000" />
           </div>
           <div className="hidden md:flex space-x-8 gap-5">
             <Link href="/" className={`${isActive("/")} hover:text-gray-900 text-center`}>
