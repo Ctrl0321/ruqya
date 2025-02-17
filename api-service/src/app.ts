@@ -22,15 +22,18 @@ const allowedOrigins = ['https://propheticruqyah.com/','https://admin.propheticr
 
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
+        console.log("CORS Origin received:", origin);
+
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            console.error(`Blocked CORS request from origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
+    credentials: true,
 };
 
 
