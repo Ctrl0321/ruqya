@@ -25,12 +25,14 @@ const corsOptions: cors.CorsOptions = {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error("Not allowed by CORS"));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
 };
+
 
 app.post(
     '/webhook',
@@ -66,14 +68,7 @@ app.post(
 
     })
 
-app.use(
-    cors({
-        origin: allowedOrigins, // Allow all origins (or specify allowed origins)
-        methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-        allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-        credentials:true
-    })
-);
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/ruqya-api/auth', authRoutes);
