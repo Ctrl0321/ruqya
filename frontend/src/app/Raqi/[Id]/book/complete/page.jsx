@@ -36,8 +36,8 @@ const CompletePage = () => {
         await sendMeetingEmail(
             userEmail,
             rakiEmail,
-            rakiName,
             userName,
+            rakiName,
             date,
             `We look forward to your participation. If you have any questions or need to make changes, please let us know.`,
             "Your Meeting Has Been Scheduled Successfully"
