@@ -57,7 +57,7 @@ export const getAllMeetings = async (
     const { timeZone = "UTC" } = req.query;
     const validatedTimeZone = validateAndConvertTimezone(timeZone.toString());
 
-    const meetings = await Meeting.find();
+    const meetings = await Meeting.find({ status: { $ne: MeetingStatus.PENDING } });
     if (!meetings.length)
       return res.status(404).json({ message: "No meetings found" });
 
@@ -182,20 +182,6 @@ export const addMeeting = async (
           // }
         },
       });
-
-      // const existingAvailability = await RakiAvailability.findOneAndUpdate(
-      //   { rakiId, startTime: utcDate },
-      //   {
-      //     isAvailable: false,
-      //   },
-      //   { new: true }
-      // );
-      //
-      // if (!existingAvailability) {
-      //   return res
-      //     .status(200)
-      //     .json({ message: "No availability found", data: null });
-      // }
     } catch (error: any) {
       console.error("Stream API Error:", error?.message || error);
       await Meeting.findByIdAndDelete(savedMeeting._id);
@@ -541,7 +527,7 @@ export const getMeetingStatistics = async (
         });
     }
 
-    let query: any = {};
+    let query: any = {status: { $ne: MeetingStatus.PENDING }};
     if (dateRange) {
       query.date = {
         $gte: dateRange.start,

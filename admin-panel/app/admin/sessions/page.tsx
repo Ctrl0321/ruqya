@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IMeeting, SessionList } from "@/components/SessionList";
+import {useEffect, useState} from "react";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {IMeeting, SessionList} from "@/components/SessionList";
 import {getMeetings, getMeetingsByRakiId, getRakis, getUsers, MeetingStatus} from "@/lib/api";
-import { toast } from "@/components/ui/use-toast";
+import {toast} from "@/components/ui/use-toast";
 import {useAuth, UserDto} from "@/contexts/AuthContexts";
 import withAuth from "@/hoc/withAuth";
 import {motion} from "framer-motion";
@@ -26,7 +26,7 @@ const SessionsPage=()=> {
                     getRakis(),
                     getUsers(),
                 ]);
-                setMeetings(meetingData.filter((meeting:IMeeting) => meeting.status !== MeetingStatus.CANCELLED));
+                setMeetings(meetingData);
                 setRakis(rakiData || []);
                 setUsers(userData || []);
             } catch (error) {
@@ -69,8 +69,10 @@ const SessionsPage=()=> {
 
     const filteredSessions = sortedSessions.filter((session) => {
         const sessionDate = new Date(session.date);
-        if (activeTab === "completed") return sessionDate < currentDate;
-        if (activeTab === "upcoming") return sessionDate >= currentDate;
+        const isCancelled =session.status === MeetingStatus.CANCELLED
+        if (activeTab === "cancelled") return  isCancelled;
+        if (activeTab === "completed") return (!isCancelled && sessionDate < currentDate);
+        if (activeTab === "upcoming") return (!isCancelled && sessionDate >= currentDate);
         return true;
     });
 
@@ -88,7 +90,7 @@ const SessionsPage=()=> {
         <div className="container mx-auto py-10">
             <h1 className="text-3xl font-bold mb-6">Sessions</h1>
             <Tabs defaultValue="all" onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100 p-1 rounded-lg">
+                <TabsList className="grid w-full grid-cols-4 mb-6 bg-gray-100 p-1 rounded-lg">
                     <TabsTrigger value="all" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
                         All Sessions
                     </TabsTrigger>
@@ -97,6 +99,9 @@ const SessionsPage=()=> {
                     </TabsTrigger>
                     <TabsTrigger value="upcoming" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
                         Upcoming Sessions
+                    </TabsTrigger>
+                    <TabsTrigger value="cancelled" className="data-[state=active]:bg-primary-700 data-[state=active]:text-white data-[state=active]:font-bold">
+                        Cancelled Sessions
                     </TabsTrigger>
                 </TabsList>
 
@@ -107,6 +112,9 @@ const SessionsPage=()=> {
                     <SessionList sessions={filteredSessions} />
                 </TabsContent>
                 <TabsContent value="upcoming">
+                    <SessionList sessions={filteredSessions} />
+                </TabsContent>
+                <TabsContent value="cancelled">
                     <SessionList sessions={filteredSessions} />
                 </TabsContent>
             </Tabs>
