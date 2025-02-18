@@ -8,8 +8,8 @@ function First() {
   useEffect(() => {
     const handleResize = () => {
       const sectionHeight = document.getElementById("first").clientHeight;
-      const newScale = sectionHeight / 290; // Adjust 290 based on the SVG's original height
-      const newTranslateY = -((newScale - 1.5) * 50); // Adjust 50 based on the desired translation
+      const newScale = sectionHeight / 280; // Increase to make the svg smaller
+      const newTranslateY = -((newScale - 1.6) * 50); // Increase to move the svg up
       setSvgScale(newScale);
       setSvgTranslateY(newTranslateY);
     };
@@ -21,7 +21,7 @@ function First() {
   }, []);
 
   return (
-    <section id="first" className="relative w-full h-auto lg:h-60vh bg-RuqyaLightPurple overflow-x-clip">
+    <section id="first" className="relative w-full h-auto lg:h-60vh min-h-[400px] bg-RuqyaLightPurple overflow-x-clip">
       {/* Overlay to prevent background from affecting content */}
       <div className="absolute inset-0 bg-RuqyaLightPurple opacity-50"></div>
 
@@ -56,7 +56,7 @@ function First() {
             {/* Image Container */}
             <div className="flex items-center justify-end mb-3 mt-5 md:mt-0 lg:mb-0 order-1 lg:order-2 animate-fade-in" style={{ animationDelay: "0.7s" }}>
               <div className="relative w-full lg:w-[90vh]">
-                <img src="https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg" alt="men-meditation" className="w-full max-h-[45vh] object-cover object-center scale-x-[-1] lg:rounded-[2.2rem] rounded-[2.2rem]" />
+                <img src="https://miro.medium.com/v2/resize:fit:1200/1*dYuIVOkIcDKIarat5ynsIw.jpeg" alt="men-meditation" className="w-full lg:min-h-[400px] max-h-[45vh] object-cover object-center scale-x-[-1] lg:rounded-[2.2rem] rounded-[2.2rem]" />
                 {/* <div className="h-5 md:h-8 hidden lg:flex"></div> */}
               </div>
             </div>
