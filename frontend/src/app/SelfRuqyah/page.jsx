@@ -78,7 +78,13 @@ export default function RuqyahPage() {
                     const link = document.createElement('a');
                     link.href = '/download/Daily Morning & Evening Adhkar.pdf';
                     link.download = 'Daily Morning & Evening Adhkar.pdf';
-                    link.click();
+                    document.body.appendChild(link);
+                    if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+                      window.open(link.href, '_blank');
+                    } else {
+                      link.click();
+                    }
+                    document.body.removeChild(link);
                   }}
                 >
                 </Button>
@@ -97,7 +103,13 @@ export default function RuqyahPage() {
                     const link = document.createElement('a');
                     link.href = '/download/ruqyah booklet.pdf';
                     link.download = 'ruqyah booklet.pdf';
-                    link.click();
+                    document.body.appendChild(link);
+                    if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+                      window.open(link.href, '_blank');
+                    } else {
+                      link.click();
+                    }
+                    document.body.removeChild(link);
                   }}
                 >
                 </Button>
@@ -116,7 +128,13 @@ export default function RuqyahPage() {
                     const link = document.createElement('a');
                     link.href = '/download/Ruqyah_AUDIO.mp3';
                     link.download = 'Ruqyah_AUDIO.mp3';
-                    link.click();
+                    document.body.appendChild(link);
+                    if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+                      window.open(link.href, '_blank');
+                    } else {
+                      link.click();
+                    }
+                    document.body.removeChild(link);
                   }}
                 >
                   Download
