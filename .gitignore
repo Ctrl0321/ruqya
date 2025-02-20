@@ -57,3 +57,4 @@ module3/.venv/
 module3/__pycache__/
 module3/*.pyc
 api-service/src/utils/auth.json
+api-service/src/app.ts

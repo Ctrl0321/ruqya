@@ -157,6 +157,8 @@ function Raqis() {
     setVisibleReviews((prev) => prev + 5);
   };
 
+  const token = localStorage.getItem("fe-token");
+
   return (
     <div className="min-h-screen  lg:mx-[9%] text-black">
       <nav aria-label="Breadcrumb m-10" className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -182,10 +184,12 @@ function Raqis() {
         <div className="flex flex-col p-2 bg-white rounded-xl -mt-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
           <img id="raqi-profile" src={data.image || displayImage} alt={data.name} className="h-48 w-48 object-cover rounded-lg animate-fade-in" style={{ animationDelay: '0.5s' }} />
           <div className="justify-center mt-4 hidden md:flex m-auto w-full animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen hover:bg-teal-700 text-white w-full rounded-lg py-3 px-3">
-              <MdOutlineMessage className="mr-3 " />
-              Chat with Raqi
-            </button>
+            {token && (
+              <button onClick={() => handleStartChat(data._id)} className="flex items-center justify-center text-center bg-RuqyaGreen hover:bg-teal-700 text-white w-full rounded-lg py-3 px-3">
+                <MdOutlineMessage className="mr-3 " />
+                Chat with Raqi
+              </button>
+            )}
           </div>
         </div>
 
@@ -262,10 +266,11 @@ function Raqis() {
           </div>
         )}
         <div className="flex flex-col items-center justify-center w-full gap-5 pt-3">
-          <Button onClick={() => handleStartChat(data._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
-            <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
-          </Button>
-
+          {token && (
+            <Button onClick={() => handleStartChat(data._id)} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-1 py-3">
+              <MdOutlineMessage className="mr-3 text-3xl" /> Chat with Raqi
+            </Button>
+          )}
           <Button text="Book Now" link={"/Raqi/" + data._id + "/book"} className="flex text-lg items-center bg-RuqyaGreen text-white w-full rounded-lg px-2 py-3" />
         </div>
       </div>
