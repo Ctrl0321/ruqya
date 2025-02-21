@@ -169,10 +169,11 @@ const BookSessionPage = () => {
 
         const meetingResponse = await addSession(sessionIdentifier, finalDateTime, rakiData._id);
 
-        const {rakiEmail,rakiName}=meetingResponse.raki
-        const {userEmail,userName}=meetingResponse.user
+      const { email: rakiEmail, name: rakiName } = meetingResponse.raki;
+      const { email: userEmail, name: userName } = meetingResponse.user;
 
-        const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, rakiData._id,rakiEmail,rakiName,userEmail,userName);
+
+      const sessionResponse = await checkoutSession(sessionIdentifier, finalDateTime, rakiData._id,rakiEmail,rakiName,userEmail,userName);
 
       if (sessionResponse?.url) {
         window.location.href = sessionResponse.url;

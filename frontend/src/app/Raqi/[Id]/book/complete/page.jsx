@@ -15,32 +15,43 @@ const CompletePage = () => {
 
   useEffect(() => {
     const verifySessionId = async () => {
-      const sessionId = searchParams.get('session_id');
-      if (sessionId) {
-        try {
-          const response = await verifySession(sessionId);
-          const {date,rakiEmail,userEmail,rakiName,userName,rakiId}= response.metadata
+      const sessionId = searchParams.get("session_id");
 
+      if (!sessionId) return;
 
-          await updateAvailability(date,rakiId,false)
+      try {
+        const response = await verifySession(sessionId);
 
-          await sendMeetingEmail(
-              userEmail,
-              rakiEmail,
-              rakiName,
-              userName,
-              date,
-              `We look forward to your participation. If you have any questions or need to make changes, please let us know.`,
-              "Your Meeting Has Been Scheduled Successfully"
-          );
-        } catch (error) {
-          console.error('Error verifying session:', error);
+        if (!response?.metadata) {
+          console.error("Invalid response metadata:", response);
+          return;
         }
+
+        const { date, rakiEmail, userEmail, rakiName, userName, rakiId } = response.metadata;
+
+        await updateAvailability(date, rakiId, false);
+
+        console.log("Email testing",userEmail,rakiEmail,rakiName,userName,date)
+
+        await sendMeetingEmail(
+            userEmail,
+            rakiEmail,
+            userName,
+            rakiName,
+            date,
+            `We look forward to your participation. If you have any questions or need to make changes, please let us know.`,
+            "Your Meeting Has Been Scheduled Successfully"
+        );
+      } catch (error) {
+        console.error("Error verifying session:", error);
       }
     };
 
+    // Execute function and prevent race conditions
     verifySessionId();
-  }, [searchParams]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString()]);
 
   return (
       <div className="min-h-screen flex items-center justify-center">

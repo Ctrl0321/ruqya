@@ -18,7 +18,7 @@ export default function LayoutClient({ children }) {
   
   
   useEffect(() => {
-    if (pathname === "/login" || pathname === "/signup" || pathname === "/meeting" || meetingRegex.test(pathname)) {
+    if (pathname === "/login" || pathname === "/signup" || pathname === "/meeting" || pathname === "/ForgotPassword" || meetingRegex.test(pathname)) {
       setShowFooter(false);
     } else {
       setShowFooter(true);
@@ -26,7 +26,7 @@ export default function LayoutClient({ children }) {
   }, [pathname]);
 
   useEffect(() => {
-    if (pathname === "/Meeting" || pathname === "/login"  || pathname === "/signup" || meetingRegex.test(pathname)) {
+    if (pathname === "/Meeting" || pathname === "/login"  || pathname === "/signup" || pathname === "/ForgotPassword"  || meetingRegex.test(pathname)) {
       setShowHeader(false);
     } else {
       setShowHeader(true);

@@ -126,6 +126,46 @@ export const changePassword = async (
   }
 };
 
+export const resetPassword = async (
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> => {
+  try {
+    const { email, newPassword } = req.body;
+
+
+    const user = await User.findOne({email});
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    user.password = newPassword;
+    await user.save();
+
+    await client.upsertUsers([
+      {
+        id: user.id,
+        name: user.name,
+        role: getStreamAdminRole({ role: user.role }),
+        image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`,
+      },
+    ]);
+
+    await serverClientChat.upsertUsers([
+      {
+        id: user.id,
+        name: user.name,
+        role: getStreamAdminRole({ role: user.role }),
+        image: `https://getstream.io/random_svg/?id=${user.id}&name=${user.name}`,
+      },
+    ]);
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 export const updateUserRole = async (
   req: AuthenticatedRequest,
   res: Response
@@ -186,6 +226,26 @@ export const getUserById = async (
     }
 
     res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const getUserByEmail = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({email});
+
+    if (!user) {
+      res.status(200).json({status:false});
+      // res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json({ status: true, user });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

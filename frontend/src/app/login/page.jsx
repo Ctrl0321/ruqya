@@ -129,7 +129,10 @@ function Login() {
 
               <BorderInput label="Password" type="password" name="password" placeholder="Enter your password" className="text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-              <div className="mt-5">
+              <p style={{margin:"15px 0 0 0"}} className="m-0 text-sm cursor-pointer text-[#474747]" onClick={() => router.push("/ForgotPassword")}>Forgot Password?</p>
+
+
+              <div className="">
                 <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3" onClick={handleSubmit}>
                   Login
                 </button>

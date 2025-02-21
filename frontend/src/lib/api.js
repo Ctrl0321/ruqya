@@ -67,6 +67,8 @@ export const verifySession = async (sessionId) => {
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
 
+export const getUserProfileWithEmail = async (email) => (await api.get(`ruqya-api/user/email/${email}`));
+
 export const getOwnProfile = async () => (await api.get("ruqya-api/user/user-profile")).data;
 
 export const getMyBookings = async () => (await api.get(`ruqya-api/meeting/get-meetings/user/?timeZone=${userTimeZone}`)).data;
@@ -80,6 +82,17 @@ export const changePassword = async (currentPassword, newPassword) =>
       newPassword,
     })
   ).data;
+
+export const resetPassword = async (
+    email,
+    newPassword
+) =>
+    (
+        await api.post("ruqya-api/user/reset-password", {
+            email,
+            newPassword,
+        })
+    ).data;
 
 export const getUsers = async () => (await api.get("ruqya-api/user/users")).data;
 

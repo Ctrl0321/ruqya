@@ -48,7 +48,7 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
                 rakiName:rakiName?.toString(),
                 userEmail:userEmail?.toString(),
                 userName:userName?.toString(),
-                timeZone:userName?.toString()
+                timeZone:timeZone?.toString()
             }
         });
 
