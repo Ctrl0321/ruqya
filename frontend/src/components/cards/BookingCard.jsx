@@ -92,7 +92,7 @@ const BookingCard = ({ Booking, selectedDate, selectedTime }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl md:max-w-[450px] text-left">
+    <div className="bg-white rounded-xl md:max-w-[400px] mt-10 md:mt-0 text-left">
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-4 mb-2">
           <div className="col-span-3 rounded-lg">
@@ -110,15 +110,38 @@ const BookingCard = ({ Booking, selectedDate, selectedTime }) => {
                   {getCountryLabel(Booking.country)}
                 </p>
               )}
-              <p className="text-gray-600 flex items-center my-1 text-xs rounded-md">
+              <p className="text-gray-600 flex items-center my-1 text-xs rounded-md relative z-10">
                 {Booking.languages ? (
-                  Booking.languages.map((lang, index) => (
-                    <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] rounded-md">
-                      {getLanguageLabel(lang)}
-                    </span>
-                  ))
+                  Booking.languages.length > 2 ? (
+                    <div className="md:w-36 w-[120px] overflow-hidden">
+                      <div className="languages-scroll animate">
+                        <div className="flex gap-1 md:gap-2 pr-4">
+                          {Booking.languages.map((lang, index) => (
+                            <span key={index} className="px-1 md:px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap flex-shrink-0 text-[11px] md:text-xs">
+                              {getLanguageLabel(lang)}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex gap-1 md:gap-2 pr-4">
+                          {Booking.languages.map((lang, index) => (
+                            <span key={`clone-${index}`} className="px-1 md:px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap flex-shrink-0 text-[11px] md:text-xs">
+                              {getLanguageLabel(lang)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-1 md:gap-2">
+                      {Booking.languages.map((lang, index) => (
+                        <span key={index} className="px-1 md:px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap text-[11px] md:text-xs">
+                          {getLanguageLabel(lang)}
+                        </span>
+                      ))}
+                    </div>
+                  )
                 ) : (
-                  <span className="px-4 py-1 bg-[#F4D6AA99] rounded-md">English</span>
+                  <span className="px-2 md:px-4 py-1 bg-[#F4D6AA99] rounded-md text-[11px] md:text-xs">English</span>
                 )}
               </p>
               

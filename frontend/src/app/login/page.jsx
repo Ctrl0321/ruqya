@@ -96,6 +96,7 @@ function Login() {
   return (
     <main className="min-h-screen flex items-center justify-center relative text-sm md:text-lg">
       <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover" />
+
       <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
       {/* <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div> */}
       <div className="w-full flex items-center justify-center relative z-10">
@@ -116,7 +117,9 @@ function Login() {
           <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-              <Image src={"/images/logo.png"} alt="Prophetic Ruqyah" width={200} height={50} className="h-12 w-auto" />
+              <Link href="/">
+                <Image src={"/images/logo.png"} alt="Prophetic Ruqyah" width={200} height={50} className="h-12 w-auto" />
+              </Link>
             </div>
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 pb-3 w-full border-b-2">Login</h1>

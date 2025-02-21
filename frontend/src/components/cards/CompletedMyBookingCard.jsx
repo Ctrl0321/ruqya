@@ -111,15 +111,38 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
                   {getCountryLabel(rakiData.country)}
                 </p>
               )}
-              <p className="text-gray-600 flex items-center my-1 text-xs rounded-md">
+              <p className="text-gray-600 flex items-center my-1 text-xs rounded-md relative z-10">
                 {rakiData?.languages ? (
-                  rakiData.languages.map((lang, index) => (
-                    <span key={index} className="px-2 py-1 mr-1 bg-[#F4D6AA99] font-bold rounded-md">
-                      {getLanguageLabel(lang)}
-                    </span>
-                  ))
+                  rakiData.languages.length > 2 ? (
+                    <div className="w-[155px] overflow-hidden">
+                      <div className="languages-scroll animate">
+                        <div className="flex gap-2 pr-4">
+                          {rakiData.languages.map((lang, index) => (
+                            <span key={index} className="px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap flex-shrink-0">
+                              {getLanguageLabel(lang)}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 pr-4">
+                          {rakiData.languages.map((lang, index) => (
+                            <span key={`clone-${index}`} className="px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap flex-shrink-0">
+                              {getLanguageLabel(lang)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      {rakiData.languages.map((lang, index) => (
+                        <span key={index} className="px-2 py-1 bg-[#F4D6AA99] rounded-md whitespace-nowrap">
+                          {getLanguageLabel(lang)}
+                        </span>
+                      ))}
+                    </div>
+                  )
                 ) : (
-                  <span className="px-4 py-1 bg-[#F4D6AA99] font-bold rounded-md">English</span>
+                  <span className="px-4 py-1 bg-[#F4D6AA99] rounded-md">English</span>
                 )}
               </p>
               <p className="text-gray-600 flex items-center my-2">

@@ -127,13 +127,9 @@ function SignUp() {
           <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-              <Image
-                src={"/images/logo.png"}
-                alt="Prophetic Ruqyah"
-                width={200}
-                height={50}
-                className="h-12 w-auto"
-              />
+            <Link href="/">
+                <Image src={"/images/logo.png"} alt="Prophetic Ruqyah" width={200} height={50} className="h-12 w-auto" />
+              </Link>
             </div>
 
             <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold pb-3 border-b-2">Registration</h1>

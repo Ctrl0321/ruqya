@@ -19,7 +19,7 @@
     "@stripe/stripe-js": "^5.6.0",
     "axios": "^1.7.9",
     "emailjs": "^4.0.3",
-    "firebase": "^11.2.0",
+    "firebase": "^11.3.1",
     "framer-motion": "^12.0.6",
     "iconsax-react": "^0.0.8",
     "lucide-react": "^0.471.1",

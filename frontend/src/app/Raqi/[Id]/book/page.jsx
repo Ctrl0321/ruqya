@@ -21,6 +21,7 @@ const BookSessionPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
     if (Id) {
@@ -39,6 +40,13 @@ const BookSessionPage = () => {
   }, [Id]);
 
   useEffect(() => {
+    const upcomingDates = getUpcomingDates();
+    if (upcomingDates.length > 0) {
+      handleDateChange(upcomingDates[0]); // Auto-click the first date
+    }
+  }, []);
+
+  useEffect(() => {
     // Clear error message after 3 seconds
     if (showError) {
       const timer = setTimeout(() => {
@@ -51,6 +59,7 @@ const BookSessionPage = () => {
   useEffect(() => {
     const fetchAvailability = async () => {
       if (selectedDate) {
+        setLoading(true); // Start loading
         try {
           const response = await getRakiAvailability(Id, getLocalFormattedDate(selectedDate));
           
@@ -62,10 +71,13 @@ const BookSessionPage = () => {
             setAvailableTimes(response
                 .filter(slot => slot.isAvailable)
                 .map(slot => slot.startTime)
-            );          }
+            );          
+          }
         } catch (error) {
           console.error("Error fetching availability:", error);
           setAvailableTimes([]);  
+        } finally {
+          setLoading(false); // End loading
         }
       } else {
         setAvailableTimes([]);
@@ -198,6 +210,40 @@ const BookSessionPage = () => {
     });
   };
 
+  const LoadingDots = () => (
+    <div className="flex justify-center items-center mt-4">
+      <div className="dot bg-RuqyaGreen"></div>
+      <div className="dot bg-RuqyaGreen"></div>
+      <div className="dot bg-RuqyaGreen"></div>
+      <style jsx>{`
+        .dot {
+          width: 8px;
+          height: 8px;
+          margin: 0 4px;
+          border-radius: 50%;
+          animation: dot-blink 1s infinite;
+        }
+        .dot:nth-child(1) {
+          animation-delay: 0s;
+        }
+        .dot:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+        @keyframes dot-blink {
+          0%, 100% {
+            opacity: 0.2;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </div>
+  );
+
   return (
     <div className="mx-[9%] py-4 min-h-screen flex flex-col md:flex-row relative">
       {showError && <div className="fixed top-0 left-0 right-0 z-50">
@@ -230,21 +276,25 @@ const BookSessionPage = () => {
           </div>
           <div ref={timeRef}>
             <label className="block text-gray-700 mt-14">Select Time:</label>
-            <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 place-items-center">
-              {getAvailableTimes().map((time, index) => (
-                <div 
-                  key={index} 
-                  className={`p-3 border rounded-md text-center mt-2 w-full ${
-                    time === "No available time slots" 
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed col-span-3 md:col-span-4" 
-                      : `cursor-pointer ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`
-                  }`}
-                  onClick={() => time !== "No available time slots" && handleTimeChange({ target: { value: time } })}
-                >
-                  {time}
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <LoadingDots />
+            ) : (
+              <div className="mt-3 grid grid-cols-3 md:grid-cols-4 gap-2 place-items-center">
+                {getAvailableTimes().map((time, index) => (
+                  <div 
+                    key={index} 
+                    className={`p-3 border rounded-md text-center mt-2 w-full ${
+                      time === "No available time slots" 
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed col-span-3 md:col-span-4" 
+                        : `cursor-pointer ${selectedTime === time ? "bg-RuqyaGreen text-white" : "bg-LightGray"}`
+                    }`}
+                    onClick={() => time !== "No available time slots" && handleTimeChange({ target: { value: time } })}
+                  >
+                    {time}
+                  </div>
+                ))}
+              </div>
+            )}
             {errors.time && <p className="text-red-500 text-sm">{errors.time}</p>}
           </div>
         </form>
@@ -252,7 +302,7 @@ const BookSessionPage = () => {
 
 
 
-      <div className="w-full md:w-1/2 md:mx-5 order-2" ref={bookingRef}>
+      <div className="w-full md:w-1/2 md:mx-5 order-2 mt-10 md:mt-0 max-w-[450px]" ref={bookingRef}>
         <div className="border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="border-b mb-3 pb-5 text-2xl">Summary</h3>
           {rakiData ? (
