@@ -2,9 +2,9 @@ import emailjs from "@emailjs/browser";
 import { toast } from "@/components/ui/toast";
 
 interface EmailParams {
-    name?: string;
+    name: string;
     user_email: string;
-    raki_email:string;
+    raki_email?:string;
     raki_name?:string;
     otp?: string;
     message?: string;
@@ -12,6 +12,8 @@ interface EmailParams {
     reason?: string;
     heading:string;
 }
+
+const resetHeading="We received a request to reset the password for your Ruqya website. To proceed with resetting your password, please use the following 6-digit verification code:"
 
 export const sendEmail = async (
     templateID: string,
@@ -46,9 +48,9 @@ export const sendEmail = async (
 
 
 // Send OTP Email
-// export const sendOtpEmail = async (email: string, otp: string,heading:string) => {
-//     return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, { email, otp,heading });
-// };
+export const sendOtpEmail = async (user_email: string, otp: string,heading:string=resetHeading,name:string) => {
+    return sendEmail(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_OTP!, {user_email, name, otp,heading });
+};
 
 // Send Verification Email
 // export const sendVerificationEmail = async (email: string, name: string,heading:string) => {

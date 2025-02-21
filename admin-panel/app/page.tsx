@@ -65,7 +65,7 @@ export default function SignIn() {
             }}
         >
             <div className="flex flex-col justify-center items-center bg-opacity-30 shadow-xl backdrop-blur-lg max-w-full sm:max-w-3xl w-full bg-white sm:shadow-box sm:rounded-3xl py-10 sm:py-16 sm:mx-5 sm:my-auto px-4 sm:px-0">
-                <img alt={'logo'} loading={'lazy'} width={180} height={105} data-nimg="1" src="/Logo.png" />
+                <img  onClick={() => router.push("/")} alt={'logo'} loading={'lazy'} width={180} height={105} data-nimg="1" src="/Logo.png" />
                 <h1 className="text-2xl font-extrabold my-6 text-center text-secondary-50">Welcome to Ruqya Admin</h1>
                 <form onSubmit={handleSubmit} className="w-3/5">
                     <div>
@@ -100,10 +100,11 @@ export default function SignIn() {
                                 <Eye size="15" color="#474747" />}
                         </button>
                     </div>
+                    <p className="mt-3 text-sm cursor-pointer text-[#474747]" onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     <button
                         disabled={isLoading}
                         type="submit"
-                        className="w-full flex justify-center mt-10 py-2 px-6 h-10 border border-transparent rounded-2xl shadow-sm text-m font-bold text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:to-primary-400"
+                        className="w-full flex justify-center mt-5 py-2 px-6 h-10 border border-transparent rounded-2xl shadow-sm text-m font-bold text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:to-primary-400"
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         {isLoading ? 'Continue with email ...' : 'Continue with email'}
