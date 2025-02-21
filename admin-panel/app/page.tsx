@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,6 +6,7 @@ import { login } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContexts';
+import { Eye, EyeSlash } from 'iconsax-react';
 
 interface LoginForm {
     email: string;
@@ -16,6 +17,7 @@ export default function SignIn() {
     const { login: loginAuth } = useAuth();
     const [formData, setFormData] = useState<LoginForm>({ email: '', password: '' });
     const [isLoading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,16 +79,26 @@ export default function SignIn() {
                             className="mt-1 block w-full h-12 px-3 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:bg-primary-50 focus:border-primary-400"
                         />
                     </div>
-                    <div>
+                    <div className="relative mt-5">
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             id="password"
                             name="password"
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
-                            className="mt-5 block w-full h-12 px-3 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:bg-primary-50 focus:border-primary-400"
+                            className="block w-full h-12 px-3 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:bg-primary-50 focus:border-primary-400 pr-10"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-5 flex items-center text-gray-600"
+                        >
+                            {showPassword ?
+                                <EyeSlash size="15"  color="#474747"/>
+                                :
+                                <Eye size="15" color="#474747" />}
+                        </button>
                     </div>
                     <button
                         disabled={isLoading}
