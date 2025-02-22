@@ -16,6 +16,7 @@ import { useChat } from "@/components/getStream/chat/ChatContextProvider";
 import { getUserProfile, getRakis, getRakiAvailability, getReviews } from "@/lib/api";
 import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import PleaseLogin from "@/components/ui/popup/pleaseLogin";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -34,7 +35,13 @@ function Raqis() {
     reviews: [],
   });
   const [visibleReviews, setVisibleReviews] = useState(5);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const router = useRouter();
+
+  const handleLogin = () => {
+    // Navigate to login page or show login form
+    router.push('/login');
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -145,10 +152,9 @@ function Raqis() {
   const handleBookNow = () => {
     const token = localStorage.getItem("fe-token");
     if (!token) {
-      alert("Please login to continue.");
+      setShowLoginPopup(true);
       saveRedirectPath(`/Raqi/${data._id}`);
-      router.push("/login");
-      return;
+      return; 
     }
     router.push(`/Raqi/${data._id}/book`);
   };
@@ -403,6 +409,11 @@ function Raqis() {
       </div>
       <Forth raqiData={raqiData} title="Similar Raqis" className="mx-5 md:mx-9 animate-fade-in" style={{ animationDelay: '1.3s' }} />
       <ChatWidgetWrapper className="animate-fade-in" style={{ animationDelay: '1.4s' }} />
+      <PleaseLogin 
+        isOpen={showLoginPopup}
+        onClose={() => setShowLoginPopup(false)}
+        onLogin={handleLogin}
+      />
     </div>
   );
 }
