@@ -75,6 +75,8 @@ export const getMyBookings = async () => (await api.get(`ruqya-api/meeting/get-m
 
 export const updateUserProfile = async (profileData) => (await api.post("ruqya-api/user/update", profileData)).data;
 
+export const updateUserEmailVerification = async (email,isEmailVerified) => (await api.post("ruqya-api/user/update-emailVerification", {email,isEmailVerified})).data;
+
 export const changePassword = async (currentPassword, newPassword) =>
   (
     await api.post("ruqya-api/user/change-password", {

@@ -74,6 +74,40 @@ export const updateUser = async (
   }
 };
 
+
+export const updateUserEmailVerification = async (
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> => {
+  try {
+    const {
+      isEmailVerified,
+      email
+    } = req.body;
+
+
+    const user = await User.findOne({email});
+
+    if (!user) {
+      res.status(400).json({ message: "User not found" });
+      return;
+    }
+
+    if (isEmailVerified) user.isEmailVerified = isEmailVerified;
+
+
+    await user.save();
+
+    res.status(200).json({
+      user,
+      success:true
+    });
+  } catch (error) {
+    console.error("Error updating user email verification:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 export const changePassword = async (
   req: AuthenticatedRequest,
   res: Response

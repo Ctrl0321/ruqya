@@ -7,7 +7,7 @@ import { BorderInput } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import {sendOtpEmail} from "@/lib/EmailService";
-import {googleSignup, signup} from "@/lib/api";
+import {googleSignup, signup, updateUserEmailVerification} from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 
@@ -90,7 +90,10 @@ function SignUp() {
     }
 
     if (enteredOtp === generatedOtp) {
-      router.push("/");
+      const response = await updateUserEmailVerification(formData.email,true)
+      if (response.data.success) {
+        router.push("/");
+      }
     } else {
       setError("Invalid OTP. Please try again.");
     }
@@ -157,7 +160,7 @@ function SignUp() {
 
               {!otpSent ? (
                   <form onSubmit={handleSubmit} className="space-y-8 ">
-                    <BorderInput type="text" name="name" label="Full Name" value={formData.name} onChange={handleChange} placeholder="Enter your full name" className="text-sm " />
+                    <BorderInput type="text" name="name" label="Full Name" value={formData.name} onChange={handleChange} placeholder="Enter your full name" className="text-sm !sm:w-[400px] md:w-[350px] " />
                     <BorderInput type="email" name="email" label="Email Address" value={formData.email} onChange={handleChange} placeholder="Enter your Email" className="text-sm" />
                     <BorderInput type="password" name="password" label="Password" value={formData.password} onChange={handleChange} placeholder="Create a Password" className="text-sm" />
                     <BorderInput type="password" name="confirmPassword" label="Confirm Password" value={formData.confirmPassword} onChange={handleChange} placeholder="Re-enter your password" className="text-sm" />
