@@ -49,7 +49,7 @@ function Login() {
 
     if (enteredOtp === generatedOtp) {
       const response = await updateUserEmailVerification(email,true)
-      if (response.data.success) {
+      if (response.success) {
         const redirectPath = localStorage.getItem("redirectPath") || "/";
         router.push(redirectPath);
       }

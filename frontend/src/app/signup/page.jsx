@@ -91,7 +91,7 @@ function SignUp() {
 
     if (enteredOtp === generatedOtp) {
       const response = await updateUserEmailVerification(formData.email,true)
-      if (response.data.success) {
+      if (response.success) {
         router.push("/");
       }
     } else {
