@@ -1,15 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {BorderInput} from "@/components/ui/input/input";
+import { BorderInput } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
-import { signup, googleSignup } from "@/lib/api";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
+import {sendOtpEmail} from "@/lib/EmailService";
+import {signup} from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
-
 
 function SignUp() {
   const router = useRouter();
@@ -17,50 +17,82 @@ function SignUp() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const otpRefs = useRef([]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error when user types
+    setError("");
+  };
+
+  const generateOtp = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
-    
-    // Validation
+    setLoading(true);
+
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError("All fields are required");
+      setLoading(false);
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
       return;
     }
-
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long");
+      setLoading(false);
       return;
     }
 
+    const newOtp = generateOtp();
+    setGeneratedOtp(newOtp);
+
     try {
-      setLoading(true);
       await signup(formData.email, formData.name, formData.password);
-      setSuccess(true);
-      setError({message: "Registration successful!", type:"success"});
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      await sendOtpEmail(formData.email, newOtp,undefined,formData.name);
+      setOtpSent(true);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create account");
+      setError(err.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOtpChange = (index, value) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) otpRefs.current[index + 1]?.focus();
+  };
+
+  const handleOtpVerify = async (e) => {
+    e.preventDefault();
+    const enteredOtp = otp.join("");
+
+    if (enteredOtp.length !== 6) {
+      setError("Enter all 6 digits of the OTP");
+      return;
+    }
+
+    if (enteredOtp === generatedOtp) {
+      router.push("/");
+    } else {
+      setError("Invalid OTP. Please try again.");
     }
   };
 
@@ -105,96 +137,54 @@ function SignUp() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center  relative">
-      <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover" />
-      <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
-      {/* <div className="absolute inset-0 z-0 w-full h-full top-2 bg-gradient-to-t from-white via-transparent"></div> */}
-      <div className="w-full flex items-center justify-center relative z-10 ">
-        {/* Left side - Image */}
-        <div className="hidden lg:block">
-          {/* <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sign%20up-s7G4xo2FweLQ6qO3qcwN2jivBqbEec.png"
-            alt="Person praying"
-            width={600}
-            height={800}
-            className="object-cover"
-            priority
-          /> */}
-        </div>
-
-        {/* Center side - Form */}
-        <div className="w-full max-w-md mx-auto md:mt-10 animate-fade-in" style={{ animationDelay: `500ms` }}>
-          <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
-            {/* Logo */}
-            <div className="flex justify-center mb-6">
-            <Link href="/">
-                <Image src={"/images/logo.png"} alt="Prophetic Ruqyah" width={200} height={50} className="h-12 w-auto" />
-              </Link>
-            </div>
-
-            <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold pb-3 border-b-2">Registration</h1>
-
-            {error && <ErrorMessage message={error} type={success ? "success" : "error"} />}
-
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="relative mb-4">
-                  <BorderInput
-                    type="text"
-                    name="name"
-                    label="Full Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your full name here"
-                    className="text-sm"
-                  />
+      <main className="min-h-screen flex items-center justify-center relative">
+        <Image src={"/svg/auth-bg.svg"} alt="Background" layout="fill" objectFit="cover" className="absolute inset-0 z-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 z-0 w-full h-full bg-gradient-to-t from-white via-transparent"></div>
+        <div className="w-full  flex items-center justify-center relative z-10">
+          <div className="w-fit p-5   mx-auto md:mt-10 animate-fade-in" style={{ animationDelay: `500ms` }}>
+            <div className="bg-white rounded-3xl p-8 shadow-xl m-5">
+              <div className="flex justify-center mb-6">
+                <Link href="/">
+                  <Image src={"/images/logo.png"} alt="Logo" width={200} height={50} className="h-12 w-auto" />
+                </Link>
               </div>
 
-              <div className="relative mb-4">
-                  <BorderInput
-                    type="email"
-                    name="email"
-                    label="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your Email Address here"
-                    className="text-sm"
-                  />
-              </div>
+              <h1 className="text-2xl text-gray-700 text-center mb-8 font-bold pb-3 border-b-2">
+                {otpSent ? "Verify Your Email" : "Registration"}
+              </h1>
 
-              <div className="relative mb-4">
-                  <BorderInput
-                    type="password"
-                    name="password"
-                    label="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Create a Password"
-                    className="text-sm"
-                  />
-              </div>
+              {error && <ErrorMessage message={error} type="error" />}
 
-              <div className="relative mb-4">
-                  <BorderInput
-                    type="password"
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Re-enter your created password"
-                    className="text-sm"
-                  />
-              </div>
+              {!otpSent ? (
+                  <form onSubmit={handleSubmit} className="space-y-8 ">
+                    <BorderInput type="text" name="name" label="Full Name" value={formData.name} onChange={handleChange} placeholder="Enter your full name" className="text-sm " />
+                    <BorderInput type="email" name="email" label="Email Address" value={formData.email} onChange={handleChange} placeholder="Enter your Email" className="text-sm" />
+                    <BorderInput type="password" name="password" label="Password" value={formData.password} onChange={handleChange} placeholder="Create a Password" className="text-sm" />
+                    <BorderInput type="password" name="confirmPassword" label="Confirm Password" value={formData.confirmPassword} onChange={handleChange} placeholder="Re-enter your password" className="text-sm" />
 
-              <div className="mt-10">
-                <Button
-                  type="submit"
-                  bg={true}
-                  text={loading ? "Signing up..." : "Sign Up"}
-                  color={"RuqyaGreen"}
-                  disabled={loading}
-                  className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5"
-                />
-              </div>
+                    <Button type="submit" bg={true} text={loading ? "Signing up..." : "Sign Up"} color={"RuqyaGreen"} disabled={loading} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
+                  </form>
+              ) : (
+                  <form onSubmit={handleOtpVerify} className="space-y-8">
+                    <p className="text-sm text-[#474747] text-center mt-2 mb-7 font-bold">Enter the OTP sent to your email to verify your identity.</p>
+                    <div className="flex justify-center gap-3 ">
+                      {otp.map((digit, index) => (
+                          <input
+                              key={index}
+                              type="text"
+                              value={digit}
+                              maxLength={1}
+                              style={{border:"1px solid #474747"}}
+                              className="w-11 h-11 mx-2 !border !border-gray-300 text-center text-lg font-bold rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                              onChange={(e) => handleOtpChange(index, e.target.value)}
+                              ref={(el) => (otpRefs.current[index] = el)}
+                          />
+                      ))}
+                    </div>
+                    <Button type="submit" bg={true} text={loading ? "Verifying..." : "Verify"} color={"RuqyaGreen"} disabled={loading} className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-full py-3 mt-5" />
+                  </form>
+              )}
+
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -205,24 +195,24 @@ function SignUp() {
               </div>
               <div className="mt-5">
                 <button
-                  type="button"
-                  className="login-with-google-btn w-full rounded-lg"
-                  onClick={handleGoogleSignUp}
+                    type="button"
+                    className="login-with-google-btn w-full rounded-lg"
+                    onClick={handleGoogleSignUp}
                 >
                   Sign Up with Google
                 </button>
               </div>
+
               <p className="text-center text-sm text-gray-600 mt-8">
-                Already have an Account?{" "}
+                Already have an account?{" "}
                 <Link href="/login" className="text-blue-600 hover:underline">
                   Log In
                 </Link>
               </p>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
   );
 }
 
