@@ -22,16 +22,16 @@ export default function RuqyahPage() {
         <div className="w-full md:w-64">
           <button
             onClick={() => setIsNavOpen(!isNavOpen)}
-            className="w-full flex items-center justify-between p-4 bg-RuqyaLightPurple rounded-lg  md:hidden"
+            className="w-full flex items-center justify-between p-4 bg-RuqyaLightPurple rounded-lg mb-2 md:hidden"
           >
             <span className="font-semibold">Content</span>
-            <ChevronDownIcon className={`w-5 h-5 transition-transform ${isNavOpen ? 'rotate-180' : ''}`} />
+            <ChevronDownIcon className={`w-5 transition-transform ${isNavOpen ? 'rotate-180' : ''}`} />
           </button>
           <nav className={`
-            overflow-hidden bg-RuqyaLightPurple  rounded-lg
-            ${isNavOpen ? 'max-h-96' : 'max-h-0 md:max-h-96'}
-            transition-all duration-300 ease-in-out
-            md:h-96 md:block
+            overflow-hidden bg-RuqyaLightPurple rounded-lg
+            ${isNavOpen ? 'h-[320px]' : 'h-0'}
+            transition-[height] duration-300 ease-in-out
+            md:h-auto md:block
           `}>
             <div className="p-4">
               <h2 className="text-lg font-semibold mb-4 hidden md:block">Content</h2>
