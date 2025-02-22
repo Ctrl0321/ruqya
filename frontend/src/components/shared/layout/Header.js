@@ -71,11 +71,22 @@ const Header = () => {
         router.push("/login");
       }
     } else {
-      // Optionally, add logic to check if the token is expired
-      // If expired, show error message and redirect to login page
-      const isTokenExpired = false;
-      if (isTokenExpired) {
-        setError({ message: "Session expired. Please login again", type: "error" });
+      try {
+        // Decode the token (it's the part between the first and second dots)
+        const tokenParts = token.split('.');
+        const decodedToken = JSON.parse(atob(tokenParts[1]));
+        
+        // Check if token is expired
+        const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
+        if (decodedToken.exp < currentTime) {
+          setError({ message: "Session expired. Please login again", type: "error" });
+          localStorage.removeItem("fe-token");
+          setTimeout(() => {
+            router.push("/login");
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
         localStorage.removeItem("fe-token");
         router.push("/login");
       }
