@@ -78,6 +78,8 @@ export const loginUser = async (req: Request, res: Response) => {
                 email: user.email,
                 role: user.role,
                 token: generateToken(user.id, user.role),
+                isEmailVerified:user.isEmailVerified
+
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
