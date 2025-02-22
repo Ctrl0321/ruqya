@@ -150,7 +150,7 @@ const Header = () => {
                   )}
                 </button>
                 {profileDropdownOpen && localStorage.getItem("fe-token") && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50 transition-all duration-300 ease-in-out transform opacity-0 translate-y-4" style={{ opacity: profileDropdownOpen ? 1 : 0, transform: profileDropdownOpen ? 'translateY(0)' : 'translateY(16px)' }}>
                     <Link href="/MyProfile" className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center" onClick={handleLinkClick}>
                       <FaEdit className="w-4 h-4 mr-2" />
                       My Profile
