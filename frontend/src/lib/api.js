@@ -64,6 +64,20 @@ export const verifySession = async (sessionId) => {
     }
 };
 
+const handleApiError = (error) => {
+  const token = localStorage.getItem("token");
+  if (error.response && error.response.status === 401 && token) {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  }
+  return Promise.reject(error);
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  handleApiError
+);
+
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
 
