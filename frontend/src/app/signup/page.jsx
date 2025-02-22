@@ -7,7 +7,7 @@ import { BorderInput } from "@/components/ui/input/input";
 import Button from "@/components/ui/buttons/DefaultButton";
 import { ErrorMessage } from "@/components/shared/common/ErrorMessage";
 import {sendOtpEmail} from "@/lib/EmailService";
-import {signup} from "@/lib/api";
+import {googleSignup, signup} from "@/lib/api";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 
