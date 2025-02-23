@@ -140,7 +140,7 @@ function Login() {
     } catch (error) {
       console.error("Google Sign-in Error:", error);
       setError({
-        message: error.response?.data?.message || error.message || "Failed to sign in with Google",
+        message: "Failed to sign in with Google",
         type: "error",
       });
     } finally {

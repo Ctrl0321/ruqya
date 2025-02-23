@@ -42,6 +42,11 @@ const Header = () => {
     });
   };
 
+  const handleLoginClick = () => {
+    localStorage.setItem("redirectPath", pathname);
+    router.push("/login");
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -131,7 +136,7 @@ const Header = () => {
                   onClick={() => {
                     const token = localStorage.getItem("fe-token");
                     if (!token) {
-                      router.push("/login");
+                      handleLoginClick();
                     } else {
                       setProfileDropdownOpen(!profileDropdownOpen);
                     }
@@ -205,7 +210,7 @@ const Header = () => {
                     onClick={() => {
                       const token = localStorage.getItem("fe-token");
                       if (!token) {
-                        router.push("/login");
+                        handleLoginClick();
                       } else {
                         setMobileProfileDropdownOpen(!mobileProfileDropdownOpen);
                       }
