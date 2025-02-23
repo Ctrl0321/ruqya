@@ -36,7 +36,6 @@ function Login() {
         setLoading(false);
         setError({ message: response.message || "Invalid login credentials", type: "error" });
       }
-      console.error("Invalid response from server", response);
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -85,7 +84,7 @@ function Login() {
     } catch (error) {
       console.error("Google Sign-in Error:", error);
       setError({
-        message: error.response?.data?.message || error.message || "Failed to sign in with Google",
+        message: "Failed to sign in with Google",
         type: "error",
       });
     } finally {

@@ -98,7 +98,7 @@ function SignUp() {
       }
     } catch (error) {
       console.error("Firebase Error:", error);
-      setError(error.response?.data?.message || "Failed to sign up with Google");
+      setError("Failed to sign up with Google");
     } finally {
       setLoading(false);
     }
