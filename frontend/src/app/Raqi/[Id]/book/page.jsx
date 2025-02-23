@@ -176,7 +176,7 @@ const BookSessionPage = () => {
       const sessionIdentifier = `${rakiData.name}'s Session`;
 
 
-        const meetingResponse = await addSession(sessionIdentifier, finalDateTime, rakiData._id);
+      const meetingResponse = await addSession(sessionIdentifier, finalDateTime, rakiData._id);
 
       const { email: rakiEmail, name: rakiName } = meetingResponse.raki;
       const { email: userEmail, name: userName } = meetingResponse.user;

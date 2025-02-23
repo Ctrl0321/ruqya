@@ -23,13 +23,19 @@ const userTimeZone = getUserTimeZone();
 // Authentication
 export const login = async (email, password) => {
   const response = await api.post("ruqya-api/auth/login", { email, password });
-  localStorage.setItem("fe-token", response.data.token);
+  if (response.data.isEmailVerified){
+      localStorage.setItem("fe-token", response.data.token);
+  }
+  else {
+      sessionStorage.setItem("fe-token", response.data.token);
+
+  }
   return response.data;
 };
 
 export const signup = async (email, name, password) => {
   const response = await apiSignup.post("ruqya-api/auth/register", { email, name, password });
-  localStorage.setItem("fe-token", response.data.token);
+  sessionStorage.setItem("fe-token", response.data.token);
   return response.data;
 };
 

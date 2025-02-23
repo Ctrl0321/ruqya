@@ -159,7 +159,7 @@ export const requestPayment = async (meetingId: string) =>
 
 
 export const rescheduleSession = async (meetingId: string, newDate: string) =>
-    (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate })).data;
+    (await api.post("ruqya-api/meeting/reschedule", { meetingId, newDate,timeZone:userTimeZone })).data;
 
 // Reviews
 export const getReviews = async (rakiId: string) =>
