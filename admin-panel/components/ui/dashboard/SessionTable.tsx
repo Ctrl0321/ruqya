@@ -28,10 +28,11 @@ interface SessionTableProps {
     rakiData: UserDto[];
     setCancelSessionId: (id: string | null) => void;
     setRescheduleSessionId: (id: string | null) => void;
+    setSessionRakiId: (id: string | null) => void;
     isSuperAdmin:boolean
 }
 
-const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRescheduleSessionId,isSuperAdmin }: SessionTableProps) => {
+const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRescheduleSessionId,setSessionRakiId,isSuperAdmin }: SessionTableProps) => {
     return (
         <Card>
             <CardHeader>
@@ -73,7 +74,11 @@ const SessionTable = ({ sessions, userData, rakiData, setCancelSessionId, setRes
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => setRescheduleSessionId(session.meetingId)}
+                                                    onClick={() => {
+                                                        setRescheduleSessionId(session.meetingId)
+                                                        setSessionRakiId(session.rakiId)
+                                                    }
+                                                }
                                                 >
                                                     Reschedule
                                                 </Button>

@@ -24,6 +24,7 @@ const AdminDashboard = () => {
 
     const [cancelSessionId, setCancelSessionId] = useState<string | null>(null);
     const [rescheduleSessionId, setRescheduleSessionId] = useState<string | null>(null);
+    const [sessionRakiId, setSessionRakiId] = useState<string | null>(null);
 
     useEffect(() => {
         if (currentUser) setUserId(currentUser._id);
@@ -55,9 +56,21 @@ const AdminDashboard = () => {
         }
     };
 
+    const getLocalFormattedDate = (date:Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = "00";
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+
     const handleRescheduleSession = async (meetingId: string, newDate: Date) => {
         try {
-            const results = await rescheduleSession(meetingId, newDate.toISOString());
+            // 2025-02-23 13:00:00
+            const results = await rescheduleSession(meetingId,getLocalFormattedDate(newDate));
 
             if (!results) throw new Error("Failed to reschedule session");
 
@@ -111,10 +124,10 @@ const AdminDashboard = () => {
 
             {isSuperAdmin && <DashboardStats revenueData={revenueData} />}
 
-            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} isSuperAdmin={isSuperAdmin} />
+            <SessionTable sessions={todaySessions} userData={userData} rakiData={rakiData} setCancelSessionId={setCancelSessionId} setRescheduleSessionId={setRescheduleSessionId} isSuperAdmin={isSuperAdmin} setSessionRakiId={setSessionRakiId} />
 
             <CancelSessionDialog isOpen={!!cancelSessionId} onClose={() => setCancelSessionId(null)} onConfirm={(reason) => cancelSessionId && handleCancelSession(cancelSessionId, reason)} />
-            <RescheduleSessionDialog isOpen={!!rescheduleSessionId} onClose={() => setRescheduleSessionId(null)} onConfirm={(newDate) => rescheduleSessionId && handleRescheduleSession(rescheduleSessionId, newDate)} />
+            <RescheduleSessionDialog isOpen={!!rescheduleSessionId} onClose={() => setRescheduleSessionId(null)} sessionRakiId={sessionRakiId} onConfirm={(newDate) => rescheduleSessionId && handleRescheduleSession(rescheduleSessionId, newDate)} />
 
             <ChatWidgetWrapper />
         </div>
