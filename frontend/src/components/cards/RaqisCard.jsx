@@ -28,7 +28,7 @@ export default function RaqisCard({ raqi }) {
     return country ? country.label : code;
   }
 
-  const { name, country: CountryCode, languages: Languages, yearOfExperience: Experience, _id: id, rating } = raqi;
+  const { name, country: CountryCode, languages: Languages, yearOfExperience: Experience, _id: id, averageRating } = raqi;
   const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
   const countryLabel = getCountryLabel(CountryCode);
 
@@ -58,7 +58,7 @@ export default function RaqisCard({ raqi }) {
         </svg>
         <span className="absolute flex flex-col items-center text-black justify-center font-semibold z-10" style={{ top: "5px", right: "15px" }}>
           <FaStar className="mb-1" />
-          <p>{rating ? formatRating(rating.averageRating) : "0.0"}</p>
+          <p>{averageRating ? formatRating(averageRating) : "0.0"}</p>
         </span>
         <svg width="292" height="328" viewBox="0 0 292 328" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10">
           <defs>
