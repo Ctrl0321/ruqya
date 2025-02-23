@@ -24,7 +24,7 @@ const Grid = ({
       `5xl:grid-cols-${cols}`,
       `gap-${gap}`,
       'my-4', 
-      'place-items-center', 
+      '', 
       className
     )}>
       {React.Children.map(children, (child, index) => (

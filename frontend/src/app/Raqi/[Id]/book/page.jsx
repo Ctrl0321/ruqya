@@ -133,6 +133,15 @@ const BookSessionPage = () => {
       scrollToRef(timeRef);
       return false;
     }
+
+    if (selectedDate && selectedDate < new Date()) {
+      newErrors.date = "Date and Time must be in the future";
+      setErrorMessage("Date and Time must be in the future");
+      setShowError(true);
+      scrollToRef(dateRef);
+      return false;
+    }
+
     setErrors(newErrors);
     setShowError(false);
     return true;
@@ -182,7 +191,7 @@ const BookSessionPage = () => {
       }
     } catch (error) {
       console.error("Error booking session:", error);
-      // router.push(`/Raqi/${Id}/book/failed`);
+      router.push(`/Raqi/${Id}/book/failed`);
     }
   };
 

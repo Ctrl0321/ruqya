@@ -7,6 +7,7 @@ import ReviewRaqiPopup from "@/components/ui/popup/ReviewRaqiPopup";
 import LoadingSpinner from "@/components/shared/common/LoadingSpinnerForCards";
 import { getUserProfile } from "@/lib/api";
 import { getLanguageLabel, getCountryLabel, parseBookingDate } from "@/lib/utils";
+import MyBookingCardSkeleton from "@/components/skeleton/MyBookingCardSkeleton";
 
 const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValueChange }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -87,7 +88,7 @@ const CompletedMyBookingCard = ({ booking = {}, show = false, className, onValue
   if (!rakiData) {
     return (
       <div className={`bg-white rounded-xl mx-auto md:max-w-[450px] text-left p-2 mb-1 flex flex-col justify-between  w-full ${className}`}>
-        <LoadingSpinner />
+        <MyBookingCardSkeleton />
       </div>
     );
   }
