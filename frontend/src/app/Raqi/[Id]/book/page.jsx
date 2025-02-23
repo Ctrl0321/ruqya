@@ -71,6 +71,7 @@ const BookSessionPage = () => {
             setAvailableTimes(response
                 .filter(slot => slot.isAvailable)
                 .map(slot => slot.startTime)
+                .sort((a, b) => new Date(`1970-01-01T${a}:00Z`) - new Date(`1970-01-01T${b}:00Z`))
             );          
           }
         } catch (error) {
