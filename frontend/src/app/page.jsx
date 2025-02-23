@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import '@/styles/globals.css';
 import {getRakis,getMyBookings} from "@/lib/api"
 import { sortBookingsByDate , removeOldBookings } from "@/lib/utils";
-import sampleDate from "@/data/sampledata.json";
 
 // import Flower from "../../public/svg/flower-right";
 // import FlowerLeft from "../../public/svg/flower-left";
@@ -51,7 +50,7 @@ export default function Home() {
       {/*</div>*/}
       <Search className="animate-fade-in" style={{ animationDelay: '0.3s' }} />
       <Second className="animate-fade-in" style={{ animationDelay: '0.4s' }} />
-      {sampleDate && sampleDate.length !== 0 && <Third raqiData={sampleDate} className="animate-fade-in" style={{ animationDelay: '0.5s' }} />}
+      {myBookings && myBookings.length !== 0 && <Third raqiData={myBookings} className="animate-fade-in" style={{ animationDelay: '0.5s' }} />}
       <Forth  raqiData={raqiData} title="Meet Our Expert Raqis" className="animate-fade-in" style={{ animationDelay: '0.6s' }} />
     </div>
   );
