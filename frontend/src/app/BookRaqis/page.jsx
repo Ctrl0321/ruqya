@@ -223,7 +223,7 @@ export default function BookRaqis() {
     }
 
     if (rating > 0) {
-      result = result.filter((raqi) => raqi.rating && raqi.rating.averageRating >= rating);
+      result = result.filter((raqi) => raqi.averageRating && raqi.averageRating >= rating);
     }
 
     setFilteredData(result);

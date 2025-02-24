@@ -29,7 +29,7 @@ function Raqis() {
   const [raqiData, setRaqiData] = useState();
   const [availability, setAvailability] = useState(null);
   const [review, setReview] = useState({
-    rakiId: "679bba3f3d6f1d200346271e",
+    rakiId: "",
     totalReviews: 0,
     averageRating: 0,
     reviews: [],

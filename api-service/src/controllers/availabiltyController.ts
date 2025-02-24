@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import RakiAvailability, {
   IRakiAvailability,
 } from "../models/rakiAvailability";
+import Review, { IReview } from "../models/review";
 import moment from "moment-timezone";
 import { AuthenticatedRequest } from "../@types/express";
 import User from "../models/user";
@@ -392,7 +393,23 @@ export const getAllAdmins = async (
       return;
     }
 
-    res.status(200).json(admins);
+    const adminsWithRatings = await Promise.all(
+      admins.map(async (admin) => {
+        const reviews = await Review.find({ rakiId: admin._id });
+
+        // Calculate statistics
+        const totalReviews = reviews.length;
+        const totalPoints = reviews.reduce((sum, review) => sum + review.points, 0);
+        const averageRating = totalReviews > 0 ? parseFloat((totalPoints / totalReviews).toFixed(1)) : undefined;
+
+        return {
+          ...admin.toObject(),
+          averageRating,
+        };
+      })
+    );
+
+    res.status(200).json(adminsWithRatings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
