@@ -117,7 +117,7 @@ export default function RuqyahPage() {
               <div className="border rounded-lg p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Music2Icon className="h-8 w-8 text-teal-500" />
-                  <span>Ruqyah AUDIO</span>
+                  <span>Ruqyah Audio</span>
                 </div>
                 <Button 
                   variant="default" 
@@ -126,8 +126,8 @@ export default function RuqyahPage() {
                   className="bg-teal-600 hover:bg-teal-700 rounded-lg"
                   onClick={() => {
                     const link = document.createElement('a');
-                    link.href = '/download/Ruqyah_AUDIO.mp3';
-                    link.download = 'Ruqyah_AUDIO.mp3';
+                    link.href = '/download/Ruqya_Audio.mp3';
+                    link.download = 'Ruqya_Audio.mp3';
                     document.body.appendChild(link);
                     if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
                       window.open(link.href, '_blank');

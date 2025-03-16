@@ -234,9 +234,9 @@ export default function BookRaqis() {
     .filter((exp) => exp !== undefined)
     .sort((a, b) => a - b);
 
-  if (isLoading) {
-    return <LoadingSpinner />; // Show loading spinner while data is being fetched
-  }
+  // if (raqiData) {
+  //   return <LoadingSpinner />; 
+  // }
 
   const renderAvailabilityFilter = () => (
     <div className="filter-section pb-6 animate-fade-in" style={{ animationDelay: `1500ms` }}>

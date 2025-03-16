@@ -70,19 +70,23 @@ export const verifySession = async (sessionId) => {
     }
 };
 
-// const handleApiError = (error) => {
-//   const token = localStorage.getItem("token");
-//   if (error.response && error.response.status === 401 && token) {
-//     localStorage.removeItem("token");
-//     window.location.href = "/";
-//   }
-//   return Promise.reject(error);
-// };
+const handleApiError = (error) => {
+  const token = localStorage.getItem("token");
+  if (error.response && error.response.status === 401 && token) {
+    localStorage.removeItem("token");
+    const pathname = window.location.pathname;
+    if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+      router.push("/login");
+    }
+    return Promise.reject(error);
+  }
+  return Promise.reject(error);
+};
 
-// api.interceptors.response.use(
-//   (response) => response,
-//   handleApiError
-// );
+api.interceptors.response.use(
+  (response) => response,
+  handleApiError
+);
 
 // User Profile
 export const getUserProfile = async (id) => (await api.get(`ruqya-api/user/${id}`)).data;
