@@ -8,7 +8,7 @@ import { Query } from 'express-serve-static-core';
 
 dotenv.config();
 
-const price = Math.round(parseFloat(process.env.SESSION_COST as string));
+const price = Math.round(parseFloat(process.env.SESSION_COST ?? "40"));
 
 
 export const createCheckoutSession = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -25,7 +25,7 @@ export const createCheckoutSession = async (req: AuthenticatedRequest, res: Resp
             line_items: [
                 {
                     price_data: {
-                        currency: 'usd',
+                        currency: 'gbp',
                         product_data: {
                             name: `1-on-1 Session: ${topic}`,
                             description: `Session with Raki ${rakiName} on ${date}`,

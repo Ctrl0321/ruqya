@@ -10,7 +10,7 @@ import Meeting, { MeetingStatus } from "../models/meeting";
 import { client } from "../config/streamConfig";
 import User from "../models/user";
 
-const MEETING_COST = Number(process.env.SESSION_COST) || 50;
+const MEETING_COST = Number(process.env.SESSION_COST) || 40;
 
 interface MeetingRequest {
   meetingId: string;

@@ -10,10 +10,16 @@ export const ChatProvider = ({ children }) => {
     const [userId, setUserId] = useState(null);
     // const [otherUserData, setOtherUserData] = useState(null);
 
+
+    const toggleChat = (newState) => {
+        console.log("Chat toggled:", newState);
+        setIsOpen(newState);
+    };
+
     return (
         <ChatContext.Provider value={{
             isOpen,
-            setIsOpen,
+            setIsOpen: toggleChat,
             userId,
             setUserId,
         }}>

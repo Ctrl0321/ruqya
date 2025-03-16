@@ -135,13 +135,23 @@ const BookSessionPage = () => {
       return false;
     }
 
-    if (selectedDate && selectedDate < new Date()) {
-      newErrors.date = "Date and Time must be in the future";
-      setErrorMessage("Date and Time must be in the future");
-      setShowError(true);
-      scrollToRef(dateRef);
-      return false;
+    console.log("Have fun",selectedDate,new Date())
+
+    if (selectedDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selected = new Date(selectedDate);
+      selected.setHours(0, 0, 0, 0);
+
+      if (selected < today) {
+        newErrors.date = "Date must be in the future";
+        setErrorMessage("Date must be in the future");
+        setShowError(true);
+        scrollToRef(dateRef);
+        return false;
+      }
     }
+
 
     setErrors(newErrors);
     setShowError(false);

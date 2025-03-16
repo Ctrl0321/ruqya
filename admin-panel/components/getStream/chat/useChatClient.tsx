@@ -33,6 +33,7 @@ export const useChatClient = (userId: string, otherUserId:string="") => {
         }
     };
 
+
     const getUserName=async (id:string)=>{
         try {
             const user = await getUserProfile(id);

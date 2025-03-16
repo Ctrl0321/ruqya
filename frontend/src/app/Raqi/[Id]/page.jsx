@@ -17,6 +17,7 @@ import { getUserProfile, getRakis, getRakiAvailability, getReviews } from "@/lib
 import { getCountryLabel, getLanguageLabel } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import PleaseLogin from "@/components/ui/popup/pleaseLogin";
+import {useAuth} from "@/contexts/AuthContexts";
 
 const displayImage = "https://as2.ftcdn.net/v2/jpg/04/75/12/25/1000_F_475122535_WQkfB8bbLLu7pTanatEAIDt4ppIYgRb8.jpg";
 
@@ -37,6 +38,8 @@ function Raqis() {
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const router = useRouter();
+  const { user: currentUser } = useAuth();
+
 
   const handleLogin = () => {
     // Navigate to login page or show login form
@@ -76,9 +79,18 @@ function Raqis() {
 
   const { setUserId: setChatUserId, setIsOpen: setOpenChatWidget } = useChat();
 
+  // useEffect(() => {
+  //   if (currentUser) setChatUserId(currentUser._id);
+  // }, [currentUser]);
+
   const handleStartChat = (otherUser) => {
-    // setUserId(otherUser);
-    setOpenChatWidget(true);
+    console.log("Starting chat with user:", otherUser);
+    setChatUserId(otherUser); // Set the other user ID
+    setOpenChatWidget(true); // Open the chat widget
+
+    setTimeout(() => {
+      console.log("Chat state should be updated now");
+    }, 100);
   };
 
   useEffect(() => {

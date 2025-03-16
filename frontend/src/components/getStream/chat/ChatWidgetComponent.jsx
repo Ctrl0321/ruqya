@@ -1,15 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Chat, Channel, ChannelHeader, MessageList, MessageInput, Thread, Window } from "stream-chat-react";
 import { useChatClient } from "@/components/getStream/chat/useChatClient";
 import { MessageCircle, Minimize2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const FloatingChatWidget = ({ userId, otherUserId }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const FloatingChatWidget = ({ userId, otherUserId, isOpen, setIsOpen }) => {
+  // const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const { client, channel, isAdmin, selectChannel, allChannels } = useChatClient(userId, otherUserId);
+
+    useEffect(() => {
+        console.log("FloatingChatWidget rendered with isOpen:", isOpen);
+        console.log("Client and channel:", !!client, !!channel);
+    }, [isOpen, client, channel]);
 
   if (!client || !channel) return null;
 
