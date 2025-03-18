@@ -76,7 +76,7 @@ export default function RuqyahPage() {
                   className="bg-teal-600 hover:bg-teal-700 rounded-lg"
                   onClick={() => {
                     const link = document.createElement('a');
-                    link.href = '/download/Daily Morning & Evening Adhkar.pdf';
+                    link.href = '/download/Ruqya_PDF1.pdf';
                     link.download = 'Daily Morning & Evening Adhkar.pdf';
                     document.body.appendChild(link);
                     if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
@@ -101,7 +101,7 @@ export default function RuqyahPage() {
                   className="bg-teal-600 hover:bg-teal-700 rounded-lg"
                   onClick={() => {
                     const link = document.createElement('a');
-                    link.href = '/download/ruqyah booklet.pdf';
+                    link.href = '/download/Ruqya_PDF2.pdf';
                     link.download = 'ruqyah booklet.pdf';
                     document.body.appendChild(link);
                     if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {

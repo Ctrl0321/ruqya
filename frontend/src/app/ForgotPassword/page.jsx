@@ -61,7 +61,7 @@ export default function ForgotPassword() {
         }
 
         const userProfile = await getUserProfileWithEmail(email);
-        console.log("Test", userProfile);
+        // console.log("Test", userProfile);
         if (userProfile.data.status) {
           const { name, email } = userProfile.data.user;
           const newOtp = Math.floor(100000 + Math.random() * 900000).toString();

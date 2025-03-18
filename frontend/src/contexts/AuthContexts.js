@@ -15,9 +15,18 @@ export const AuthProvider = ({ children }) => {
         const initializeAuth = async () => {
             try {
                 const userData = await getOwnProfile()
-                setUser(userData)
+                if (userData) {
+                    setUser(userData)
+                } else {
+                    // Clear any potential data in localStorage when no user data
+                    localStorage.clear()
+                    router.push('/login')
+                }
             } catch (error) {
                 console.error('Failed to fetch user profile:', error)
+                // Clear localStorage on error too
+                localStorage.clear()
+                router.push('/login')
             } finally {
                 setIsLoading(false)
             }
@@ -29,10 +38,16 @@ export const AuthProvider = ({ children }) => {
     const login = async (token) => {
         try {
             const userData = await getOwnProfile()
-            setUser(userData)
-            router.push('/admin')
+            if (userData) {
+                setUser(userData)
+                router.push('/admin')
+            } else {
+                localStorage.clear()
+                throw new Error('No user data returned after login')
+            }
         } catch (error) {
             console.error('Login failed:', error)
+            localStorage.clear()
             throw error
         }
     }
