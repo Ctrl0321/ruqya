@@ -16,7 +16,7 @@ function Second() {
         <Image src={flower} alt="flower" className="w-6 mb-3 inline" />
       </p>
       <h1 className="mt-5 text-2xl md:text-3xl font-bold text-RuqyaGray text-center leading-relaxed animate-fade-in" style={{ animationDelay: '0.4s' }}>
-        <span className="text-5xl"> £40.00/</span> booking
+        <span className="text-5xl"> £50.00/</span> booking
       </h1>
     </div>
   );

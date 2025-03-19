@@ -8,7 +8,7 @@ import { Query } from 'express-serve-static-core';
 
 dotenv.config();
 
-const price = Math.round(parseFloat(process.env.SESSION_COST ?? "40"));
+const price = Math.round(parseFloat(process.env.SESSION_COST ?? "50"));
 
 
 export const createCheckoutSession = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
