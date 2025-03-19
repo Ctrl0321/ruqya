@@ -239,7 +239,7 @@ export default function BookRaqis() {
   // }
 
   const renderAvailabilityFilter = () => (
-    <div className="filter-section pb-6 animate-fade-in" style={{ animationDelay: `1500ms` }}>
+    <div className="filter-section pb-6 animate-fade-in" style={{ animationDelay: `2000ms` }}>
       <h2 className="text-lg font-semibold mb-4">Availability</h2>
       <div className="space-y-4 bg-white/50 p-4 rounded-lg font-sans">
         <div className="relative z-50"> {/* Adjusted z-index */}
@@ -421,7 +421,7 @@ export default function BookRaqis() {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-start items-start m-auto filter-section pb-6 animate-fade-in" style={{ animationDelay: `2000ms` }}>
+              <div className="flex flex-col justify-start items-start m-auto filter-section pb-6 animate-fade-in" style={{ animationDelay: `1500ms` }}>
                 <div className="flex justify-between items-center text-lg mb-4 w-full">
                   <span className="flex-1 font-semibold">Rating</span>
                   <div className="text-xs text-gray-500 ml-auto">

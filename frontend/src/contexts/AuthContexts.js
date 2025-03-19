@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useState, useEffect, useContext } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {getOwnProfile} from "@/lib/api"
 
 const AuthContext = createContext()
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
+    const pathname = usePathname()
 
     useEffect(() => {
         const initializeAuth = async () => {
@@ -20,13 +21,17 @@ export const AuthProvider = ({ children }) => {
                 } else {
                     // Clear any potential data in localStorage when no user data
                     localStorage.clear()
-                    router.push('/login')
+                    if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+                        router.push("/login");
+                      }
                 }
             } catch (error) {
                 console.error('Failed to fetch user profile:', error)
                 // Clear localStorage on error too
                 localStorage.clear()
-                router.push('/login')
+                if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+                    router.push("/login");
+                  }
             } finally {
                 setIsLoading(false)
             }
