@@ -11,7 +11,8 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
     const pathname = usePathname()
-
+    const raqiRegex = /^\/Raqi\/[a-f0-9]{24}$/;
+    
     useEffect(() => {
         const initializeAuth = async () => {
             try {
