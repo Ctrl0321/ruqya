@@ -1,237 +1,151 @@
 'use client';
 import React from 'react';
 import { Container, Typography, Box, Paper, Grid, Divider } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Image from 'next/image';
-
-const SectionTitle = styled(Typography)(({ theme }) => ({
-  color: '#2D3748',
-  fontWeight: 700,
-  marginBottom: theme.spacing(2),
-  position: 'relative',
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    bottom: -8,
-    left: 0,
-    width: 60,
-    height: 3,
-    backgroundColor: '#4CAF50',
-  },
-}));
-
-const ContentPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  borderRadius: 12,
-  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-  transition: 'transform 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-  },
-}));
+import { BookOpenIcon, BookIcon, UsersIcon } from 'lucide-react';
 
 const AboutUs = () => {
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
+    <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <Typography 
-          variant="h2" 
-          component="h1" 
-          sx={{ 
-            fontWeight: 800, 
-            color: '#1E293B',
-            mb: 2 
-          }}
-        >
+      <div className="text-center mb-12 animate-fade-in" style={{ animationDelay: '0ms' }}>
+        <h1 className="text-4xl font-extrabold text-gray-800 sm:text-5xl mb-4">
           About Us
-        </Typography>
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            fontWeight: 500, 
-            color: '#4CAF50',
-            mb: 3 
-          }}
-        >
+        </h1>
+        <h2 className="text-xl font-medium text-green-600 mb-6">
           Welcome to Prophetic Ruqyah
-        </Typography>
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            fontSize: '1.1rem', 
-            maxWidth: '800px', 
-            mx: 'auto',
-            color: '#4A5568'
-          }}
-        >
+        </h2>
+        <p className="text-lg max-w-3xl mx-auto text-gray-600">
           At Prophetic Ruqyah, we are dedicated to restoring spiritual balance and nurturing the heart, mind, and soul through authentic Islamic healing practices. Rooted in the timeless wisdom of the Prophetic traditions, our mission is to bring light, healing, and tranquility to those seeking solace in today's challenging world.
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
-      <Grid container spacing={4}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Our Story Section */}
-        <Grid item xs={12} md={6}>
-          <ContentPaper>
-            <SectionTitle variant="h4">Our Story</SectionTitle>
-            <Typography paragraph sx={{ color: '#4A5568' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-[60px] after:h-[3px] after:bg-green-500">Our Story</h3>
+            <p className="text-gray-600 mb-4">
               Prophetic Ruqyah was founded with a deep commitment to the rich heritage of Islamic spiritual healing. Inspired by the teachings of the Prophet Muhammad (peace be upon him), our journey began with the aim of reviving the ancient art of Ruqyah—a practice that combines Quranic recitations, supplications, and spiritual guidance.
-            </Typography>
-            <Typography paragraph sx={{ color: '#4A5568' }}>
+            </p>
+            <p className="text-gray-600">
               We believe that true healing comes from a strong connection with faith, sincere prayer, and the compassionate support of a community.
-            </Typography>
-          </ContentPaper>
-        </Grid>
+            </p>
+          </div>
+        </div>
 
         {/* Our Mission Section */}
-        <Grid item xs={12} md={6}>
-          <ContentPaper>
-            <SectionTitle variant="h4">Our Mission</SectionTitle>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box>
-                <Typography variant="h6" sx={{ color: '#2D3748', fontWeight: 600 }}>
-                  Authentic Healing
-                </Typography>
-                <Typography sx={{ color: '#4A5568' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-[60px] after:h-[3px] after:bg-green-500">Our Mission</h3>
+            <div className="flex flex-col gap-4">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-700">Authentic Healing</h4>
+                <p className="text-gray-600">
                   We provide genuine Ruqyah sessions that adhere to the principles and practices taught by the Prophet (peace be upon him).
-                </Typography>
-              </Box>
+                </p>
+              </div>
               
-              <Box>
-                <Typography variant="h6" sx={{ color: '#2D3748', fontWeight: 600 }}>
-                  Spiritual Empowerment
-                </Typography>
-                <Typography sx={{ color: '#4A5568' }}>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-700">Spiritual Empowerment</h4>
+                <p className="text-gray-600">
                   Our goal is to empower individuals with the knowledge and spiritual tools needed to overcome challenges, heal emotional wounds, and maintain inner peace.
-                </Typography>
-              </Box>
+                </p>
+              </div>
               
-              <Box>
-                <Typography variant="h6" sx={{ color: '#2D3748', fontWeight: 600 }}>
-                  Compassionate Guidance
-                </Typography>
-                <Typography sx={{ color: '#4A5568' }}>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-700">Compassionate Guidance</h4>
+                <p className="text-gray-600">
                   We offer a supportive environment where every person is respected and cared for, ensuring that your spiritual journey is nurtured with kindness and expertise.
-                </Typography>
-              </Box>
-            </Box>
-          </ContentPaper>
-        </Grid>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* What We Offer Section */}
-        <Grid item xs={12}>
-          <ContentPaper>
-            <SectionTitle variant="h4">What We Offer</SectionTitle>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
-                <Box sx={{ 
-                  p: 3, 
-                  textAlign: 'center', 
-                  backgroundColor: '#F7FAFC',
-                  borderRadius: 2,
-                  height: '100%'
-                }}>
-                  <Box sx={{ fontSize: '3rem', color: '#4CAF50', mb: 2 }}>🔊</Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#2D3748' }}>
-                    Personalized Ruqyah Sessions
-                  </Typography>
-                  <Typography sx={{ color: '#4A5568' }}>
-                    Whether you are facing spiritual distress or seeking protection, our experienced spiritual healers tailor sessions to meet your unique needs.
-                  </Typography>
-                </Box>
-              </Grid>
+        <div className="col-span-1 md:col-span-2 animate-fade-in" style={{ animationDelay: '450ms' }}>
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-[60px] after:h-[3px] after:bg-green-500">What We Offer</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-green-50 p-6 rounded-lg text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div className="flex justify-center text-green-600 mb-4">
+                  <BookOpenIcon size={48} />
+                </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">Personalized Ruqyah Sessions</h4>
+                <p className="text-gray-600">
+                  Whether you are facing spiritual distress or seeking protection, our experienced spiritual healers tailor sessions to meet your unique needs.
+                </p>
+              </div>
               
-              <Grid item xs={12} md={4}>
-                <Box sx={{ 
-                  p: 3, 
-                  textAlign: 'center', 
-                  backgroundColor: '#F7FAFC',
-                  borderRadius: 2,
-                  height: '100%'
-                }}>
-                  <Box sx={{ fontSize: '3rem', color: '#4CAF50', mb: 2 }}>📚</Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#2D3748' }}>
-                    Educational Resources
-                  </Typography>
-                  <Typography sx={{ color: '#4A5568' }}>
-                    Our website is a repository of articles, guides, and multimedia content that explore the science and spirituality of Ruqyah, helping you understand its profound benefits.
-                  </Typography>
-                </Box>
-              </Grid>
+              <div className="bg-blue-50 p-6 rounded-lg text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div className="flex justify-center text-green-600 mb-4">
+                  <BookIcon size={48} />
+                </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">Educational Resources</h4>
+                <p className="text-gray-600">
+                  Our website is a repository of articles, guides, and multimedia content that explore the science and spirituality of Ruqyah, helping you understand its profound benefits.
+                </p>
+              </div>
               
-              <Grid item xs={12} md={4}>
-                <Box sx={{ 
-                  p: 3, 
-                  textAlign: 'center', 
-                  backgroundColor: '#F7FAFC',
-                  borderRadius: 2,
-                  height: '100%'
-                }}>
-                  <Box sx={{ fontSize: '3rem', color: '#4CAF50', mb: 2 }}>👥</Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#2D3748' }}>
-                    Community Support
-                  </Typography>
-                  <Typography sx={{ color: '#4A5568' }}>
-                    Connect with like-minded individuals and experts who share your path towards spiritual growth and healing.
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </ContentPaper>
-        </Grid>
+              <div className="bg-red-50 p-6 rounded-lg text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div className="flex justify-center text-green-600 mb-4">
+                  <UsersIcon size={48} />
+                </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">Community Support</h4>
+                <p className="text-gray-600">
+                  Connect with like-minded individuals and experts who share your path towards spiritual growth and healing.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Our Approach Section */}
-        <Grid item xs={12} md={6}>
-          <ContentPaper>
-            <SectionTitle variant="h4">Our Approach</SectionTitle>
-            <Typography paragraph sx={{ color: '#4A5568' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-[60px] after:h-[3px] after:bg-green-500">Our Approach</h3>
+            <p className="text-gray-600 mb-4">
               We combine the art of Prophetic Ruqyah with modern insights to create a healing experience that is both authentic and relevant. Our approach is always grounded in Islamic teachings and aimed at fostering a deep connection with the Divine.
-            </Typography>
-            <Typography paragraph sx={{ color: '#4A5568' }}>
+            </p>
+            <p className="text-gray-600">
               We ensure that all practices are conducted in a respectful, confidential, and supportive environment.
-            </Typography>
-          </ContentPaper>
-        </Grid>
+            </p>
+          </div>
+        </div>
 
         {/* Our Commitment Section */}
-        <Grid item xs={12} md={6}>
-          <ContentPaper>
-            <SectionTitle variant="h4">Our Commitment</SectionTitle>
-            <Typography paragraph sx={{ color: '#4A5568' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '750ms' }}>
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-[60px] after:h-[3px] after:bg-green-500">Our Commitment</h3>
+            <p className="text-gray-600 mb-4">
               At Prophetic Ruqyah, your well-being is our priority. We are committed to:
-            </Typography>
-            <Box sx={{ pl: 2 }}>
-              <Typography paragraph sx={{ display: 'flex', alignItems: 'center', color: '#4A5568' }}>
-                <Box component="span" sx={{ color: '#4CAF50', mr: 1, fontWeight: 'bold' }}>•</Box> 
+            </p>
+            <div className="pl-4">
+              <p className="flex items-center text-gray-600 mb-2">
+                <span className="text-green-600 mr-2 font-bold">•</span> 
                 Upholding the highest ethical standards in all our practices.
-              </Typography>
-              <Typography paragraph sx={{ display: 'flex', alignItems: 'center', color: '#4A5568' }}>
-                <Box component="span" sx={{ color: '#4CAF50', mr: 1, fontWeight: 'bold' }}>•</Box> 
+              </p>
+              <p className="flex items-center text-gray-600 mb-2">
+                <span className="text-green-600 mr-2 font-bold">•</span> 
                 Providing continuous support and guidance throughout your spiritual journey.
-              </Typography>
-              <Typography paragraph sx={{ display: 'flex', alignItems: 'center', color: '#4A5568' }}>
-                <Box component="span" sx={{ color: '#4CAF50', mr: 1, fontWeight: 'bold' }}>•</Box> 
+              </p>
+              <p className="flex items-center text-gray-600">
+                <span className="text-green-600 mr-2 font-bold">•</span> 
                 Being a reliable source of wisdom, healing, and hope in an ever-changing world.
-              </Typography>
-            </Box>
-          </ContentPaper>
-        </Grid>
-      </Grid>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Final CTA */}
-      <Box sx={{ 
-        textAlign: 'center', 
-        mt: 4, 
-        p: 5, 
-        backgroundColor: '#EDF2F7',
-        borderRadius: 3
-      }}>
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: '#2D3748' }}>
+      <div className="text-center mt-8 p-10 bg-green-50 rounded-xl animate-fade-in" style={{ animationDelay: '900ms' }}>
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Join us on a journey towards spiritual renewal, inner peace, and a deeper connection with your faith.
-        </Typography>
-      </Box>
-    </Container>
+        </h3>
+      </div>
+    </div>
   );
 };
 

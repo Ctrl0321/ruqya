@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
                 } else {
                     // Clear any potential data in localStorage when no user data
                     localStorage.clear()
-                    if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/aboutus" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+                    if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/AboutUs" && pathname !== "/login" && !raqiRegex.test(pathname)) {
                         router.push("/login");
                       }
                 }
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
                 console.error('Failed to fetch user profile:', error)
                 // Clear localStorage on error too
                 localStorage.clear()
-                if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/aboutus" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+                if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/AboutUs" && pathname !== "/login" && !raqiRegex.test(pathname)) {
                     router.push("/login");
                   }
             } finally {
