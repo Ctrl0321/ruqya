@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   ruqya-frontend:
-    image: ruqya-frontend:1.3.2
+    image: ruqya-frontend:1.3.3
     build:
       context: ../frontend
 #      platforms:
