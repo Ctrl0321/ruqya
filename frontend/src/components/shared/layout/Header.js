@@ -72,7 +72,7 @@ const Header = () => {
     const token = localStorage.getItem("fe-token");
     const raqiRegex = /^\/Raqi\/[a-f0-9]{24}$/;
     if (!token) {
-      if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
+      if (pathname !== "/" && pathname !== "/BookRaqis" && pathname !== "/SelfRuqyah" && pathname !== "/AboutUs" && pathname !== "/signup" && pathname !== "/login" && !raqiRegex.test(pathname)) {
         router.push("/login");
       }
     } else {
@@ -97,10 +97,6 @@ const Header = () => {
       }
     }
   }, [pathname, router]);
-
-  function testAlert() {
-    setError({ message: "This is a test error message", type: "error" });
-  }
 
   return (
     <>
@@ -130,6 +126,9 @@ const Header = () => {
               </Link>
               <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} w-24 text-center hover:text-gray-900`}>
                 Self-Ruqyah
+              </Link>
+              <Link href="/AboutUs" className={`${isActive("/AboutUs")} w-24 text-center hover:text-gray-900`}>
+                About Us
               </Link>
               <div className="relative" ref={profileDropdownRef}>
                 <button
@@ -203,6 +202,9 @@ const Header = () => {
                 </Link>
                 <Link href="/SelfRuqyah" className={`${isActive("/SelfRuqyah")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} onClick={handleLinkClick}>
                   Self-Ruqyah
+                </Link>
+                <Link href="/AboutUs" className={`${isActive("/AboutUs")} px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200`} onClick={handleLinkClick}>
+                  About Us
                 </Link>
 
                 <div className="border-t border-gray-200 pt-3">
